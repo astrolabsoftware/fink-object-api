@@ -7,3 +7,4 @@ fink-utils
 line_profiler
 requests
 pyarrow
+matplotlib

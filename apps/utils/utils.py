@@ -51,7 +51,7 @@ def download_cutout(objectId, candid, kind):
     config = extract_configuration("config.yml")
 
     r = requests.post(
-        "{}/api/v1/cutouts".format(config["CUTOUTAPIURL"]),
+        "{}/api/v1/cutouts".format(config["APIURL"]),
         json={
             "objectId": objectId,
             "candid": candid,
