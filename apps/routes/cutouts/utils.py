@@ -120,11 +120,15 @@ def format_and_send_cutout(payload: dict):
     user_config = extract_configuration("config.yml")
     if output_format == "FITS":
         json_payload.update({"return_type": "FITS"})
-        r0 = requests.post("{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload)
+        r0 = requests.post(
+            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+        )
         cutout = io.BytesIO(r0.content)
     elif output_format in ["PNG", "array"]:
         json_payload.update({"return_type": "array"})
-        r0 = requests.post("{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload)
+        r0 = requests.post(
+            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+        )
         cutout = json.loads(r0.content)
 
     # send the FITS file
