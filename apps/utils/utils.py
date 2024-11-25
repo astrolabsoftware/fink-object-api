@@ -40,7 +40,7 @@ def extract_configuration(filename):
     if config["HOST"].endswith(".org"):
         config["APIURL"] = "https://" + config["HOST"]
     else:
-        config["APIURL"] = "http://" + config["HOST"] + ":" + config["PORT"]
+        config["APIURL"] = "http://" + config["HOST"] + ":" + str(config["PORT"])
     return config
 
 def download_cutout(objectId, candid, kind):
