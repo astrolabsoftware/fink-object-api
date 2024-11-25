@@ -172,6 +172,7 @@ def convert_datatype(series: pd.Series, type_: type) -> pd.Series:
     return series.astype(type_)
 
 
+@profile
 def extract_rate_and_color(pdf: pd.DataFrame, tolerance: float = 0.3):
     """Extract magnitude rates in different filters, color, and color change rate.
 

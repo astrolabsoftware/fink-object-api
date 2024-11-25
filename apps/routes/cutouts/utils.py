@@ -27,7 +27,10 @@ from apps.utils.plotting import sigmoid_normalizer, legacy_normalizer, convolve
 from apps.utils.decoding import format_hbase_output
 from apps.utils.utils import extract_configuration
 
+from line_profiler import profile
 
+
+@profile
 def format_and_send_cutout(payload: dict):
     """Extract data returned by HBase and jsonify it
 

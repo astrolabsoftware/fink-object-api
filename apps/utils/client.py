@@ -23,7 +23,9 @@ import yaml
 
 from apps import __file__ as apps_loc
 
+from line_profiler import profile
 
+@profile
 def initialise_jvm(path=None):
     """Start a JVM
 
@@ -41,6 +43,7 @@ def initialise_jvm(path=None):
     jpype.attachThreadToJVM()
 
 
+@profile
 def connect_to_hbase_table(
     tablename: str,
     schema_name=None,
@@ -92,6 +95,7 @@ def connect_to_hbase_table(
     return client
 
 
+@profile
 def create_or_update_hbase_table(
     tablename: str,
     families: list,

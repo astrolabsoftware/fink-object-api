@@ -18,6 +18,7 @@ from astropy.convolution import Box2DKernel, Gaussian2DKernel
 from astropy.convolution import convolve as astropy_convolve
 from astropy.visualization import AsymmetricPercentileInterval, simple_norm
 
+from line_profiler import profile
 
 def sigmoid(img: list) -> list:
     """Sigmoid function used for img_normalizer
@@ -78,6 +79,7 @@ def legacy_normalizer(data: list, stretch="asinh", pmin=0.5, pmax=99.5) -> list:
     )
 
 
+@profile
 def convolve(image, smooth=3, kernel="gauss"):
     """Convolve 2D image. Hacked from aplpy"""
     if smooth is None and isinstance(kernel, str) and kernel in ["box", "gauss"]:
@@ -106,6 +108,7 @@ def convolve(image, smooth=3, kernel="gauss"):
     return astropy_convolve(image, kernel, boundary="extend")
 
 
+@profile
 def _data_stretch(
     image,
     vmin=None,

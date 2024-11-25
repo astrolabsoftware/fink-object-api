@@ -18,7 +18,10 @@ from apps.utils.utils import download_cutout
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output, hbase_to_dict
 
+from line_profiler import profile
 
+
+@profile
 def extract_object_data(payload: dict) -> pd.DataFrame:
     """Extract data returned by HBase and format it in a Pandas dataframe
 
