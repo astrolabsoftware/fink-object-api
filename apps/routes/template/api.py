@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from flask import Blueprint, Response, jsonify, request
-from apps.utils import check_args
-from apps.utils import send_tabular_data
+from apps.utils.utils import check_args
+from apps.utils.utils import send_tabular_data
 
-from apps.template.utils import my_function
+from apps.routes.template.utils import my_function
 
 bp = Blueprint("template", __name__)
 

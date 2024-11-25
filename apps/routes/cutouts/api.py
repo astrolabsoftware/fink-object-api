@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from flask import Blueprint, Response, jsonify, request
-from apps.utils import check_args
+from apps.utils.utils import check_args
 
 from apps.routes.cutouts.utils import format_and_send_cutout
 
