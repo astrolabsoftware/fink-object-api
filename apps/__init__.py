@@ -12,23 +12,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Flask, url_for
-import yaml
-
-config = yaml.load(open("config.yml"), yaml.Loader)
-
-app = Flask("Fink REST API")
-
-# HBase client nrows default limit
-nlimit = 10000
-
-# Server configuration
-app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
-app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
-app.config["JSON_SORT_KEYS"] = False
-
-from apps.routes.template.api import bp as bp_template
-app.register_blueprint(bp_template)
-
-if __name__ == "__main__":
-    app.run(config["APIURL"], debug=True, port=int(config["PORT"]))
+__version__ = "0.1"
