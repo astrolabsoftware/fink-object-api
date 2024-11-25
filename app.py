@@ -17,6 +17,7 @@ from flask import Flask
 from apps.utils.utils import extract_configuration
 
 from apps.routes.objects.api import bp as bp_objects
+from apps.routes.cutouts.api import bp as bp_cutouts
 
 config = extract_configuration("config.yml")
 
@@ -28,6 +29,7 @@ app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["JSON_SORT_KEYS"] = False
 
 app.register_blueprint(bp_objects)
+app.register_blueprint(bp_cutouts)
 
 if __name__ == "__main__":
     app.run(config["HOST"], debug=True, port=int(config["PORT"]))
