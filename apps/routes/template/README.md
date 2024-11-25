@@ -11,15 +11,19 @@ Simply create a new folder following the `template` folder:
 ├── app.py
 ├── apps
 │   ├── __init__.py
-│   ├── template
-│   │   ├── api.py
-│   │   ├── __init__.py
-│   │   ├── README.md
-│   │   └── utils.py
-│   └── utils.py
+│   ├── routes
+│   │   └── template
+│   │       ├── api.py
+│   │       ├── __init__.py
+│   │       ├── README.md
+│   │       └── utils.py
+│   └── utils
+│       └── utils.py
+├── bin
 ├── config.yml
 ├── LICENSE
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 It should contain `api.py`, `__init__.py`, and eventually `utils.py`.

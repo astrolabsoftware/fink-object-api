@@ -12,12 +12,62 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Various utilities"""
+
 import io
+import json
+import yaml
+import requests
 
 from flask import Response
 
 from astropy.table import Table
 from astropy.io import votable
+
+
+def extract_configuration(filename):
+    """Extract user defined configuration
+
+    Parameters
+    ----------
+    filename: str
+        Full path to the `config.yml` file.
+
+    Returns
+    -------
+    out: dict
+        Dictionary with user defined values.
+    """
+    config = yaml.load(open("config.yml"), yaml.Loader)
+    return config
+
+
+def download_cutout(objectId, candid, kind):
+    """ """
+    config = extract_configuration("config.yml")
+
+    r = requests.post(
+        "{}/api/v1/cutouts".format(config["APIURL"]),
+        json={
+            "objectId": objectId,
+            "candid": candid,
+            "kind": kind,
+            "output-format": "array",
+        },
+    )
+    if r.status_code == 200:
+        data = json.loads(r.content)
+    else:
+        # TODO: different return based on `kind`?
+        return []
+
+    if kind != "All":
+        return data["b:cutout{}_stampData".format(kind)]
+    else:
+        return [
+            data["b:cutout{}_stampData".format(k)]
+            for k in ["Science", "Template", "Difference"]
+        ]
 
 
 def check_args(args: list, payload: dict) -> dict:
@@ -46,7 +96,7 @@ def send_tabular_data(pdf, output_format):
         Pandas DataFrame with data to be sent
     output_format: str
         Output format: json, csv, votable, parquet.
-    
+
     Returns
     -------
     out: Any
