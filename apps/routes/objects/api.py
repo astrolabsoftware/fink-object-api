@@ -53,7 +53,7 @@ ARGS = [
     {
         "name": "columns",
         "required": False,
-        "description": f"Comma-separated data columns to transfer. Default is all columns. See {APIURL}/api/v1/columns for more information.",
+        "description": f"Comma-separated data columns to transfer. Default is all columns.",
     },
     {
         "name": "output-format",
