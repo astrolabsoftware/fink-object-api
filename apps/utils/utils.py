@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Various utilities"""
+
 import io
 import json
 import yaml
@@ -22,6 +23,7 @@ from flask import Response
 
 from astropy.table import Table
 from astropy.io import votable
+
 
 def extract_configuration(filename):
     """Extract user defined configuration
@@ -42,6 +44,7 @@ def extract_configuration(filename):
     else:
         config["APIURL"] = "http://" + config["HOST"] + ":" + str(config["PORT"])
     return config
+
 
 def download_cutout(objectId, candid, kind):
     """ """

@@ -20,6 +20,7 @@ from apps.routes.objects.utils import extract_object_data
 
 bp = Blueprint("objects", __name__)
 
+
 # Enable CORS for this blueprint
 @bp.after_request
 def after_request(response):
@@ -53,7 +54,7 @@ ARGS = [
     {
         "name": "columns",
         "required": False,
-        "description": f"Comma-separated data columns to transfer. Default is all columns.",
+        "description": "Comma-separated data columns to transfer. Default is all columns.",
     },
     {
         "name": "output-format",
@@ -61,6 +62,7 @@ ARGS = [
         "description": "Output format among json[default], csv, parquet, votable",
     },
 ]
+
 
 @bp.route("/api/v1/objects", methods=["GET"])
 def return_object_arguments():

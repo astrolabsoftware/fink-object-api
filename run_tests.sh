@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2024 AstroLab Software
 # Author: Julien Peloton
 #
@@ -12,8 +13,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import pandas as pd
+set -e
+message_help="""
+Run the test suite of the modules\n\n
+Usage:\n
+    \t./run_tests.sh [--url]\n\n
 
+--url is the Science Portal URL you would like to test against.
+"""
+# Grab the command line arguments
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --url)
+        URL="$2"
+        shift 2
+        ;;
+    -h)
+        echo -e $message_help
+        exit
+        ;;
+  esac
+done
 
-def my_function(payload):
-    return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
+if [[ -f $URL ]]; then
+  echo "You need to specify an URL" $URL
+  exit
+fi
+
+# Run the test suite on the utilities
+cd tests
+for filename in ./*.py
+do
+  echo $filename
+  # Run test suite
+  python $filename $URL
+done

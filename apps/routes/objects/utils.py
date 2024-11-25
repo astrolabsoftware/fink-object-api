@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
+from numpy import array as nparray
 from apps.utils.utils import download_cutout
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import format_hbase_output
+from apps.utils.decoding import format_hbase_output, hbase_to_dict
 
 
 def extract_object_data(payload: dict) -> pd.DataFrame:
@@ -101,9 +102,9 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
         else:
             colname = "b:cutout{}_stampData".format(cutout_kind)
             pdf[colname] = pdf[["i:objectId", "i:candid"]].apply(
-                lambda x: pd.Series(
-                    [download_cutout(x.iloc[0], x.iloc[1], cutout_kind)]
-                ),
+                lambda x: pd.Series([
+                    download_cutout(x.iloc[0], x.iloc[1], cutout_kind)
+                ]),
                 axis=1,
             )
 
@@ -145,12 +146,10 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
 
         if "i:jd" in pdfUP.columns:
             # workaround -- see https://github.com/astrolabsoftware/fink-science-portal/issues/216
-            mask = np.array(
-                [
-                    False if float(i) in pdf["i:jd"].to_numpy() else True
-                    for i in pdfUP["i:jd"].to_numpy()
-                ]
-            )
+            mask = nparray([
+                False if float(i) in pdf["i:jd"].to_numpy() else True
+                for i in pdfUP["i:jd"].to_numpy()
+            ])
             pdfUP = pdfUP[mask]
 
         # Hacky way to avoid converting concatenated column to float
