@@ -6,3 +6,4 @@ fink-filters
 fink-utils
 line_profiler
 requests
+pyarrow
