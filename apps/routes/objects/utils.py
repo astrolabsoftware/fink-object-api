@@ -102,9 +102,9 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
         else:
             colname = "b:cutout{}_stampData".format(cutout_kind)
             pdf[colname] = pdf[["i:objectId", "i:candid"]].apply(
-                lambda x: pd.Series([
-                    download_cutout(x.iloc[0], x.iloc[1], cutout_kind)
-                ]),
+                lambda x: pd.Series(
+                    [download_cutout(x.iloc[0], x.iloc[1], cutout_kind)]
+                ),
                 axis=1,
             )
 
@@ -146,10 +146,12 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
 
         if "i:jd" in pdfUP.columns:
             # workaround -- see https://github.com/astrolabsoftware/fink-science-portal/issues/216
-            mask = nparray([
-                False if float(i) in pdf["i:jd"].to_numpy() else True
-                for i in pdfUP["i:jd"].to_numpy()
-            ])
+            mask = nparray(
+                [
+                    False if float(i) in pdf["i:jd"].to_numpy() else True
+                    for i in pdfUP["i:jd"].to_numpy()
+                ]
+            )
             pdfUP = pdfUP[mask]
 
         # Hacky way to avoid converting concatenated column to float
