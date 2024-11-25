@@ -30,4 +30,4 @@ app.config["JSON_SORT_KEYS"] = False
 app.register_blueprint(bp_objects)
 
 if __name__ == "__main__":
-    app.run(config["APIURL"], debug=True, port=int(config["PORT"]))
+    app.run(config["HOST"], debug=True, port=int(config["PORT"]))

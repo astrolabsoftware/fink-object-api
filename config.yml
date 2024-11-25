@@ -1,5 +1,5 @@
 # Host and port of the application
-APIURL: localhost
+HOST: localhost
 PORT: 32000
 
 # URL of the fink_cutout_api
