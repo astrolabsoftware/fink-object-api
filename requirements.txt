@@ -5,3 +5,4 @@ numpy
 fink-filters
 fink-utils
 line_profiler
+requests
