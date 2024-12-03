@@ -66,10 +66,22 @@ TODO:
 
 ## Tests
 
-All the routes are extensively tested. To trigger a test, simply run:
+All the routes are extensively tested. To trigger a test on a route, simply run:
 
 ```bash
+python apps/routes/objects/test.py $HOST:$PORT
+```
 
+By replacing `HOST` and `$PORT` with their values (could be the main API instance). If the program exits with no error or message, the test has been successful.
+
+TODO:
+- [ ] Make tests more verbose, even is successful.
+
+Alternatively, you can launch all tests using:
+
+
+```bash
+./run_tests.sh --url $HOST:$PORT
 ```
 
 ## Profiling a route

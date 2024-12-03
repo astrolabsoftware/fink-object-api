@@ -34,7 +34,7 @@ ExecStart=/bin/sh -c 'source /root/.bashrc; exec /root/miniconda/bin/gunicorn --
 WantedBy=multi-user.target
 ```
 
-Make sure you change `PORT2` with your actual port. Reload units and launch the application:
+Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Reload units and launch the application:
 
 ```bash
 systemctl daemon-reload
