@@ -25,6 +25,7 @@ from apps import __file__ as apps_loc
 
 from line_profiler import profile
 
+
 @profile
 def initialise_jvm(path=None):
     """Start a JVM

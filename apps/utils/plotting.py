@@ -20,6 +20,7 @@ from astropy.visualization import AsymmetricPercentileInterval, simple_norm
 
 from line_profiler import profile
 
+
 def sigmoid(img: list) -> list:
     """Sigmoid function used for img_normalizer
 

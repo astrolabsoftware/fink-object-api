@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Various utilities"""
+
 import io
 import json
 import yaml
@@ -45,6 +46,7 @@ def extract_configuration(filename):
     else:
         config["APIURL"] = "http://" + config["HOST"] + ":" + str(config["PORT"])
     return config
+
 
 @profile
 def download_cutout(objectId, candid, kind):
