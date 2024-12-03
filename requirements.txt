@@ -1,0 +1,10 @@
+astropy
+flask
+pandas
+numpy
+fink-filters
+fink-utils
+line_profiler
+requests
+pyarrow
+matplotlib
