@@ -13,12 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Call extract_object_data"""
+
 from apps.routes.objects.utils import extract_object_data
 
 payload = {
     "objectId": "ZTF21abfmbix",
     "withupperlim": True,
-    #"withcutouts": True,
+    # "withcutouts": True,
 }
 
 extract_object_data(payload)

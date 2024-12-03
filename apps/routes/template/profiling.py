@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Call extract_object_data"""
+
 from apps.routes.template.utils import my_function
 
 payload = {
@@ -20,4 +21,3 @@ payload = {
 }
 
 my_function(payload)
-

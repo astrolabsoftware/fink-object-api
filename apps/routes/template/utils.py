@@ -16,6 +16,7 @@ import pandas as pd
 
 from line_profiler import profile
 
+
 @profile
 def my_function(payload):
     return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
