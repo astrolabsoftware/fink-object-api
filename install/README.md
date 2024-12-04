@@ -24,21 +24,21 @@ Description=gunicorn daemon for fink_object_api
 After=network.target
 
 [Service]
-User=root
-Group=root
-WorkingDirectory=/home/centos/fink-object-api
+User=almalinux
+Group=almalinux
+WorkingDirectory=/home/almalinux/fink-object-api
 
-ExecStart=/bin/sh -c 'source /root/.bashrc; exec /root/miniconda/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b localhost:PORT2 --workers=1 --threads=8 --timeout 180 --chdir /home/centos/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
+ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec /home/almalinux/fink-env/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b localhost:PORT2 --workers=1 --threads=8 --timeout 180 --chdir /home/almalinux/fink-object-api --bind unix:/home/almalinux/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Reload units and launch the application:
+Make sure you change `PORT2` with your actual port, and `localhost` with your domain. Make sure also to update path to `gunicorn`. Update the `config.yml`, reload units and launch the application:
 
 ```bash
-systemctl daemon-reload
-systemctl start fink_object_api
+sudo systemctl daemon-reload
+sudo systemctl start fink_object_api
 ```
 
 
