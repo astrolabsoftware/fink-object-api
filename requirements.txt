@@ -8,3 +8,5 @@ line_profiler
 requests
 pyarrow
 matplotlib
+JPype1
+PyYAML

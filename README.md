@@ -1,10 +1,14 @@
 # Fink object API
 
+[![Sentinel](https://github.com/astrolabsoftware/fink-object-api/workflows/Sentinel/badge.svg)](https://github.com/astrolabsoftware/fink-object-api/actions?query=workflow%3ASentinel)
+
+![structure](.github/API_fink.png)
+
 This repository contains the code source of the Fink REST API used to access object data stored in tables in Apache HBase.
 
 ## Requirements and installation
 
-You will need Python installed (>=3.11) with requirements listed in [requirements.txt](requirements.txt). You will also need [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api) fully installed (which implies Hadoop installed on the machine, and Java 11 at least). For the full installation and deployment, refer as to the [procedure](install/README.md).
+You will need Python installed (>=3.11) with requirements listed in [requirements.txt](requirements.txt). You will also need [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api) fully installed (which implies Hadoop installed on the machine, and Java 11/17). For the full installation and deployment, refer as to the [procedure](install/README.md).
 
 ## Configuration
 
@@ -39,7 +43,7 @@ TODO:
 
 ### Debug
 
-After starting `fink-cutout-api`, you can simply test the API using:
+After starting [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api), you can simply test the API using:
 
 ```bash
 python app.py
