@@ -10,3 +10,4 @@ pyarrow
 matplotlib
 JPype1
 PyYAML
+pyspark
