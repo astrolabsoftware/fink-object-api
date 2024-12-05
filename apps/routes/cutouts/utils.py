@@ -176,6 +176,8 @@ def format_and_send_cutout(payload: dict):
         datab, mimetype="image/png", as_attachment=True, download_name=filename
     )
 
+
+@profile
 def request_cutout(json_payload, output_format, cutout_api_url):
     """Request a cutout from the Fink cutout API
 
@@ -206,4 +208,3 @@ def request_cutout(json_payload, output_format, cutout_api_url):
         )
         cutout = json.loads(r0.content)
     return cutout
-
