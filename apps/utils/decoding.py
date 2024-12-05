@@ -151,7 +151,7 @@ def hbase_to_dict(hbase_output):
 
     # We do bulk export to JSON on Java side to avoid overheads of iterative access
     # and then parse it back to Dict in Python
-    optimized = json.loads(JSONObject(hbase_output).toString())
+    optimized = json.loads(JSONObject(str(hbase_output)).toString())
 
     return optimized
 
