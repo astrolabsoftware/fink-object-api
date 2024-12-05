@@ -8,6 +8,7 @@ CUTOUTAPIURL: http://localhost
 # HBase configuration
 HBASEIP: localhost
 ZOOPORT: 2183
+CLIENTVERSION: 03.04.00x
 
 # Table schema (schema_{fink_broker}_{fink_science})
 SCHEMAVER: schema_3.1_5.21.14

@@ -14,6 +14,49 @@ pip install -r requirements.txt
 
 Follow instructions in the [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api/blob/main/install/README.md).
 
+## Client installation
+
+To access HBase tables, we use a client based on [Lomikel](https://github.com/hrivnac/Lomikel). To download the latest version of the client, go to `bin` and execute:
+
+```bash
+cd bin
+./download_client.sh
+```
+
+Do not forget to update the version in the `config.yml` file. Then install a new unit for systemd under `/etc/systemd/system/fink_gateway.service`:
+
+```bash
+[Unit]
+Description=Start a JVM with Fink Java objects
+After=network.target
+
+[Service]
+User=almalinux
+Group=almalinux
+WorkingDirectory=/home/almalinux/fink-object-api/bin
+
+ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Reload daemon and start the service:
+
+```bash
+systemctl daemon-reload
+systemctl start fink_gateway
+```
+
+Check carefuly the status:
+
+```bash
+systemctl start fink_gateway
+```
+
+Note that having a JVM open all the time can lead to a memory leak, so it is probably wise to restart the service from time to time.
+
+
 ## Systemctl and gunicorn
 
 Install a new unit for systemd under `/etc/systemd/system/fink_object_api.service`:
@@ -31,7 +74,8 @@ WorkingDirectory=/home/almalinux/fink-object-api
 ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec /home/almalinux/fink-env/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b localhost:PORT2 --workers=1 --threads=8 --timeout 180 --chdir /home/almalinux/fink-object-api --bind unix:/home/almalinux/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target fink_gateway.service fink_cutout_api.service
+After=fink_gateway.service fink_cutout_api.service
 ```
 
 Make sure you change `PORT2` with your actual port, and `localhost` with your domain. Make sure also to update path to `gunicorn`. Update the `config.yml`, reload units and launch the application:
@@ -40,6 +84,5 @@ Make sure you change `PORT2` with your actual port, and `localhost` with your do
 sudo systemctl daemon-reload
 sudo systemctl start fink_object_api
 ```
-
 
 You are ready to use the API!
