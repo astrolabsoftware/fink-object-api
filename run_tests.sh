@@ -41,8 +41,7 @@ if [[ -f $URL ]]; then
 fi
 
 # Run the test suite on the utilities
-cd tests
-for filename in ./*.py
+for filename in apps/routes/*/test.py
 do
   echo $filename
   # Run test suite

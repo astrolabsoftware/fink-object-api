@@ -12,11 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import pandas as pd
+"""Call extract_object_data"""
 
-from line_profiler import profile
+from apps.routes.template.utils import my_function
 
+payload = {
+    "arg1": "toto",
+}
 
-@profile
-def my_function(payload):
-    return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
+my_function(payload)

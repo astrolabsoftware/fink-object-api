@@ -12,11 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import pandas as pd
+"""Call extract_object_data"""
 
-from line_profiler import profile
+from apps.routes.objects.utils import extract_object_data
 
+payload = {
+    "objectId": "ZTF21abfmbix",
+    "withupperlim": True,
+    # "withcutouts": True,
+}
 
-@profile
-def my_function(payload):
-    return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
+extract_object_data(payload)

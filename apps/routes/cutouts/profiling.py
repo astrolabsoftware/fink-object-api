@@ -12,11 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import pandas as pd
+"""Call format_and_send_cutout"""
 
-from line_profiler import profile
+from apps.routes.cutouts.utils import format_and_send_cutout
 
+payload = {
+    "objectId": "ZTF21abfmbix",
+    "kind": "All",
+    "output-format": "array",
+}
 
-@profile
-def my_function(payload):
-    return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
+format_and_send_cutout(payload)

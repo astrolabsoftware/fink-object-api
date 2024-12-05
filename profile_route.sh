@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2024 AstroLab Software
 # Author: Julien Peloton
 #
@@ -12,11 +13,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import pandas as pd
+## Script to launch the python test suite and measure the coverage.
+## Must be launched as fink_test
+set -e
+message_help="""
+Profile a route\n\n
+Usage:\n
+    \t./profile_route.sh --route <route_path>\n\n
+"""
 
-from line_profiler import profile
+export ROOTPATH=`pwd`
+# Grab the command line arguments
+NO_SPARK=false
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --route)
+      ROUTE_PATH=$2
+      shift 2
+      ;;
+    -h)
+        echo -e $message_help
+        exit
+        ;;
+  esac
+done
 
+kernprof -l $ROUTE_PATH/profiling.py
+python -m line_profiler -rmt "profiling.py.lprof"
 
-@profile
-def my_function(payload):
-    return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
