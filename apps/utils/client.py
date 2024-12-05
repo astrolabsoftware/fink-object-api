@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utilities to work with the Fink HBase client"""
+
 from py4j.java_gateway import JavaGateway
 import os
 
@@ -53,7 +54,9 @@ def connect_to_hbase_table(
     )
 
     gateway = JavaGateway(auto_convert=True)
-    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(args["HBASEIP"], args["ZOOPORT"])
+    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
+        args["HBASEIP"], args["ZOOPORT"]
+    )
 
     if schema_name is None:
         schema_name = args["SCHEMAVER"]
@@ -106,7 +109,9 @@ def create_or_update_hbase_table(
     )
 
     gateway = JavaGateway(auto_convert=True)
-    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(args["HBASEIP"], args["ZOOPORT"])
+    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
+        args["HBASEIP"], args["ZOOPORT"]
+    )
 
     if create:
         # Create the table and connect without schema

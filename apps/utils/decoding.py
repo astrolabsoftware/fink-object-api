@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utilities to decode data from the HBase client"""
+
 from py4j.java_gateway import JavaGateway
 import json
 import pandas as pd
