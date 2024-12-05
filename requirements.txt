@@ -8,6 +8,6 @@ line_profiler
 requests
 pyarrow
 matplotlib
-JPype1
+py4j
 PyYAML
 pyspark
