@@ -196,13 +196,13 @@ def request_cutout(json_payload, output_format, cutout_api_url):
     if output_format == "FITS":
         json_payload.update({"return_type": "FITS"})
         r0 = requests.post(
-            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+            "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
         )
         cutout = io.BytesIO(r0.content)
     elif output_format in ["PNG", "array"]:
         json_payload.update({"return_type": "array"})
         r0 = requests.post(
-            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+            "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
         )
         cutout = json.loads(r0.content)
     return cutout
