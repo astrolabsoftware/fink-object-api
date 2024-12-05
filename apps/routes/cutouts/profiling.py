@@ -15,6 +15,9 @@
 """Call format_and_send_cutout"""
 
 from apps.routes.cutouts.utils import format_and_send_cutout
+from flask import Flask
+
+app = Flask("Profile cutouts")
 
 payload = {
     "objectId": "ZTF21abfmbix",
@@ -22,4 +25,5 @@ payload = {
     "output-format": "array",
 }
 
-format_and_send_cutout(payload)
+with app.app_context():
+    format_and_send_cutout(payload)
