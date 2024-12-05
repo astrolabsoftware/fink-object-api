@@ -4,42 +4,26 @@
 
 ![structure](.github/API_fink.png)
 
-This repository contains the code source of the Fink REST API used to access object data stored in tables in Apache HBase.
+The object API is a Flask application used to access object data stored in tables in Apache HBase. The application relies internally on two components, the Java Gateway and the Fink cutout API. 
+
+The Java Gateway enables the Flask application to communicate with a JVM using [py4j](https://www.py4j.org/), where the Fink HBase client based on [Lomikel](https://github.com/hrivnac/Lomikel) is available. This client simplifies the interaction with HBase tables, where Fink aggregated alert data is stored.
+
+The Fink cutout API is a Flask application to access cutouts from the Fink datalake. We only store cutout metadata in HBase, and this API retrieves the data from the raw parquet files stored on HDFS.
+
+## User documentation
+
+TBD 
 
 ## Requirements and installation
 
-You will need Python installed (>=3.11) with requirements listed in [requirements.txt](requirements.txt). You will also need [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api) fully installed (which implies Hadoop installed on the machine, and Java 11/17). For the full installation and deployment, refer as to the [procedure](install/README.md).
+You will need Python installed (>=3.9) with requirements listed in [requirements.txt](requirements.txt). You will also need [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api) fully installed (which implies Hadoop installed on the machine, and Java 11/17). For the full installation and deployment, refer as to the [procedure](install/README.md).
 
-## Configuration
+## Deployment
 
-First you need to configure the parameters in [config.yml](config.yml):
-
-```yml
-# Host and port of the application
-HOST: localhost
-PORT: 32000
-
-# URL of the fink_cutout_api
-CUTOUTAPIURL: http://localhost
-
-# HBase configuration
-HBASEIP: localhost
-ZOOPORT: 2183
-
-# Table schema (schema_{fink_broker}_{fink_science})
-SCHEMAVER: schema_3.1_5.21.14
-
-# Maximum number of rows to
-# return in one call
-NLIMIT: 10000
-```
-
-Make sure that the `SCHEMAVER` is the same you use for your tables in HBase.
+The input parameters can be found in [config.yml](config.yml). Make sure that the `SCHEMAVER` is the same you use for your tables in HBase.
 
 TODO:
 - [ ] Find a way to automatically sync schema with tables.
-
-## Deployment
 
 ### Debug
 
@@ -51,7 +35,7 @@ python app.py
 
 ### Production
 
-The application is managed by `gunicorn` and `systemd` (see [install](install/README.md)), and you can simply manage it using:
+The application is simply managed by `gunicorn` and `systemd` (see [install](install/README.md)), and you can simply manage it using:
 
 ```bash
 # start the application
