@@ -14,34 +14,15 @@
 # limitations under the License.
 """Utilities to work with the Fink HBase client"""
 
+from py4j.java_gateway import JavaGateway
 import os
 
-import jpype
-import jpype.imports
 import numpy as np
 import yaml
 
 from apps import __file__ as apps_loc
 
 from line_profiler import profile
-
-
-@profile
-def initialise_jvm(path=None):
-    """Start a JVM
-
-    Parameters
-    ----------
-    path: str, optional
-        Path to the HBase client. Default is relative to apps/
-    """
-    if not jpype.isJVMStarted():
-        if path is None:
-            path = os.path.dirname(apps_loc) + "/../bin/FinkBrowser.exe.jar"
-        jarpath = f"-Djava.class.path={path}"
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", jarpath, convertStrings=True)
-
-    jpype.attachThreadToJVM()
 
 
 @profile
@@ -62,14 +43,9 @@ def connect_to_hbase_table(
         Name of the rowkey in the table containing the schema. Default is given by the config file.
     nlimit: int, optional
         Maximum number of objects to return. Default is 10000
-    setphysicalrepo: bool, optional
-        If True, store cutouts queried on disk ("/tmp/Lomikel/HBaseClientBinaryDataRepository")
-        Needs client 02.01+. Default is False
     config_path: str, optional
         Path to the config file. Default is None (relative to the apps/ folder)
     """
-    initialise_jvm()
-
     if config_path is None:
         config_path = os.path.dirname(apps_loc) + "/../config.yml"
     args = yaml.load(
@@ -77,20 +53,14 @@ def connect_to_hbase_table(
         yaml.Loader,
     )
 
-    import com.Lomikel.HBaser
-    from com.astrolabsoftware.FinkBrowser.Utils import Init
-
-    Init.init()
-
-    client = com.Lomikel.HBaser.HBaseClient(args["HBASEIP"], args["ZOOPORT"])
+    gateway = JavaGateway(auto_convert=True)
+    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
+        args["HBASEIP"], args["ZOOPORT"]
+    )
 
     if schema_name is None:
         schema_name = args["SCHEMAVER"]
     client.connect(tablename, schema_name)
-    if setphysicalrepo:
-        import com.Lomikel.HBaser.FilesBinaryDataRepository
-
-        client.setRepository(com.Lomikel.HBaser.FilesBinaryDataRepository())
     client.setLimit(args["NLIMIT"])
 
     return client
@@ -131,8 +101,6 @@ def create_or_update_hbase_table(
     if len(np.unique(families)) != 1:
         raise NotImplementedError("`create_hbase_table` only accepts one family name")
 
-    initialise_jvm()
-
     if config_path is None:
         config_path = os.path.dirname(apps_loc) + "/../config.yml"
     args = yaml.load(
@@ -140,12 +108,10 @@ def create_or_update_hbase_table(
         yaml.Loader,
     )
 
-    import com.Lomikel.HBaser
-    from com.astrolabsoftware.FinkBrowser.Utils import Init
-
-    Init.init()
-
-    client = com.Lomikel.HBaser.HBaseClient(args["HBASEIP"], args["ZOOPORT"])
+    gateway = JavaGateway(auto_convert=True)
+    client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
+        args["HBASEIP"], args["ZOOPORT"]
+    )
 
     if create:
         # Create the table and connect without schema
