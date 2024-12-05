@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utilities to decode data from the HBase client"""
-
+from py4j.java_gateway import JavaGateway
+import json
 import pandas as pd
 import numpy as np
 
@@ -144,13 +145,8 @@ def format_hbase_output(
 @profile
 def hbase_to_dict(hbase_output):
     """Optimize hbase output TreeMap for faster conversion to DataFrame"""
-    # Naive Python implementation
-    # optimized = {i: dict(j) for i, j in hbase_output.items()}
-
-    # Here we assume JPype is already initialized
-    import json
-
-    from org.json import JSONObject
+    gateway = JavaGateway(auto_convert=True)
+    JSONObject = gateway.jvm.org.json.JSONObject
 
     # We do bulk export to JSON on Java side to avoid overheads of iterative access
     # and then parse it back to Dict in Python

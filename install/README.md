@@ -23,7 +23,7 @@ cd bin
 ./download_client.sh
 ```
 
-Do not forget to update the version in the `config.yml` file. Then install a new unit for systemd under `/etc/systemd/system/fink_gateway.service`:
+Do not forget to update the version in the `config.yml` file. Then install a new unit for systemd under `/etc/systemd/system/fink_gateway.service` (check the correct version numbers for JARs):
 
 ```bash
 [Unit]
