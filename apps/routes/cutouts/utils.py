@@ -119,20 +119,10 @@ def format_and_send_cutout(payload: dict):
             as_attachment=True,
             download_name=filename,
         )
+
     # Extract cutouts
     user_config = extract_configuration("config.yml")
-    if output_format == "FITS":
-        json_payload.update({"return_type": "FITS"})
-        r0 = requests.post(
-            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
-        )
-        cutout = io.BytesIO(r0.content)
-    elif output_format in ["PNG", "array"]:
-        json_payload.update({"return_type": "array"})
-        r0 = requests.post(
-            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
-        )
-        cutout = json.loads(r0.content)
+    cutout = request_cutout(json_payload, output_format, user_config["CUTOUTAPIURL"])
 
     # send the FITS file
     if output_format == "FITS":
@@ -185,3 +175,35 @@ def format_and_send_cutout(payload: dict):
     return send_file(
         datab, mimetype="image/png", as_attachment=True, download_name=filename
     )
+
+def request_cutout(json_payload, output_format, cutout_api_url):
+    """Request a cutout from the Fink cutout API
+
+    Parameters
+    ----------
+    json_payload: dict
+        Dictionary with arguments for /api/v1/cutouts
+    output_format: str
+        Among: FITS, PNG, array
+    cutout_api_url: str
+        URL of the Fink cutout API service.
+
+    Returns
+    -------
+    cutout: Any
+        Output type depends on the `output_format` argument
+    """
+    if output_format == "FITS":
+        json_payload.update({"return_type": "FITS"})
+        r0 = requests.post(
+            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+        )
+        cutout = io.BytesIO(r0.content)
+    elif output_format in ["PNG", "array"]:
+        json_payload.update({"return_type": "array"})
+        r0 = requests.post(
+            "{}/api/v1/cutouts".format(user_config["CUTOUTAPIURL"]), json=json_payload
+        )
+        cutout = json.loads(r0.content)
+    return cutout
+
