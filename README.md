@@ -12,7 +12,11 @@ The Fink cutout API is a Flask application to access cutouts from the Fink datal
 
 ## Documentation
 
-The user documentation can be found at this [link](https://fink-broker.readthedocs.io/en/latest/services/search/getting_started/#quick-start-api). Documentation for developpers and maintainers can be found on [GitLab](https://gitlab.in2p3.fr/fink/rubin-performance-check/-/blob/main/portal/README.md?ref_type=heads) (auth required).
+There are several forms of documentation, depending on what you are looking for: 
+
+- Tutorials/How-to guides: [Fink user manual](https://fink-broker.readthedocs.io/en/latest/services/search/getting_started/#quick-start-api)
+- API Reference guide: [https://api.fink-portal.org](https://api.fink-portal.org)
+- Notes for developpers and maintainers (auth required): [GitLab](https://gitlab.in2p3.fr/fink/rubin-performance-check/-/blob/main/portal/README.md?ref_type=heads)
 
 ## Requirements and installation
 
@@ -24,7 +28,7 @@ The input parameters can be found in [config.yml](config.yml). Make sure that th
 
 ### Debug
 
-After starting [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api), you can simply test the API using:
+After starting the Fink Java Gateway and [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api) services, you can simply launch the API in debug mode using:
 
 ```bash
 python app.py
@@ -32,7 +36,7 @@ python app.py
 
 ### Production
 
-The application is simply managed by `gunicorn` and `systemd` (see [install](install/README.md)), and you can simply manage it using:
+The application is simply managed by `gunicorn` and `systemd` (see [install](install/README.md)), and you can manage it using:
 
 ```bash
 # start the application
