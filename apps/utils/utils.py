@@ -18,6 +18,7 @@ import io
 import json
 import yaml
 import requests
+import logging
 
 from flask import Response
 
@@ -66,6 +67,9 @@ def download_cutout(objectId, candid, kind):
         data = json.loads(r.content)
     else:
         # TODO: different return based on `kind`?
+        logging.warning(
+            "Cutout retrieval failed with status {}: {}".format(r.status_code, r.text)
+        )
         return []
 
     if kind != "All":
@@ -83,12 +87,12 @@ def check_args(args: list, payload: dict) -> dict:
     Parameters
     ----------
     """
-    required_args = [i["name"] for i in args if i["required"] is True]
+    required_args = [k for k in args if args[k].required is True]
     for required_arg in required_args:
         if required_arg not in payload:
             rep = {
                 "status": "error",
-                "text": f"A value for `{required_arg}` is required. Use GET to check arguments.\n",
+                "text": f"A value for `{required_arg}` is required. See https://api.fink-portal.org \n",
             }
             return rep
     return {"status": "ok"}
@@ -111,24 +115,33 @@ def send_tabular_data(pdf, output_format):
         case of error, returns `Response` object.
     """
     if output_format == "json":
-        return pdf.to_json(orient="records")
+        response = Response(pdf.to_json(orient="records"), 200)
+        response.headers.set("Content-Type", "application/json")
+        return response
     elif output_format == "csv":
-        return pdf.to_csv(index=False)
+        # TODO: set header?
+        response = Response(pdf.to_csv(index=False), 200)
+        response.headers.set("Content-Type", "application/csv")
+        return response
     elif output_format == "votable":
         f = io.BytesIO()
         table = Table.from_pandas(pdf)
         vt = votable.from_table(table)
         votable.writeto(vt, f)
         f.seek(0)
-        return f.read()
+        response = Response(f.read(), 200)
+        response.headers.set("Content-Type", "votable")
+        return response
     elif output_format == "parquet":
         f = io.BytesIO()
         pdf.to_parquet(f)
         f.seek(0)
-        return f.read()
+        response = Response(f.read(), 200)
+        response.headers.set("Content-Type", "parquet")
+        return response
 
     rep = {
         "status": "error",
-        "text": f"Output format `{output_format}` is not supported. Choose among json, csv, or parquet\n",
+        "text": f"Output format `{output_format}` is not supported. Choose among json, csv, votable, or parquet\n",
     }
     return Response(str(rep), 400)

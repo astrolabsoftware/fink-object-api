@@ -47,13 +47,16 @@ def format_hbase_output(
     truncated: bool = False,
     extract_color: bool = True,
     with_constellation: bool = True,
+    escape_slash: bool = False,
 ):
     """ """
     if len(hbase_output) == 0:
         return pd.DataFrame({})
 
     # Construct the dataframe
-    pdfs = pd.DataFrame.from_dict(hbase_to_dict(hbase_output), orient="index")
+    pdfs = pd.DataFrame.from_dict(
+        hbase_to_dict(hbase_output, escape_slash=escape_slash), orient="index"
+    )
 
     # Tracklet cell contains null if there is nothing
     # and so HBase won't transfer data -- ignoring the column
@@ -144,13 +147,15 @@ def format_hbase_output(
 
 
 @profile
-def hbase_to_dict(hbase_output):
+def hbase_to_dict(hbase_output, escape_slash=False):
     """Optimize hbase output TreeMap for faster conversion to DataFrame"""
     gateway = JavaGateway(auto_convert=True)
     JSONObject = gateway.jvm.org.json.JSONObject
 
     # We do bulk export to JSON on Java side to avoid overheads of iterative access
     # and then parse it back to Dict in Python
+    if escape_slash:
+        hbase_output = str(hbase_output)
     optimized = json.loads(JSONObject(str(hbase_output)).toString())
 
     return optimized
