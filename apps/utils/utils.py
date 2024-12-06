@@ -67,6 +67,7 @@ def download_cutout(objectId, candid, kind):
         data = json.loads(r.content)
     else:
         # TODO: different return based on `kind`?
+        logging.warning("Cutout retrieval failed with status {}: {}".format(r.status_code, r.text))
         return []
 
     if kind != "All":
