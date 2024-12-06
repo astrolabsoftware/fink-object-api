@@ -83,12 +83,12 @@ def check_args(args: list, payload: dict) -> dict:
     Parameters
     ----------
     """
-    required_args = [i["name"] for i in args if i["required"] is True]
+    required_args = [k for k in args if args[k].required is True]
     for required_arg in required_args:
         if required_arg not in payload:
             rep = {
                 "status": "error",
-                "text": f"A value for `{required_arg}` is required. Use GET to check arguments.\n",
+                "text": f"A value for `{required_arg}` is required. See https://api.fink-portal.org \n",
             }
             return rep
     return {"status": "ok"}

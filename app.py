@@ -12,24 +12,51 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Flask
+from flask import Flask, Blueprint
+from flask_restx import Api
+
+from apps import __version__
 
 from apps.utils.utils import extract_configuration
 
-from apps.routes.objects.api import bp as bp_objects
-from apps.routes.cutouts.api import bp as bp_cutouts
+from apps.routes.objects.api import ns as ns_objects
+from apps.routes.cutouts.api import ns as ns_cutouts
 
 config = extract_configuration("config.yml")
 
 app = Flask("Fink REST API")
+
+# Master blueprint
+blueprint = Blueprint("api", __name__, url_prefix="/")
+api = Api(
+    blueprint,
+    version=__version__,
+    title="Fink object API",
+    description="REST API to access data from Fink",
+)
+
+
+# Enable CORS for this blueprint
+@blueprint.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
+    return response
+
 
 # Server configuration
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["JSON_SORT_KEYS"] = False
 
-app.register_blueprint(bp_objects)
-app.register_blueprint(bp_cutouts)
+# Register namespace
+api.add_namespace(ns_objects)
+api.add_namespace(ns_cutouts)
+
+# Register blueprint
+app.register_blueprint(blueprint)
+
 
 if __name__ == "__main__":
     app.run(config["HOST"], debug=True, port=int(config["PORT"]))

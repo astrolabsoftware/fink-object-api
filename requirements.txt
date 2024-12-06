@@ -1,5 +1,6 @@
 astropy
 flask
+flask-restx
 pandas
 numpy
 fink-filters
