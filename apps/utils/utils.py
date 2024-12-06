@@ -20,6 +20,7 @@ import yaml
 import requests
 
 from flask import Response
+from flask import make_response
 
 from astropy.table import Table
 from astropy.io import votable
@@ -120,15 +121,19 @@ def send_tabular_data(pdf, output_format):
         vt = votable.from_table(table)
         votable.writeto(vt, f)
         f.seek(0)
-        return f.read()
+        response = make_response(f.read())
+        response.headers.set('Content-Type', 'votable')
+        return response
     elif output_format == "parquet":
         f = io.BytesIO()
         pdf.to_parquet(f)
         f.seek(0)
-        return f.read()
+        response = make_response(f.read())
+        response.headers.set('Content-Type', 'parquet')
+        return response
 
     rep = {
         "status": "error",
-        "text": f"Output format `{output_format}` is not supported. Choose among json, csv, or parquet\n",
+        "text": f"Output format `{output_format}` is not supported. Choose among json, csv, votable, or parquet\n",
     }
     return Response(str(rep), 400)
