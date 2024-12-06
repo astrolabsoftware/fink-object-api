@@ -146,7 +146,9 @@ def test_withcutouts_single_field() -> None:
     """
     pdf = get_an_object(oid=OID, withcutouts=True, cutout_kind="Science")
 
-    assert isinstance(pdf["b:cutoutScience_stampData"].to_numpy()[0], list)
+    cutout = pdf["b:cutoutScience_stampData"].to_numpy()[0]
+    assert isinstance(cutout, list), cutout
+    assert len(cutout) != 0, cutout
     assert "b:cutoutTemplate_stampData" not in pdf.columns
 
 
