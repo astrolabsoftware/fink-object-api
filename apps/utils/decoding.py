@@ -150,13 +150,13 @@ def format_hbase_output(
 def hbase_to_dict(hbase_output, escape_slash=False):
     """Optimize hbase output TreeMap for faster conversion to DataFrame"""
     gateway = JavaGateway(auto_convert=True)
-    JSONObject = gateway.jvm.org.json.JSONObject
+    GSONObject = gateway.jvm.com.google.gson.Gson
 
     # We do bulk export to JSON on Java side to avoid overheads of iterative access
     # and then parse it back to Dict in Python
     if escape_slash:
         hbase_output = str(hbase_output)
-    optimized = json.loads(JSONObject(str(hbase_output)).toString())
+    optimized = json.loads(GSONObject().toJson(hbase_output))
 
     return optimized
 

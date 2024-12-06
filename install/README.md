@@ -35,7 +35,7 @@ User=almalinux
 Group=almalinux
 WorkingDirectory=/home/almalinux/fink-object-api/bin
 
-ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
+ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar:gson-2.11.0.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
 
 [Install]
 WantedBy=multi-user.target

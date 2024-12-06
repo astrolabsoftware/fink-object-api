@@ -71,6 +71,7 @@ By replacing `HOST` and `$PORT` with their values (could be the main API instanc
 To profile a route, simply use:
 
 ```bash
+export PYTHONPATH=$PYTHONPATH:$PWD
 ./profile_route.sh --route apps/routes/<route>
 ```
 
@@ -95,6 +96,40 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 
   0.00 seconds - /home/peloton/codes/fink-object-api/apps/routes/template/utils.py:19 - my_function
 ```
+
+### Main route performance
+
+The main route performance for a medium size object (14 alerts, about 130 columns):
+
+| request| time (second)|
+|--------|--------------|
+| Lightcurve data (3 cols) | 0.1 |
+| Lightcurve data (130 cols) | 0.3 |
+| Lightcurve & 1 cutout data | 3.4 |
+| Lightcurve & 3 cutout data | 5.4 |
+
+Requesting cutouts is costly! We have 14 alerts, which is about 0.25 second per cutout. Note that requesting 3 cutouts is faster then 3 times 1 cutout, as what drives the cost is to load the full block in HDFS in memory (see this [discussion](https://github.com/astrolabsoftware/fink-broker/issues/921) about the strategy behind). 
+
+Note that for lightcurve data, the time is fortunately not linear with the number of alerts per object:
+
+| request| time (second)|
+|--------|--------------|
+| Lightcurve data (33 alerts, 130 cols) | 0.3 |
+| Lightcurve data (1575 alerts, 130 cols) | 1.8|
+
+
+### The power of the Gateway
+
+Initially, we loaded the client JAR using jpype at the application's start, sharing the client among all users. This approach caused several issues due to the client's lack of thread safety. To resolve this, we switched to an isolation mode, where a new client is created for each query instead of reusing a global client (see astrolabsoftware/fink-science-portal#516).
+
+While this strategy effectively prevents conflicts between sessions, it significantly slows down individual queries. For instance, when using the route `api/v1/objects`, the overall query time is primarily determined by the time taken to load the client.
+
+Instead of loading the client from scratch in the Python application for each query, we now spawn a JVM once (from outside the Python application), and access Java objects dynamically from the Python application using py4j. This has led to huge speed-up for most queries without the need for cutouts, e.g. for the `/api/v1/objects` route:
+
+| | time (second)|
+|--------|--------------|
+| Isolation mode | 3.4 |
+| Gateway | 0.3 | 
 
 ## Adding a new route
 
