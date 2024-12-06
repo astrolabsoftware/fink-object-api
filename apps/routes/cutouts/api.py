@@ -72,7 +72,7 @@ ARGS = ns.model(
 
 
 @ns.route("/")
-@ns.doc(params={dic["name"]: dic["description"] for dic in ARGS})
+@ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Cutouts(Resource):
     def get(self):
         """Retrieve cutout data from the Fink/ZTF datalake"""

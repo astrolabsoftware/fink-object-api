@@ -60,7 +60,7 @@ ARGS = ns.model(
 
 
 @ns.route("/")
-@ns.doc(params={dic["name"]: dic["description"] for dic in ARGS})
+@ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Objects(Resource):
     def get(self):
         """Retrieve object data from the Fink/ZTF database"""
