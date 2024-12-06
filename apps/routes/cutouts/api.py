@@ -76,8 +76,8 @@ ARGS = ns.model(
 class Cutouts(Resource):
     def get(self):
         """Retrieve cutout data from the Fink/ZTF datalake"""
-        self.payload = request.args
-        if len(self.payload) > 0:
+        payload = request.args
+        if len(payload) > 0:
             # POST from query URL
             return self.post()
         else:
@@ -85,10 +85,11 @@ class Cutouts(Resource):
 
     def post(self):
         """Retrieve cutout data from the Fink/ZTF datalake"""
-        # get payload from the JSON
+        # get payload from the query URL
         payload = request.args
 
-        if payload is None:
+        if payload is None or len(payload) == 0:
+            # if no payload, try the JSON blob
             payload = request.json
 
         rep = check_args(ARGS, payload)

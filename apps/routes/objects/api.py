@@ -64,8 +64,8 @@ ARGS = ns.model(
 class Objects(Resource):
     def get(self):
         """Retrieve object data from the Fink/ZTF database"""
-        self.payload = request.args
-        if len(self.payload) > 0:
+        payload = request.args
+        if len(payload) > 0:
             # POST from query URL
             return self.post()
         else:
@@ -73,10 +73,11 @@ class Objects(Resource):
 
     def post(self):
         """Retrieve object data from the Fink/ZTF database"""
-        # get payload from the JSON
+        # get payload from the query URL
         payload = request.args
 
-        if payload is None:
+        if payload is None or len(payload) == 0:
+            # if no payload, try the JSON blob
             payload = request.json
 
         rep = check_args(ARGS, payload)
