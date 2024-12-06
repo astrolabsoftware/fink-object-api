@@ -10,6 +10,8 @@ The Java Gateway enables the Flask application to communicate with a JVM using [
 
 The Fink cutout API is a Flask application to access cutouts from the Fink datalake. We only store cutout metadata in HBase, and this API retrieves the data from the raw parquet files stored on HDFS.
 
+_From 2019 to 2024, the development of this API was done in [fink-science-portal](https://github.com/astrolabsoftware/fink-science-portal). Check this repository for older issues and PR._
+
 ## Documentation
 
 There are several forms of documentation, depending on what you are looking for: 
