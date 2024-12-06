@@ -83,6 +83,7 @@ class Cutouts(Resource):
         else:
             return Response(ARGS.description, 200)
 
+    @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
         """Retrieve cutout data from the Fink/ZTF datalake"""
         # get payload from the query URL

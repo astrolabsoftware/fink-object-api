@@ -71,6 +71,7 @@ class Objects(Resource):
         else:
             return Response(ARGS.description, 200)
 
+    @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
         """Retrieve object data from the Fink/ZTF database"""
         # get payload from the query URL
