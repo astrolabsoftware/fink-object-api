@@ -91,6 +91,7 @@ def format_and_send_cutout(payload: dict):
         group_alerts=False,
         truncated=True,
         extract_color=False,
+        escape_slash=True,
     )
 
     json_payload = {}
