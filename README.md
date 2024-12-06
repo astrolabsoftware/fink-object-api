@@ -10,9 +10,9 @@ The Java Gateway enables the Flask application to communicate with a JVM using [
 
 The Fink cutout API is a Flask application to access cutouts from the Fink datalake. We only store cutout metadata in HBase, and this API retrieves the data from the raw parquet files stored on HDFS.
 
-## User documentation
+## Documentation
 
-TBD 
+The user documentation can be found at this [link](https://fink-broker.readthedocs.io/en/latest/services/search/getting_started/#quick-start-api). Documentation for developpers and maintainers can be found on [GitLab](https://gitlab.in2p3.fr/fink/rubin-performance-check/-/blob/main/portal/README.md?ref_type=heads) (auth required).
 
 ## Requirements and installation
 
@@ -21,9 +21,6 @@ You will need Python installed (>=3.9) with requirements listed in [requirements
 ## Deployment
 
 The input parameters can be found in [config.yml](config.yml). Make sure that the `SCHEMAVER` is the same you use for your tables in HBase.
-
-TODO:
-- [ ] Find a way to automatically sync schema with tables.
 
 ### Debug
 
@@ -48,10 +45,6 @@ systemctl restart fink_object_api
 systemctl stop fink_object_api
 ```
 
-TODO:
-- [ ] Add nginx management
-- [ ] Add bash scripts under `bin/` to manage both nginx and gunicorn
-
 ## Tests
 
 All the routes are extensively tested. To trigger a test on a route, simply run:
@@ -60,12 +53,7 @@ All the routes are extensively tested. To trigger a test on a route, simply run:
 python apps/routes/objects/test.py $HOST:$PORT
 ```
 
-By replacing `HOST` and `$PORT` with their values (could be the main API instance). If the program exits with no error or message, the test has been successful.
-
-TODO:
-- [ ] Make tests more verbose, even is successful.
-
-Alternatively, you can launch all tests using:
+By replacing `HOST` and `$PORT` with their values (could be the main API instance). If the program exits with no error or message, the test has been successful. Alternatively, you can launch all tests using:
 
 
 ```bash
@@ -105,3 +93,11 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 ## Adding a new route
 
 You find a [template](apps/routes/template) route to start a new route. Just copy this folder, and modify it with your new route. Alternatively, you can see how other routes are structured to get inspiration. Do not forget to add tests in the [test folder](tests/)!
+
+## Todo
+
+- [ ] configuration: Find a way to automatically sync schema with tables.
+- [ ] Add nginx management
+- [ ] Add bash scripts under `bin/` to manage both nginx and gunicorn
+- [ ] Make tests more verbose, even is successful.
+
