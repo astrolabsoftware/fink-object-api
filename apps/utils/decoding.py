@@ -156,7 +156,7 @@ def hbase_to_dict(hbase_output, escape_slash=False):
     # and then parse it back to Dict in Python
     if escape_slash:
         hbase_output = str(hbase_output)
-    optimized = json.loads(JSONObject(str(hbase_output)).toString())
+    optimized = json.loads(JSONObject(hbase_output).toString())
 
     return optimized
 
