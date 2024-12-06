@@ -112,23 +112,28 @@ def send_tabular_data(pdf, output_format):
         case of error, returns `Response` object.
     """
     if output_format == "json":
-        return pdf.to_json(orient="records")
+        response = Response(pdf.to_json(orient="records"), 200)
+        response.headers.set('Content-Type', 'application/json')
+        return response
     elif output_format == "csv":
-        return pdf.to_csv(index=False)
+        # TODO: set header?
+        response = Response(pdf.to_csv(index=False), 200)
+        response.headers.set('Content-Type', 'application/csv')
+        return response
     elif output_format == "votable":
         f = io.BytesIO()
         table = Table.from_pandas(pdf)
         vt = votable.from_table(table)
         votable.writeto(vt, f)
         f.seek(0)
-        response = make_response(f.read())
+        response = Reponse(f.read(), 200)
         response.headers.set('Content-Type', 'votable')
         return response
     elif output_format == "parquet":
         f = io.BytesIO()
         pdf.to_parquet(f)
         f.seek(0)
-        response = make_response(f.read())
+        response = Reponse(f.read(), 200)
         response.headers.set('Content-Type', 'parquet')
         return response
 
