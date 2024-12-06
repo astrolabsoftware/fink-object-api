@@ -54,7 +54,9 @@ def format_hbase_output(
         return pd.DataFrame({})
 
     # Construct the dataframe
-    pdfs = pd.DataFrame.from_dict(hbase_to_dict(hbase_output, escape_slash=escape_slash), orient="index")
+    pdfs = pd.DataFrame.from_dict(
+        hbase_to_dict(hbase_output, escape_slash=escape_slash), orient="index"
+    )
 
     # Tracklet cell contains null if there is nothing
     # and so HBase won't transfer data -- ignoring the column

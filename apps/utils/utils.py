@@ -18,9 +18,9 @@ import io
 import json
 import yaml
 import requests
+import logging
 
 from flask import Response
-from flask import make_response
 
 from astropy.table import Table
 from astropy.io import votable
@@ -67,7 +67,9 @@ def download_cutout(objectId, candid, kind):
         data = json.loads(r.content)
     else:
         # TODO: different return based on `kind`?
-        logging.warning("Cutout retrieval failed with status {}: {}".format(r.status_code, r.text))
+        logging.warning(
+            "Cutout retrieval failed with status {}: {}".format(r.status_code, r.text)
+        )
         return []
 
     if kind != "All":
@@ -114,12 +116,12 @@ def send_tabular_data(pdf, output_format):
     """
     if output_format == "json":
         response = Response(pdf.to_json(orient="records"), 200)
-        response.headers.set('Content-Type', 'application/json')
+        response.headers.set("Content-Type", "application/json")
         return response
     elif output_format == "csv":
         # TODO: set header?
         response = Response(pdf.to_csv(index=False), 200)
-        response.headers.set('Content-Type', 'application/csv')
+        response.headers.set("Content-Type", "application/csv")
         return response
     elif output_format == "votable":
         f = io.BytesIO()
@@ -127,15 +129,15 @@ def send_tabular_data(pdf, output_format):
         vt = votable.from_table(table)
         votable.writeto(vt, f)
         f.seek(0)
-        response = Reponse(f.read(), 200)
-        response.headers.set('Content-Type', 'votable')
+        response = Response(f.read(), 200)
+        response.headers.set("Content-Type", "votable")
         return response
     elif output_format == "parquet":
         f = io.BytesIO()
         pdf.to_parquet(f)
         f.seek(0)
-        response = Reponse(f.read(), 200)
-        response.headers.set('Content-Type', 'parquet')
+        response = Response(f.read(), 200)
+        response.headers.set("Content-Type", "parquet")
         return response
 
     rep = {
