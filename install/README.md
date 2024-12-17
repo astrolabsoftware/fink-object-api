@@ -31,11 +31,11 @@ Description=Start a JVM with Fink Java objects
 After=network.target
 
 [Service]
-User=almalinux
-Group=almalinux
-WorkingDirectory=/home/almalinux/fink-object-api/bin
+User=root
+Group=root
+WorkingDirectory=/opt/fink-object-api/bin
 
-ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar:gson-2.11.0.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
+ExecStart=/bin/sh -c 'source /root/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar:gson-2.11.0.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
 
 [Install]
 WantedBy=multi-user.target
@@ -44,14 +44,15 @@ WantedBy=multi-user.target
 Reload daemon and start the service:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl start fink_gateway
+systemctl daemon-reload
+systemctl enable fink_gateway
+systemctl start fink_gateway
 ```
 
 Check carefuly the status:
 
 ```bash
-sudo systemctl start fink_gateway
+systemctl status fink_gateway
 ```
 
 Note that having a JVM open all the time can lead to a memory leak, so it is probably wise to restart the service from time to time.
@@ -68,21 +69,22 @@ After=network.target fink_gateway.service fink_cutout_api.service
 Requires=fink_gateway.service fink_cutout_api.service
 
 [Service]
-User=almalinux
-Group=almalinux
-WorkingDirectory=/home/almalinux/fink-object-api
+User=root
+Group=root
+WorkingDirectory=/opt/fink-object-api
 
-ExecStart=/bin/sh -c 'source /home/almalinux/.bashrc; exec /home/almalinux/fink-env/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b localhost:PORT2 --workers=1 --threads=8 --timeout 180 --chdir /home/almalinux/fink-object-api --bind unix:/home/almalinux/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
+ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=1 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Make sure you change `PORT2` with your actual port, and `localhost` with your domain. Make sure also to update path to `gunicorn`. Update the `config.yml`, reload units and launch the application:
+Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Update the `config.yml`, reload units and launch the application:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl start fink_object_api
+systemctl daemon-reload
+systemctl enable fink_object_api
+systemctl start fink_object_api
 ```
 
 Note that this will automatically starts `fink_gateway.service` and `fink_cutout_api.service` if they were not started. You are ready to use the API!
