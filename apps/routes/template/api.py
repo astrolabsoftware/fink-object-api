@@ -12,64 +12,60 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Blueprint, Response, jsonify, request
+from flask import Response, request
+from flask_restx import Namespace, Resource, fields
+
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
 from apps.routes.template.utils import my_function
 
-bp = Blueprint("template", __name__)
+ns = Namespace("api/v1/template", "Template")
 
-
-# Enable CORS for this blueprint
-@bp.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
-    return response
-
-
-ARGS = [
+ARGS = ns.model(
+    "template",
     {
-        "name": "arg1",
-        "required": True,
-        "description": "explain me",
+        "arg1": fields.Integer(description="Explain me", example=1, required=True),
+        "output-format": fields.String(
+            description="Output format among json[default], csv, parquet, votable.",
+            example="json",
+            required=False,
+        ),
     },
-    {
-        "name": "output-format",
-        "required": False,
-        "description": "Output format among json[default], csv, parquet, votable",
-    },
-]
+)
 
 
-@bp.route("/api/v1/template", methods=["GET"])
-def return_template_arguments():
-    """Obtain information about retrieving object data"""
-    if len(request.args) > 0:
-        # POST from query URL
-        return return_template(payload=request.args)
-    else:
-        return jsonify({"args": ARGS})
+@ns.route("")
+@ns.doc(params={k: ARGS[k].description for k in ARGS})
+class Templates(Resource):
+    def get(self):
+        """Explain me"""
+        payload = request.args
+        if len(payload) > 0:
+            # POST from query URL
+            return self.post()
+        else:
+            return Response(ns.description, 200)
 
+    @ns.expect(ARGS, location="json", as_dict=True)
+    def post(self):
+        """Explain me"""
+        # get payload from the query URL
+        payload = request.args
 
-@bp.route("/api/v1/template", methods=["POST"])
-def return_template(payload=None):
-    """Retrieve object data"""
-    # get payload from the JSON
-    if payload is None:
-        payload = request.json
+        if payload is None or len(payload) == 0:
+            # if no payload, try the JSON blob
+            payload = request.json
 
-    rep = check_args(ARGS, payload)
-    if rep["status"] != "ok":
-        return Response(str(rep), 400)
+        rep = check_args(ARGS, payload)
+        if rep["status"] != "ok":
+            return Response(str(rep), 400)
 
-    out = my_function(payload)
+        out = my_function(payload)
 
-    # Error propagation
-    if isinstance(out, Response):
-        return out
+        # Error propagation
+        if isinstance(out, Response):
+            return out
 
-    output_format = payload.get("output-format", "json")
-    return send_tabular_data(out, output_format)
+        output_format = payload.get("output-format", "json")
+        return send_tabular_data(out, output_format)
