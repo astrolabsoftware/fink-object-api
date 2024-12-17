@@ -37,8 +37,9 @@ ARGS = ns.model(
         "output-format": fields.String(
             description="PNG[default], FITS, array", example="PNG", required=False
         ),
-        "candid": fields.Integer(
+        "candid": fields.String(
             description="Candidate ID (long integer) of the alert belonging to the object with `objectId`. If not filled, the cutouts of the latest alert is returned",
+            example="2890466950515015016",
             required=False,
         ),
         "stretch": fields.String(
