@@ -38,8 +38,7 @@ ARGS = ns.model(
             description="PNG[default], FITS, array", example="PNG", required=False
         ),
         "candid": fields.Integer(
-            description="Candidate ID of the alert belonging to the object with `objectId`. If not filled, the cutouts of the latest alert is returned",
-            example=2890466950515015016,
+            description="Candidate ID (long integer) of the alert belonging to the object with `objectId`. If not filled, the cutouts of the latest alert is returned",
             required=False,
         ),
         "stretch": fields.String(
@@ -81,7 +80,7 @@ class Cutouts(Resource):
             # POST from query URL
             return self.post()
         else:
-            return Response(ARGS.description, 200)
+            return Response(ns.description, 200)
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):

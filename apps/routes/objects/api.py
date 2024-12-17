@@ -69,7 +69,7 @@ class Objects(Resource):
             # POST from query URL
             return self.post()
         else:
-            return Response(ARGS.description, 200)
+            return Response(ns.description, 200)
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
