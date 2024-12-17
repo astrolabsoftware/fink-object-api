@@ -59,7 +59,7 @@ ARGS = ns.model(
 )
 
 
-@ns.route("/")
+@ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Objects(Resource):
     def get(self):

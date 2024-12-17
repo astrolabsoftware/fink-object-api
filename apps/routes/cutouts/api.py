@@ -35,7 +35,7 @@ ARGS = ns.model(
             required=True,
         ),
         "output-format": fields.String(
-            description="PNG[default], FITS, array", example="array", required=False
+            description="PNG[default], FITS, array", example="PNG", required=False
         ),
         "candid": fields.Integer(
             description="Candidate ID of the alert belonging to the object with `objectId`. If not filled, the cutouts of the latest alert is returned",
@@ -71,7 +71,7 @@ ARGS = ns.model(
 )
 
 
-@ns.route("/")
+@ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Cutouts(Resource):
     def get(self):
