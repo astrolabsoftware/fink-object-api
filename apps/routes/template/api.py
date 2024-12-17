@@ -25,11 +25,7 @@ ns = Namespace("api/v1/template", "Template")
 ARGS = ns.model(
     "template",
     {
-        "arg1": fields.Integer(
-            description="Explain me", 
-            example=1, 
-            required=True
-        ),
+        "arg1": fields.Integer(description="Explain me", example=1, required=True),
         "output-format": fields.String(
             description="Output format among json[default], csv, parquet, votable.",
             example="json",
@@ -37,6 +33,7 @@ ARGS = ns.model(
         ),
     },
 )
+
 
 @ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
@@ -72,4 +69,3 @@ class Templates(Resource):
 
         output_format = payload.get("output-format", "json")
         return send_tabular_data(out, output_format)
-
