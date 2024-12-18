@@ -14,7 +14,7 @@
 # limitations under the License.
 import pandas as pd
 
-from flask import Response, jsonify
+from flask import Response, json
 from flask_restx import Namespace, Resource
 
 from fink_utils.xmatch.simbad import get_simbad_labels
@@ -46,6 +46,6 @@ class Classnames(Resource):
             "Cross-match with SIMBAD (see http://simbad.u-strasbg.fr/simbad/sim-display?data=otypes)": simbad_types,
         }
 
-        response = Response(jsonify(types), 200)
+        response = Response(json.dumps(types), 200)
         response.headers.set("Content-Type", "application/json")
         return response
