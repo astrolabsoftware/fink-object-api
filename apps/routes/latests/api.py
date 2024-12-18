@@ -18,36 +18,41 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.objects.utils import extract_object_data
+from apps.routes.latests.utils import extract_object_from_class
 
-ns = Namespace("api/v1/objects", "Get object data based on ZTF ID")
+ns = Namespace("api/v1/latests", "Get object data based their class")
 
 ARGS = ns.model(
-    "objects",
+    "class",
     {
-        "objectId": fields.String(
-            description='single ZTF Object ID, or a comma-separated list of object names, e.g. "ZTF19acmdpyr,ZTF21aaxtctv"',
-            example="ZTF21abfmbix",
+        "class": fields.String(
+            description="Fink derived label. See https://api.fink-portal.org/api/v1/classes for available tags.",
+            example="Early SN Ia candidate",
             required=True,
         ),
-        "withupperlim": fields.Boolean(
-            description="If True, retrieve also upper limit measurements, and bad quality measurements. Use the column `d:tag` in your results: valid, upperlim, badquality.",
-            example=False,
+        "n": fields.Integer(
+            description="Last N alerts to transfer between stopping date and starting date. Default is 100.",
+            example=10,
             required=False,
         ),
-        "withcutouts": fields.Boolean(
-            description="If True, retrieve also cutout data as 2D array. See also `cutout-kind`. More information on the original cutouts at https://irsa.ipac.caltech.edu/data/ZTF/docs/ztf_explanatory_supplement.pdf",
-            example=False,
+        "startdate": fields.String(
+            description="Starting date in UTC (iso, jd, or MJD). Default is 2019-11-01 00:00:00",
+            example="2024-11-03 12:30:00",
             required=False,
         ),
-        "cutout-kind": fields.String(
-            description="`Science`, `Template`, or `Difference`. If not specified, returned all three.",
-            example="Science",
+        "stopdate": fields.String(
+            description="Stopping date in UTC (iso, jd, or MJD). Default is now.",
+            example="2024-12-03 12:30:00",
+            required=False,
+        ),
+        "color": fields.Boolean(
+            description="If True, extract color information for the transient. Default is False.",
+            example=False,
             required=False,
         ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'i:magpsf,i:jd'. If not specified, transfer all columns.",
-            example="i:jd,i:magpsf,i:fid",
+            example="i:objectId,i:jd,i:magpsf,i:fid",
             required=False,
         ),
         "output-format": fields.String(
@@ -61,9 +66,9 @@ ARGS = ns.model(
 
 @ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
-class Objects(Resource):
+class Latests(Resource):
     def get(self):
-        """Retrieve object data from the Fink/ZTF database based on their name"""
+        """Retrieve object data from the Fink/ZTF database based on their Fink derived class"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -73,7 +78,7 @@ class Objects(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Retrieve object data from the Fink/ZTF database based on their name"""
+        """Retrieve object data from the Fink/ZTF database based on their Fink derived class"""
         # get payload from the query URL
         payload = request.args
 
@@ -85,7 +90,7 @@ class Objects(Resource):
         if rep["status"] != "ok":
             return Response(str(rep), 400)
 
-        out = extract_object_data(payload)
+        out = extract_object_from_class(payload)
 
         # Error propagation
         if isinstance(out, Response):
