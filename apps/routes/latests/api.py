@@ -42,6 +42,7 @@ ARGS = ns.model(
         ),
         "stopdate": fields.String(
             description="Stopping date in UTC (iso, jd, or MJD). Default is now.",
+            example="2024-12-03 12:30:00",
             required=False,
         ),
         "color": fields.Boolean(

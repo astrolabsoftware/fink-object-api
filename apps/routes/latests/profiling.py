@@ -17,11 +17,8 @@
 from apps.routes.latests.utils import extract_object_from_class
 
 # CLASS="EB*"
-CLASS="Early SN Ia candidate"
+CLASS = "Early SN Ia candidate"
 
-payload = {
-    "class": CLASS,
-    "n": 100
-}
+payload = {"class": CLASS, "n": 100}
 
 extract_object_from_class(payload)

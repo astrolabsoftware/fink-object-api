@@ -148,4 +148,3 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     )
 
     return pdf
-
