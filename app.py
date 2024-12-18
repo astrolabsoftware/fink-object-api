@@ -22,6 +22,7 @@ from apps.utils.utils import extract_configuration
 from apps.routes.objects.api import ns as ns_objects
 from apps.routes.cutouts.api import ns as ns_cutouts
 from apps.routes.latests.api import ns as ns_latests
+from apps.routes.classes.api import ns as ns_classes
 
 config = extract_configuration("config.yml")
 
@@ -55,6 +56,7 @@ app.config["JSON_SORT_KEYS"] = False
 api.add_namespace(ns_objects)
 api.add_namespace(ns_cutouts)
 api.add_namespace(ns_latests)
+api.add_namespace(ns_classes)
 
 # Register blueprint
 app.register_blueprint(blueprint)
