@@ -32,7 +32,7 @@ ARGS = ns.model(
         ),
         "n": fields.Integer(
             description="Last N alerts to transfer between stopping date and starting date. Default is 100.",
-            example=1000,
+            example=10,
             required=False,
         ),
         "startdate": fields.String(
