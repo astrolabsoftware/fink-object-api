@@ -63,7 +63,7 @@ ARGS = ns.model(
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Objects(Resource):
     def get(self):
-        """Retrieve object data from the Fink/ZTF database"""
+        """Retrieve object data from the Fink/ZTF database based on their name"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -73,7 +73,7 @@ class Objects(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Retrieve object data from the Fink/ZTF database"""
+        """Retrieve object data from the Fink/ZTF database based on their name"""
         # get payload from the query URL
         payload = request.args
 

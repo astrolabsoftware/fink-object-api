@@ -30,7 +30,7 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
     Parameters
     ----------
     payload: dict
-        See https://fink-portal.org/api/v1/objects
+        See https://api.fink-portal.org
 
     Return
     ----------
