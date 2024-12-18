@@ -31,6 +31,7 @@ def conesearch(
     radius="5",
     startdate=None,
     window=None,
+    columns=None,
     output_format="json",
 ):
     """Perform a conesearch in the Science Portal using the Fink REST API"""
@@ -38,6 +39,8 @@ def conesearch(
 
     if startdate is not None:
         payload.update({"startdate": startdate, "window": window})
+    if columns is not None:
+        payload.update({"columns": columns})
 
     r = requests.post("{}/api/v1/conesearch".format(APIURL), json=payload)
 
@@ -114,6 +117,21 @@ def test_conesearch_with_dates() -> None:
     # One object found
     assert len(pdf2) == 1
 
+def test_conesearch_with_cols() -> None:
+    """
+    Examples
+    --------
+    >>> test_conesearch_with_cols()
+    """
+    pdf = conesearch(
+        ra="175.3242473",
+        dec="36.5429392",
+        radius="5",
+        columns="i:objectId",
+    )
+
+    assert not pdf.empty
+    assert len(pdf.columns) == 1, "I count {} columns".format(len(pdf.columns))
 
 def test_bad_radius_conesearch() -> None:
     """
