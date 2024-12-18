@@ -15,45 +15,32 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from apps.routes.v1.sso.utils import extract_sso_data
-
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
+from apps.routes.v1.resolver.utils import resolve_name
 
-ns = Namespace("api/v1/sso", "Get Solar System object data based on their ID")
+ns = Namespace("api/v1/resolver", "Resolve names")
 
 ARGS = ns.model(
-    "sso",
+    "resolver",
     {
-        "n_or_d": fields.String(
-            description="IAU number of the object, or designation of the object IF the number does not exist yet. Example for numbers: 8467 (asteroid) or 10P (comet). Example for designations: 2010JO69 (asteroid) or C/2020V2 (comet). You can also give a list of object names (comma-separated).",
-            example="8467",
+        "resolver": fields.String(
+            description="Resolver among: `simbad`, `ssodnet`, `tns`",
+            example="tns",
             required=True,
         ),
-        "withEphem": fields.Boolean(
-            description="Attach ephemerides provided by the Miriade service (https://ssp.imcce.fr/webservices/miriade/api/ephemcc/), as extra columns in the results.",
+        "name": fields.String(
+            description="Object name to resolve.", example="ZTF24abxxltd", required=True
+        ),
+        "reverse": fields.Boolean(
+            description="If True, resolve ZTF* name. Default is False.",
             example=False,
             required=False,
         ),
-        "withResiduals": fields.Boolean(
-            description="Return the residuals `obs - model` using the sHG1G2 phase curve model. Work only for a single object query (`n_or_d` cannot be a list).",
-            example=False,
-            required=False,
-        ),
-        "withCutouts": fields.Boolean(
-            description="If True, retrieve also cutout data as 2D array. See also `cutout-kind`. More information on the original cutouts at https://irsa.ipac.caltech.edu/data/ZTF/docs/ztf_explanatory_supplement.pdf",
-            example=False,
-            required=False,
-        ),
-        "cutout-kind": fields.String(
-            description="`Science`, `Template`, or `Difference`.",
-            example="Science",
-            required=False,
-        ),
-        "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'i:magpsf,i:jd'. If not specified, transfer all columns.",
-            example="i:jd,i:magpsf,i:fid",
+        "nmax": fields.Integer(
+            description="Maximum number of match to return. Default is 10.",
+            example=10,
             required=False,
         ),
         "output-format": fields.String(
@@ -67,9 +54,9 @@ ARGS = ns.model(
 
 @ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
-class Solarsystem(Resource):
+class Resolver(Resource):
     def get(self):
-        """Retrieve Solar System data from the Fink/ZTF database based on their ID"""
+        """Explore existing names for a given object"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -79,7 +66,7 @@ class Solarsystem(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Retrieve Solar System data from the Fink/ZTF database based on their ID"""
+        """Explore existing names for a given object"""
         # get payload from the query URL
         payload = request.args
 
@@ -91,7 +78,7 @@ class Solarsystem(Resource):
         if rep["status"] != "ok":
             return Response(str(rep), 400)
 
-        out = extract_sso_data(payload)
+        out = resolve_name(payload)
 
         # Error propagation
         if isinstance(out, Response):
