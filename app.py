@@ -23,6 +23,7 @@ from apps.routes.v1.objects.api import ns as ns_objects
 from apps.routes.v1.cutouts.api import ns as ns_cutouts
 from apps.routes.v1.latests.api import ns as ns_latests
 from apps.routes.v1.classes.api import ns as ns_classes
+from apps.routes.v1.conesearch.api import ns as ns_conesearch
 
 config = extract_configuration("config.yml")
 
@@ -57,6 +58,7 @@ api.add_namespace(ns_objects)
 api.add_namespace(ns_cutouts)
 api.add_namespace(ns_latests)
 api.add_namespace(ns_classes)
+api.add_namespace(ns_conesearch)
 
 # Register blueprint
 app.register_blueprint(blueprint)
