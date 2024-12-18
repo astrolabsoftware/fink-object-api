@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_from_class"""
 
-from apps.routes.objects.utils import extract_object_from_class
+from apps.routes.latests.utils import extract_object_from_class
 
 # CLASS="EB*"
 CLASS="Early SN Ia candidate"
