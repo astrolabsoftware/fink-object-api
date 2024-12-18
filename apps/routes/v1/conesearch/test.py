@@ -117,6 +117,7 @@ def test_conesearch_with_dates() -> None:
     # One object found
     assert len(pdf2) == 1
 
+
 def test_conesearch_with_cols() -> None:
     """
     Examples
@@ -131,7 +132,10 @@ def test_conesearch_with_cols() -> None:
     )
 
     assert not pdf.empty
-    assert len(pdf.columns) == 1, "I count {} columns".format(len(pdf.columns))
+
+    # i:objectId, plus mandatory i:ra,i:dec, plus computed v:separation
+    assert len(pdf.columns) == 4, "I count {} columns".format(len(pdf.columns))
+
 
 def test_bad_radius_conesearch() -> None:
     """

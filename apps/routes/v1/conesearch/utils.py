@@ -46,6 +46,10 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     """
     if "columns" in payload:
         cols = payload["columns"].replace(" ", "")
+        if "i:ra" not in cols:
+            cols = ",".join([cols, "i:ra"])
+        if "i:dec" not in cols:
+            cols = ",".join([cols, "i:dec"])
     else:
         cols = "*"
 
@@ -133,7 +137,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
             result = client.scan(
                 "",
                 to_search,
-                "*",
+                cols,
                 0,
                 True,
                 True,
