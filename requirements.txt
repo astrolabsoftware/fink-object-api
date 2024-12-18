@@ -12,3 +12,4 @@ matplotlib
 py4j
 PyYAML
 pyspark
+healpy

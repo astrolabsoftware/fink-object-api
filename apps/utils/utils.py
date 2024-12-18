@@ -24,6 +24,7 @@ from flask import Response
 
 from astropy.table import Table
 from astropy.io import votable
+from astropy.time import Time
 
 from line_profiler import profile
 
@@ -145,3 +146,27 @@ def send_tabular_data(pdf, output_format):
         "text": f"Output format `{output_format}` is not supported. Choose among json, csv, votable, or parquet\n",
     }
     return Response(str(rep), 400)
+
+
+def isoify_time(t):
+    """Return time in ISO format
+
+    Parameters
+    ----------
+    t: Any
+        Input time in jd, mjd, or ISOT
+
+    Returns
+    -------
+    out: str
+        Time in ISO format
+    """
+    try:
+        tt = Time(t)
+    except ValueError:
+        ft = float(t)
+        if ft // 2400000:
+            tt = Time(ft, format="jd")
+        else:
+            tt = Time(ft, format="mjd")
+    return tt.iso
