@@ -46,4 +46,4 @@ class Classnames(Resource):
             "Cross-match with SIMBAD (see http://simbad.u-strasbg.fr/simbad/sim-display?data=otypes)": simbad_types,
         }
 
-        return Response(types, 200)
+        return Response({"classes": types}, 200)
