@@ -13,3 +13,4 @@ py4j
 PyYAML
 pyspark
 healpy
+space-rocks
