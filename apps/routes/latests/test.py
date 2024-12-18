@@ -88,23 +88,20 @@ def test_simbad_classsearch() -> None:
 
     assert np.all(pdf["v:classification"].to_numpy() == "QSO")
 
+    pdf2 = classsearch(myclass="QSO")
 
-# def test_tns_classsearch() -> None:
-#     """
-#     Examples
-#     ---------
-#     >>> test_tns_classsearch()
-#     """
-#     pdf = classsearch(myclass='(TNS) SN Ia', n=100)
-#
-#     assert not pdf.empty
-#
-#     # 9 instead of 10 because we group by objectId,
-#     # and among the 10 first alerts, there are 2 with the same objectId
-#     assert len(pdf) == 9, len(pdf)
-#
-#     # print(pdf['i:fid'].to_numpy())
-#     assert np.all(pdf['i:fid'].to_numpy() > 0)
+    assert pdf.equals(pdf2)
+
+
+def test_tns_classsearch() -> None:
+    """
+    Examples
+    ---------
+    >>> test_tns_classsearch()
+    """
+    pdf = classsearch(myclass='(TNS) SN Ia')
+
+    assert not pdf.empty
 
 
 def test_classsearch_and_date() -> None:
