@@ -44,6 +44,11 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     ----------
     out: pandas dataframe
     """
+    if "columns" in payload:
+        cols = payload["columns"].replace(" ", "")
+    else:
+        cols = "*"
+
     if "startdate" in payload:
         jd_start = Time(isoify_time(payload["startdate"])).jd
     else:
@@ -114,7 +119,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
             result = client.scan(
                 "",
                 to_search,
-                "*",
+                cols,
                 0,
                 True,
                 True,
