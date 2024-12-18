@@ -20,7 +20,9 @@ from apps.utils.utils import send_tabular_data
 
 from apps.routes.v1.resolver.utils import resolve_name
 
-ns = Namespace("api/v1/resolver", "Resolve names")
+ns = Namespace(
+    "api/v1/resolver", "Resolve astronomical names to ZTF alert names, and vice-versa"
+)
 
 ARGS = ns.model(
     "resolver",
@@ -31,10 +33,10 @@ ARGS = ns.model(
             required=True,
         ),
         "name": fields.String(
-            description="Object name to resolve.", example="ZTF24abxxltd", required=True
+            description="Object name to resolve.", example="SN 2024abtt", required=True
         ),
         "reverse": fields.Boolean(
-            description="If True, resolve ZTF* name. Default is False.",
+            description="If True, resolve ZTF* name instead. Default is False.",
             example=False,
             required=False,
         ),
