@@ -12,12 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call extract_object_data"""
+"""Call format_and_send_cutout"""
 
-from apps.routes.template.utils import my_function
+from apps.routes.v1.cutouts.utils import format_and_send_cutout
+from flask import Flask
+
+app = Flask("Profile cutouts")
 
 payload = {
-    "arg1": "toto",
+    "objectId": "ZTF21abfmbix",
+    "kind": "All",
+    "output-format": "array",
 }
 
-my_function(payload)
+with app.app_context():
+    format_and_send_cutout(payload)

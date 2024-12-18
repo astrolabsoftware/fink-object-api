@@ -17,7 +17,7 @@ from flask_restx import Namespace, Resource, fields
 
 from apps.utils.utils import check_args
 
-from apps.routes.cutouts.utils import format_and_send_cutout
+from apps.routes.v1.cutouts.utils import format_and_send_cutout
 
 ns = Namespace("api/v1/cutouts", "Get cutout data based on ZTF ID")
 

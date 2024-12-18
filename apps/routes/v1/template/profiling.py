@@ -14,12 +14,10 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.objects.utils import extract_object_data
+from apps.routes.v1.template.utils import my_function
 
 payload = {
-    "objectId": "ZTF21abfmbix",
-    "withupperlim": True,
-    # "withcutouts": True,
+    "arg1": "toto",
 }
 
-extract_object_data(payload)
+my_function(payload)

@@ -72,7 +72,7 @@ To profile a route, simply use:
 
 ```bash
 export PYTHONPATH=$PYTHONPATH:$PWD
-./profile_route.sh --route apps/routes/<route>
+./profile_route.sh --route apps/routes/v1/<route>
 ```
 
 Depending on the route, you will see the details of the timings and a summary similar to:
@@ -84,7 +84,7 @@ python -m line_profiler -rmt "profiling.py.lprof"
 Timer unit: 1e-06 s
 
 Total time: 0.000241599 s
-File: /home/peloton/codes/fink-object-api/apps/routes/template/utils.py
+File: /home/peloton/codes/fink-object-api/apps/routes/v1/template/utils.py
 Function: my_function at line 19
 
 Line #      Hits         Time  Per Hit   % Time  Line Contents
@@ -94,7 +94,7 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
     21         1        241.6    241.6    100.0      return pd.DataFrame({payload["arg1"]: [1, 2, 3]})
 
 
-  0.00 seconds - /home/peloton/codes/fink-object-api/apps/routes/template/utils.py:19 - my_function
+  0.00 seconds - /home/peloton/codes/fink-object-api/apps/routes/v1/template/utils.py:19 - my_function
 ```
 
 ### Main route performance
