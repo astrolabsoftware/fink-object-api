@@ -99,7 +99,7 @@ def test_tns_classsearch() -> None:
     ---------
     >>> test_tns_classsearch()
     """
-    pdf = classsearch(myclass='(TNS) SN Ia')
+    pdf = classsearch(myclass="(TNS) SN Ia")
 
     assert not pdf.empty
 
