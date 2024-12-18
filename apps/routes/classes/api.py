@@ -12,8 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response, request
-from flask_restx import Namespace, Resource, fields
+import pandas as pd
+
+from flask import Response
+from flask_restx import Namespace, Resource
 
 from fink_utils.xmatch.simbad import get_simbad_labels
 
@@ -45,4 +47,3 @@ class Classnames(Resource):
         }
 
         return Response(types, 200)
-
