@@ -29,13 +29,13 @@ def get_fields_per_family():
 
     schema = r.json()
 
-    categories = schema["fields"].keys()
+    categories = schema.keys()
 
     dic = {}
     for i in ["i:", "d:", "b:", "v:"]:
         for category in categories:
             if i in category:
-                dic[i] = list(schema["fields"][category].keys())
+                dic[i] = list(schema[category].keys())
 
     return dic
 
@@ -162,7 +162,7 @@ def test_recent_object() -> None:
     """
     r = requests.post(
         "{}/api/v1/latests".format(APIURL),
-        json={"class": "EB*", "n": 1, "columns": "i:objectId"},
+        json={"class": "Solar System MPC", "n": 1, "columns": "i:objectId"},
     )
 
     assert r.status_code == 200, r.content
