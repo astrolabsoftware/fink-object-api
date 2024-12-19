@@ -24,6 +24,8 @@ from apps.routes.v1.cutouts.api import ns as ns_cutouts
 from apps.routes.v1.latests.api import ns as ns_latests
 from apps.routes.v1.classes.api import ns as ns_classes
 from apps.routes.v1.conesearch.api import ns as ns_conesearch
+from apps.routes.v1.sso.api import ns as ns_sso
+from apps.routes.v1.resolver.api import ns as ns_resolver
 
 config = extract_configuration("config.yml")
 
@@ -59,6 +61,8 @@ api.add_namespace(ns_cutouts)
 api.add_namespace(ns_latests)
 api.add_namespace(ns_classes)
 api.add_namespace(ns_conesearch)
+api.add_namespace(ns_sso)
+api.add_namespace(ns_resolver)
 
 # Register blueprint
 app.register_blueprint(blueprint)

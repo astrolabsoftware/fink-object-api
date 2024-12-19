@@ -26,6 +26,10 @@ from astropy.table import Table
 from astropy.io import votable
 from astropy.time import Time
 
+import numpy as np
+
+import rocks
+
 from line_profiler import profile
 
 
@@ -170,3 +174,52 @@ def isoify_time(t):
         else:
             tt = Time(ft, format="mjd")
     return tt.iso
+
+
+@profile
+def resolve_sso_name_to_ssnamenr(sso_name):
+    """Find corresponding ZTF ssnamenr from user input
+
+    Parameters
+    ----------
+    sso_name: str
+        SSO name or number
+
+    Returns
+    -------
+    out: list of str
+        List of corresponding ZTF ssnamenr
+    """
+    config = extract_configuration("config.yml")
+
+    # search all ssnamenr corresponding quaero -> ssnamenr
+    r = requests.post(
+        "{}/api/v1/resolver".format(config["APIURL"]),
+        json={"resolver": "ssodnet", "name": sso_name, "nmax": 1},
+    )
+    if r.status_code != 200:
+        return []
+
+    ssnamenrs = np.unique([i["i:ssnamenr"] for i in r.json()])
+
+    return ssnamenrs
+
+
+@profile
+def resolve_sso_name(sso_name):
+    """Find corresponding UAI name and number using quaero
+
+    Parameters
+    ----------
+    sso_name: str
+        SSO name or number
+
+    Returns
+    -------
+    name: str
+        UAI name. NaN if does not exist.
+    number: str
+        UAI number. NaN if does not exist.
+    """
+    sso_name, sso_number = rocks.identify(sso_name)
+    return sso_name, sso_number
