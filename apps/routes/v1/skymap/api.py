@@ -25,7 +25,7 @@ ns = Namespace("api/v1/skymap", "Return Fink/ZTF alerts within a GW skymap")
 ARGS = ns.model(
     "skymap",
     {
-        "file": fields.Any(
+        "file": fields.Raw(
             description="LIGO/Virgo probability sky maps, as gzipped FITS (bayestar.fits.gz). Not compatible with `event_name`.",
             required=False,
         ),
