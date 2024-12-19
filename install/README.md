@@ -10,6 +10,12 @@ Clone this repository, and install all python dependencies:
 pip install -r requirements.txt
 ```
 
+Run an update of rocks:
+
+```bash
+rocks update
+```
+
 ## Fink cutout API installation
 
 Follow instructions in the [fink-cutout-api](https://github.com/astrolabsoftware/fink-cutout-api/blob/main/install/README.md).

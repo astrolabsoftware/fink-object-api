@@ -16,3 +16,4 @@ healpy
 space-rocks
 scipy
 lxml
+sbpy
