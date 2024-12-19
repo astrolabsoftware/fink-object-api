@@ -180,12 +180,14 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         colname = "b:cutout{}_stampData".format(cutout_kind)
         cutouts = []
         for _, row in pdf.iterrows():
-            cutouts.append(download_cutout(row["i:objectId"], row["i:candid"], cutout_kind))
+            cutouts.append(
+                download_cutout(row["i:objectId"], row["i:candid"], cutout_kind)
+            )
         pdf[colname] = cutouts
-        #pdf[colname] = pdf[["i:objectId", "i:candid"]].apply(
+        # pdf[colname] = pdf[["i:objectId", "i:candid"]].apply(
         #    lambda x: pd.Series([download_cutout(x.iloc[0], x.iloc[1], cutout_kind)]),
         #    axis=1,
-        #)
+        # )
 
     if with_ephem:
         # We should probably add a timeout

@@ -23,6 +23,8 @@ Usage:\n
 """
 
 export ROOTPATH=`pwd`
+export PYTHONPATH=$PYTHONPATH:$ROOTPATH
+
 # Grab the command line arguments
 NO_SPARK=false
 while [ "$#" -gt 0 ]; do
