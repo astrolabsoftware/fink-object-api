@@ -22,7 +22,12 @@ APIURL = sys.argv[1]
 
 
 def bayestartest(
-    bayestar="apps/routes/v1/skymap/bayestar.fits.gz", event_name="", credible_level=0.1, n_day_before=1, n_day_after=6, output_format="json"
+    bayestar="apps/routes/v1/skymap/bayestar.fits.gz",
+    event_name="",
+    credible_level=0.1,
+    n_day_before=1,
+    n_day_after=6,
+    output_format="json",
 ):
     """Perform a GW search in the Science Portal using the Fink REST API"""
     if event_name != "":

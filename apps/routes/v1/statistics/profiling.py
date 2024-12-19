@@ -12,11 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call search_in_skymap"""
+"""Call get_statistics"""
 
-from apps.routes.v1.skymap.utils import search_in_skymap
+from apps.routes.v1.statistics.utils import get_statistics
 
-payload = {"event_name": "S230709bi", "credible_level": 0.2}
+payload = {
+    "objectId": "20241104",
+}
 
-pdf = search_in_skymap(payload)
-print("{} objects".format(len(pdf)))
+get_statistics(payload)
