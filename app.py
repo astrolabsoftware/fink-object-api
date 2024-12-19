@@ -28,6 +28,7 @@ from apps.routes.v1.sso.api import ns as ns_sso
 from apps.routes.v1.resolver.api import ns as ns_resolver
 from apps.routes.v1.tracklet.api import ns as ns_tracklet
 from apps.routes.v1.schema.api import ns as ns_schema
+from apps.routes.v1.skymap.api import ns as ns_skymap
 
 config = extract_configuration("config.yml")
 
@@ -67,6 +68,7 @@ api.add_namespace(ns_sso)
 api.add_namespace(ns_resolver)
 api.add_namespace(ns_tracklet)
 api.add_namespace(ns_schema)
+api.add_namespace(ns_skymap)
 
 # Register blueprint
 app.register_blueprint(blueprint)

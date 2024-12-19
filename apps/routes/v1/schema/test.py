@@ -22,8 +22,8 @@ APIURL = sys.argv[1]
 
 
 def get_fields_per_family():
-    """Get fields exposed in /api/v1/columns"""
-    r = requests.get("{}/api/v1/columns".format(APIURL))
+    """Get fields exposed in /api/v1/schema"""
+    r = requests.get("{}/api/v1/schema".format(APIURL))
 
     assert r.status_code == 200, r.content
 
@@ -41,7 +41,7 @@ def get_fields_per_family():
 
 
 def check_recent_columns(columns, objectId):
-    """Check the alert columns correspond to what is defined in /api/v1/columns"""
+    """Check the alert columns correspond to what is defined in /api/v1/schema"""
     fields_per_family = get_fields_per_family()
 
     for family in fields_per_family.keys():
@@ -73,7 +73,7 @@ def check_recent_columns(columns, objectId):
 
 
 def check_old_columns(columns, objectId):
-    """Check the alert columns correspond to what is defined in /api/v1/columns"""
+    """Check the alert columns correspond to what is defined in /api/v1/schema"""
     fields_per_family = get_fields_per_family()
 
     for family in fields_per_family.keys():
@@ -154,7 +154,7 @@ def check_old_columns(columns, objectId):
 
 
 def test_recent_object() -> None:
-    """Supposed to fail if apps/api/api.py@columns_arguments is not updated correctly
+    """Supposed to fail if columns_arguments is not updated correctly
 
     Examples
     --------
