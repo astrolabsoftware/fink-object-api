@@ -42,6 +42,8 @@ def get_statistics(payload: dict) -> pd.DataFrame:
 
     client = connect_to_hbase_table("statistics_class")
     if "schema" in payload and str(payload["schema"]) == "True":
+        # TODO: change the strategy to get the schema
+        # The table schema changes everyday, so it is not very useful
         # Schema should use 3 things: /classes, basic:, and date
         schema = client.schema()
         results = list(schema.columnNames())
