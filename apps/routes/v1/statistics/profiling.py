@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call extract_object_data"""
+"""Call get_statistics"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.statistics.utils import get_statistics
 
 payload = {
-    "n_or_d": "Julienpeloton",
+    "objectId": "20241104",
 }
 
-extract_sso_data(payload)
+get_statistics(payload)

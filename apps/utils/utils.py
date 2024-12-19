@@ -135,7 +135,7 @@ def send_tabular_data(pdf, output_format):
         votable.writeto(vt, f)
         f.seek(0)
         response = Response(f.read(), 200)
-        response.headers.set("Content-Type", "votable")
+        response.headers.set("Content-Type", "text/xml")
         return response
     elif output_format == "parquet":
         f = io.BytesIO()
