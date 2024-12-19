@@ -176,6 +176,7 @@ def isoify_time(t):
     return tt.iso
 
 
+@profile
 def resolve_sso_name_to_ssnamenr(sso_name):
     """Find corresponding ZTF ssnamenr from user input
 
@@ -189,9 +190,11 @@ def resolve_sso_name_to_ssnamenr(sso_name):
     out: list of str
         List of corresponding ZTF ssnamenr
     """
+    config = extract_configuration("config.yml")
+
     # search all ssnamenr corresponding quaero -> ssnamenr
     r = requests.post(
-        "https://api.fink-portal.org/api/v1/resolver",
+        "{}/api/v1/resolver".format(config["APIURL"]),
         json={"resolver": "ssodnet", "name": sso_name, "nmax": 1},
     )
     if r.status_code != 200:
@@ -202,6 +205,7 @@ def resolve_sso_name_to_ssnamenr(sso_name):
     return ssnamenrs
 
 
+@profile
 def resolve_sso_name(sso_name):
     """Find corresponding UAI name and number using quaero
 
