@@ -106,7 +106,7 @@ class Schema(Resource):
                 {
                     "name": "cdsxmatch",
                     "type": "string",
-                    "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://fink-portal.org/api/v1/classes",
+                    "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://api.fink-portal.org/api/v1/classes",
                 },
                 {
                     "name": "gcvs",
@@ -291,7 +291,7 @@ class Schema(Resource):
                 {
                     "name": "classification",
                     "type": "string",
-                    "doc": "Fink inferred classification. See https://fink-portal.org/api/v1/classes",
+                    "doc": "Fink inferred classification. See https://api.fink-portal.org/api/v1/classes",
                 },
                 {
                     "name": "g-r",
