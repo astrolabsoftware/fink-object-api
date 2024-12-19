@@ -46,7 +46,7 @@ ARGS = ns.model(
         ),
         "maxnumber": fields.Integer(
             description="Maximum number of entries (observations or orbital parameters) to retrieve. Default is 10,000.",
-            example=10000,
+            example=10,
             required=False,
         ),
         "output-format": fields.String(
