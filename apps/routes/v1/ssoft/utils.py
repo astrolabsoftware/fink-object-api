@@ -48,7 +48,8 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     out: pandas dataframe
     """
     # Schema
-    if "schema" in payload:
+    schema = payload.get("schema", False)
+    if schema:
         if "flavor" in payload:
             flavor = payload["flavor"]
             if flavor not in ["SSHG1G2", "SHG1G2", "HG1G2", "HG"]:
@@ -116,9 +117,6 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         ),
     )
 
-    if payload.get("output-format", "parquet") != "parquet":
-        return pd.read_parquet(io.BytesIO(r.content))
-
     if "sso_name" in payload:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
@@ -133,6 +131,9 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         pdf = pdf[mask]
         pdf = pdf[pdf["sso_number"].astype("int") == int(payload["sso_number"])]
         return pdf
-
-    # return blob
-    return io.BytesIO(r.content)
+    elif payload.get("output-format", "parquet") != "parquet":
+        # Full table in other format than parquet (slow)
+        return pd.read_parquet(io.BytesIO(r.content))
+    else:
+        # Full table in parquet (fast)
+        return io.BytesIO(r.content)
