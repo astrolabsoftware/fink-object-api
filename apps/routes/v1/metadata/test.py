@@ -26,18 +26,18 @@ OID = "ZTF21abfmbix"
 
 def get_metadata(objectId=None, internal_name=None, internal_name_decoded=None):
     """Query metadata"""
-    payload = {}
-
     if objectId is not None:
-        payload.update({"objectId": objectId})
+        r = requests.get("{}/api/v1/metadata?objectId={}".format(APIURL, objectId))
 
     if internal_name is not None:
-        payload.update({"internal_name": internal_name})
+        r = requests.get(
+            "{}/api/v1/metadata?internal_name={}".format(APIURL, internal_name)
+        )
 
     if internal_name_decoded is not None:
-        payload.update({"internal_name_decoded": internal_name_decoded})
-
-    r = requests.post("{}/api/v1/metadata".format(APIURL), json=payload)
+        r = requests.get(
+            "{}/api/v1/metadata?internal_name_decoded={}".format(APIURL, internal_name)
+        )
 
     assert r.status_code == 200, r.content
 
@@ -55,6 +55,8 @@ def test_objectId() -> None:
     pdf = get_metadata(objectId="ZTF23aaaatwl")
 
     assert not pdf.empty
+
+    assert pdf["d:comments"].values[0] == "coucou"
 
 
 if __name__ == "__main__":
