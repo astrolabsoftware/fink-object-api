@@ -70,7 +70,9 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
             ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
 
         # return the schema of the table
-        return Response(ssoft_columns, 200)
+        response = Response(json.dumps(ssoft_columns), 200)
+        response.headers.set("Content-Type", "application/json")
+        return response
 
     # Table
     if "version" in payload:
@@ -136,4 +138,7 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         return pd.read_parquet(io.BytesIO(r.content))
     else:
         # Full table in parquet (fast)
-        return io.BytesIO(r.content)
+        # return the schema of the table
+        response = Response(io.BytesIO(r.content), 200)
+        response.headers.set("Content-Type", "application/parquet")
+        return reponse
