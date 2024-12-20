@@ -27,6 +27,13 @@ from apps.routes.v1.conesearch.api import ns as ns_conesearch
 from apps.routes.v1.sso.api import ns as ns_sso
 from apps.routes.v1.resolver.api import ns as ns_resolver
 from apps.routes.v1.tracklet.api import ns as ns_tracklet
+from apps.routes.v1.schema.api import ns as ns_schema
+from apps.routes.v1.skymap.api import ns as ns_skymap
+from apps.routes.v1.statistics.api import ns as ns_statistics
+from apps.routes.v1.ssocand.api import ns as ns_ssocand
+from apps.routes.v1.anomaly.api import ns as ns_anomaly
+from apps.routes.v1.ssoft.api import ns as ns_ssoft
+from apps.routes.v1.metadata.api import ns as ns_metadata
 
 config = extract_configuration("config.yml")
 
@@ -63,8 +70,15 @@ api.add_namespace(ns_latests)
 api.add_namespace(ns_classes)
 api.add_namespace(ns_conesearch)
 api.add_namespace(ns_sso)
+api.add_namespace(ns_ssocand)
 api.add_namespace(ns_resolver)
 api.add_namespace(ns_tracklet)
+api.add_namespace(ns_schema)
+api.add_namespace(ns_skymap)
+api.add_namespace(ns_statistics)
+api.add_namespace(ns_anomaly)
+api.add_namespace(ns_ssoft)
+api.add_namespace(ns_metadata)
 
 # Register blueprint
 app.register_blueprint(blueprint)

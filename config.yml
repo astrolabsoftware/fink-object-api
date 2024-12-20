@@ -16,3 +16,8 @@ SCHEMAVER: schema_3.1_5.21.14
 # Maximum number of rows to
 # return in one call
 NLIMIT: 10000
+
+# SSoFT
+WEBHDFS:
+USER:
+NAMENODE:

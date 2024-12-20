@@ -138,7 +138,5 @@ You find a [template](apps/routes/template) route to start a new route. Just cop
 ## Todo
 
 - [ ] configuration: Find a way to automatically sync schema with tables.
-- [ ] Add nginx management
-- [ ] Add bash scripts under `bin/` to manage both nginx and gunicorn
 - [ ] Make tests more verbose, even is successful.
 

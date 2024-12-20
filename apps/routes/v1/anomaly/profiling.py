@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call extract_object_data"""
+"""Call get_anomalous_alerts"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.anomaly.utils import get_anomalous_alerts
 
 payload = {
-    "n_or_d": "Julienpeloton",
+    "n": 10000,
 }
 
-extract_sso_data(payload)
+get_anomalous_alerts(payload)

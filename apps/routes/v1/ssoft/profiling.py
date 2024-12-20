@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call extract_object_data"""
+"""Call get_ssoft"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+import pandas as pd
+from apps.routes.v1.ssoft.utils import get_ssoft
 
-payload = {
-    "n_or_d": "Julienpeloton",
-}
+payload = {"version": "2024.11", "flavor": "SHG1G2"}
 
-extract_sso_data(payload)
+ssoft = get_ssoft(payload)
+print(pd.read_parquet(ssoft))

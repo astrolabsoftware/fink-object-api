@@ -14,10 +14,14 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.metadata.utils import retrieve_metadata, retrieve_oid
 
-payload = {
-    "n_or_d": "Julienpeloton",
+payload1 = {
+    "objectId": "ZTF21abfmbix",
 }
+payload2 = {"internal_name": "Fink J062452.88+020818.3"}
+payload3 = {"internal_name_encoded": "FinkJ062452.88+020818.3"}
 
-extract_sso_data(payload)
+retrieve_metadata(payload1)
+retrieve_oid(payload2)
+retrieve_oid(payload3)

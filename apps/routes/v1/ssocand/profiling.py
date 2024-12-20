@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Call extract_object_data"""
+"""Call get_ssocand"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.ssocand.utils import get_ssocand
 
 payload = {
-    "n_or_d": "Julienpeloton",
+    "kind": "lightcurves",
 }
 
-extract_sso_data(payload)
+get_ssocand(payload)
