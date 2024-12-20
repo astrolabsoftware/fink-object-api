@@ -53,8 +53,8 @@ ARGS = ns.model(
             required=False,
         ),
         "output-format": fields.String(
-            description="Output format among json[default], csv, parquet, votable.",
-            example="json",
+            description="Output format among json, csv, parquet[default], votable.",
+            example="parquet",
             required=False,
         ),
     },
