@@ -141,4 +141,4 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         # return the schema of the table
         response = Response(io.BytesIO(r.content), 200)
         response.headers.set("Content-Type", "application/parquet")
-        return reponse
+        return response
