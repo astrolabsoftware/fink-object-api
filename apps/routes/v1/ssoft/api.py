@@ -29,7 +29,7 @@ ARGS = ns.model(
     {
         "sso_name": fields.String(
             description="If specified, retrieve only the SSO with that official name or provisional designation from IAU.",
-            example="JulienPeloton",
+            example="Julienpeloton",
             required=False,
         ),
         "sso_number": fields.Integer(
