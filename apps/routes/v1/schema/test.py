@@ -53,6 +53,13 @@ def check_recent_columns(columns, objectId):
         ]
 
         outside_obtained = [i for i in definition if i not in obtained]
+
+        # If all Plx and e_Plx are null, the columns are not transfered from HBase
+        # This happens e.g. for Solar System objects
+        # Let's hack it...
+        # TODO: find a better cast in xmatch@fink-science for null values
+        outside_obtained = [i for i in outside_obtained if i not in ["Plx", "e_Plx"]]
+
         assert len(outside_obtained) == 0, (
             "Not in obtained fields",
             family,
@@ -144,14 +151,6 @@ def check_old_columns(columns, objectId):
             # `spicy_name` was introduced by mistake instead of `spicy_class` for 2024/02/01
             outside_definition = [
                 i for i in obtained if (i not in definition) and (i != "spicy_name")
-            ]
-
-            # If all Plx and e_Plx are null, the columns are not transfered from HBase
-            # This happens e.g. for Solar System objects
-            # Let's hack it...
-            # TODO: find a better cast in xmatch@fink-science for null values
-            outside_definition = [
-                i for i in outside_definition if i not in ["Plx", "e_Plx"]
             ]
 
             assert len(outside_definition) == 0, (
