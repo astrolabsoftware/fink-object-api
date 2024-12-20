@@ -14,11 +14,10 @@
 # limitations under the License.
 """Call get_ssoft"""
 
+import pandas as pd
 from apps.routes.v1.ssoft.utils import get_ssoft
 
-payload = {
-    "version": "2024.11",
-    "flavor": "SHG1G2"
-}
+payload = {"version": "2024.11", "flavor": "SHG1G2"}
 
-get_ssoft(payload)
+ssoft = get_ssoft(payload)
+print(pd.read_parquet(ssoft))
