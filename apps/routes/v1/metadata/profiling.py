@@ -16,7 +16,9 @@
 
 from apps.routes.v1.metadata.utils import retrieve_metadata, retrieve_oid
 
-payload1 = {"objectId": "ZTF21abfmbix",}
+payload1 = {
+    "objectId": "ZTF21abfmbix",
+}
 payload2 = {"internal_name": "Fink J062452.88+020818.3"}
 payload3 = {"internal_name_encoded": "FinkJ062452.88+020818.3"}
 
