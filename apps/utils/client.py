@@ -15,12 +15,10 @@
 """Utilities to work with the Fink HBase client"""
 
 from py4j.java_gateway import JavaGateway
-import os
 
 import numpy as np
-import yaml
 
-from apps import __file__ as apps_loc
+from apps.utils.utils import extract_configuration
 
 from line_profiler import profile
 
@@ -31,7 +29,6 @@ def connect_to_hbase_table(
     schema_name=None,
     nlimit=10000,
     setphysicalrepo=False,
-    config_path=None,
 ):
     """Return a client connected to a HBase table
 
@@ -46,22 +43,17 @@ def connect_to_hbase_table(
     config_path: str, optional
         Path to the config file. Default is None (relative to the apps/ folder)
     """
-    if config_path is None:
-        config_path = os.path.dirname(apps_loc) + "/../config.yml"
-    args = yaml.load(
-        open(config_path),
-        yaml.Loader,
-    )
+    config = extract_configuration("config.yml")
 
     gateway = JavaGateway(auto_convert=True)
     client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
-        args["HBASEIP"], args["ZOOPORT"]
+        config["HBASEIP"], config["ZOOPORT"]
     )
 
     if schema_name is None:
-        schema_name = args["SCHEMAVER"]
+        schema_name = config["SCHEMAVER"]
     client.connect(tablename, schema_name)
-    client.setLimit(args["NLIMIT"])
+    client.setLimit(config["NLIMIT"])
 
     return client
 
@@ -73,7 +65,6 @@ def create_or_update_hbase_table(
     schema_name: str,
     schema: dict,
     create=False,
-    config_path=None,
 ):
     """Create or update a table in HBase
 
@@ -101,16 +92,11 @@ def create_or_update_hbase_table(
     if len(np.unique(families)) != 1:
         raise NotImplementedError("`create_hbase_table` only accepts one family name")
 
-    if config_path is None:
-        config_path = os.path.dirname(apps_loc) + "/../config.yml"
-    args = yaml.load(
-        open(config_path),
-        yaml.Loader,
-    )
+    config = extract_configuration("config.yml")
 
     gateway = JavaGateway(auto_convert=True)
     client = gateway.jvm.com.Lomikel.HBaser.HBaseClient(
-        args["HBASEIP"], args["ZOOPORT"]
+        config["HBASEIP"], config["ZOOPORT"]
     )
 
     if create:
