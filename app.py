@@ -33,6 +33,7 @@ from apps.routes.v1.statistics.api import ns as ns_statistics
 from apps.routes.v1.ssocand.api import ns as ns_ssocand
 from apps.routes.v1.anomaly.api import ns as ns_anomaly
 from apps.routes.v1.ssoft.api import ns as ns_ssoft
+from apps.routes.v1.ssoft.api import ns as ns_metadata
 
 config = extract_configuration("config.yml")
 
@@ -77,6 +78,7 @@ api.add_namespace(ns_skymap)
 api.add_namespace(ns_statistics)
 api.add_namespace(ns_anomaly)
 api.add_namespace(ns_ssoft)
+api.add_namespace(ns_metadata)
 
 # Register blueprint
 app.register_blueprint(blueprint)
