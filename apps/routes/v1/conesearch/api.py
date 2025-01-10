@@ -46,17 +46,17 @@ ARGS = ns.model(
             required=False,
         ),
         "startdate": fields.String(
-            description="Starting date in UTC (iso, jd, or MJD). Default is 2019-11-01 00:00:00",
+            description="Starting date in UTC (iso, jd, or MJD). It restrict the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period. Default is 2019-11-01 00:00:00",
             example="2021-06-10 12:30:00",
             required=False,
         ),
         "stopdate": fields.String(
-            description="Stopping date in UTC (iso, jd, or MJD). Default is now.",
+            description="Stopping date in UTC (iso, jd, or MJD). It restrict the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period. Default is now.",
             example="2021-07-10 12:30:00",
             required=False,
         ),
         "window": fields.Float(
-            description="Time window in days, may be used instead of stopdate.",
+            description="Time window in days, may be used instead of stopdate. It restrict the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period.",
             required=False,
         ),
         "columns": fields.String(
