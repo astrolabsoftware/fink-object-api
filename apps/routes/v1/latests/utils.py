@@ -91,10 +91,12 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         )
         schema_client = client.schema()
         group_alerts = True
-    elif payload["class"].startswith("(SIMBAD)") or payload["class"] != "allclasses":
+    else:
         if payload["class"].startswith("(SIMBAD)"):
+            # SIMBAD crossmatch
             classname = payload["class"].split("(SIMBAD) ")[1]
         else:
+            # Fink classification
             classname = payload["class"]
 
         client = connect_to_hbase_table("ztf.class")
@@ -110,23 +112,6 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
             0,
             False,
             False,
-        )
-        schema_client = client.schema()
-        group_alerts = False
-    elif payload["class"] == "allclasses":
-        client = connect_to_hbase_table("ztf.jd")
-        client.setLimit(nalerts)
-        client.setRangeScan(True)
-        client.setReversed(True)
-
-        to_evaluate = f"key:key:{jd_start},key:key:{jd_stop}"
-        results = client.scan(
-            "",
-            to_evaluate,
-            cols,
-            0,
-            True,
-            True,
         )
         schema_client = client.schema()
         group_alerts = False
