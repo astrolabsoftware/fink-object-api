@@ -154,6 +154,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     # reset the limit in case it has been changed above
     client.close()
 
+    if len(results) == 0:
+        return pd.DataFrame()
+
     pdf = format_hbase_output(
         results,
         schema_client,
