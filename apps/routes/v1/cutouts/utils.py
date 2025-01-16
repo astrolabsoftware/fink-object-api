@@ -107,7 +107,7 @@ def format_and_send_cutout(payload: dict):
 
     json_payload.update(
         {
-            "hdfsPath": pdf["d:hdfs_path"].to_numpy()[pos_target].split("8020")[1],
+            "hdfsPath": pdf["d:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
             "kind": payload["kind"],
             "objectId": pdf["i:objectId"].to_numpy()[pos_target],
         }
