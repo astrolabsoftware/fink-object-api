@@ -223,7 +223,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             dec=dec,
             p0=[15.0, 0.15, 0.15, 0.8, np.pi, 0.0],
             bounds=(
-                [0, 0, 0, 3e-1, 0, -np.pi / 2],
+                [-3, 0, 0, 3e-1, 0, -np.pi / 2],
                 [30, 1, 1, 1, 2 * np.pi, np.pi / 2],
             ),
             model="SHG1G2",
