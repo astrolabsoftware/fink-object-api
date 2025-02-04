@@ -28,7 +28,7 @@ ARGS = ns.model(
         "date": fields.String(
             description="A ISO date. Format: YYYY-MM-DD hh:mm:dd. You can use short versions like YYYY-MM-DD only, or YYYY-MM-DD hh.",
             example="2024-11-03",
-            required=True,
+            required=False,
         ),
         "id": fields.String(
             description="Tracklet ID, in the format TRCK_YYYYMMDD_HHMMSS_NN.",
