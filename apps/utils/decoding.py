@@ -66,6 +66,11 @@ def format_hbase_output(
     if "d:tns" not in pdfs.columns and not truncated:
         pdfs["d:tns"] = ""
 
+    if "blazar_stats_m0" not in pdfs.columns and not truncated:
+        pdfs["blazar_stats_m0"] = -1.0
+        pdfs["blazar_stats_m1"] = -1.0
+        pdfs["blazar_stats_m2"] = -1.0
+
     # Remove hbase specific fields
     for _ in ["key:key", "key:time"]:
         if _ in pdfs.columns:
