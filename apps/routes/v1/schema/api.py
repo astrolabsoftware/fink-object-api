@@ -278,6 +278,21 @@ class Schema(Resource):
                     "type": "string",
                     "doc": "TNS label, if it exists.",
                 },
+                {
+                    "name": "blazar_stats_m0",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness.",
+                },
+                {
+                    "name": "blazar_stats_m1",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness.",
+                },
+                {
+                    "name": "blazar_stats_m2",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state duration.",
+                },
             ],
         )
 
