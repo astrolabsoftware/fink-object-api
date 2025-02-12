@@ -58,6 +58,8 @@ def extract_trendy_data(payload: dict) -> pd.DataFrame:
 
     if "columns" in payload:
         cols = payload["columns"].replace(" ", "")
+        if not "d:mag_rate" in cols:
+            cols += ",d:mag_rate"
         truncated = True
     else:
         cols = "*"
