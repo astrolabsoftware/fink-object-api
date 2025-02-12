@@ -235,9 +235,10 @@ def test_with_ephem_multiple_ssosearch() -> None:
         pdf2.to_numpy(),
     )
 
+
 # Test is too long!
 # Add an argument to limit the number of stamps (default 10?)
-#def test_withcutouts() -> None:
+# def test_withcutouts() -> None:
 #    """
 #    Examples
 #    --------
