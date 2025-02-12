@@ -11,7 +11,7 @@ ZOOPORT: 2183
 CLIENTVERSION: 03.04.00x
 
 # Table schema (schema_{fink_broker}_{fink_science})
-SCHEMAVER: schema_3.1_5.21.14
+SCHEMAVER: schema_4.0_6.1.1
 
 # Maximum number of rows to
 # return in one call
