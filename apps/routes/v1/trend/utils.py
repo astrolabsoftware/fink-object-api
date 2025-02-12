@@ -116,8 +116,8 @@ def extract_trendy_data(payload: dict) -> pd.DataFrame:
             json={
                 "class": payload["class"],
                 "n": payload["n"],
-                "startdate": payload["startdate"],
-                "stopdate": payload["stopdate"],
+                "startdate": payload.get("startdate", "2019-11-01 00:00:00"),
+                "stopdate": payload.get("stopdate", Time.now().iso),
             },
         )
 
