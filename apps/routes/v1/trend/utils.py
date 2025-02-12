@@ -109,7 +109,7 @@ def extract_trendy_data(payload: dict) -> pd.DataFrame:
         # Any other known class
         # rest api + filter on mag_rate?
         # what if 0 objects?
-        config = extract_configuration()
+        config = extract_configuration("config.yml")
 
         r = requests.post(
             "{}/api/v1/latests".format(config["APIURL"]),
