@@ -58,6 +58,9 @@ def format_hbase_output(
         hbase_to_dict(hbase_output, escape_slash=escape_slash), orient="index"
     )
 
+    # TODO: for not truncated, add a generic mechanism to
+    #       add default field value.
+
     # Tracklet cell contains null if there is nothing
     # and so HBase won't transfer data -- ignoring the column
     if "d:tracklet" not in pdfs.columns and not truncated:
@@ -65,6 +68,11 @@ def format_hbase_output(
 
     if "d:tns" not in pdfs.columns and not truncated:
         pdfs["d:tns"] = ""
+
+    if "d:blazar_stats_m0" not in pdfs.columns and not truncated:
+        pdfs["d:blazar_stats_m0"] = -1.0
+        pdfs["d:blazar_stats_m1"] = -1.0
+        pdfs["d:blazar_stats_m2"] = -1.0
 
     # Remove hbase specific fields
     for _ in ["key:key", "key:time"]:

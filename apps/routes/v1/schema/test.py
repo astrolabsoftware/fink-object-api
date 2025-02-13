@@ -137,6 +137,9 @@ def check_old_columns(columns, objectId):
                 "vsx",
                 "x3hsp",
                 "x4lac",
+                "blazar_stats_m0",
+                "blazar_stats_m1",
+                "blazar_stats_m2",
             ]
 
             outside_obtained = [i for i in definition if i not in obtained]

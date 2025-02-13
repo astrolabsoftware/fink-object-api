@@ -30,6 +30,11 @@ ARGS = ns.model(
             example="Early SN Ia candidate",
             required=True,
         ),
+        "trend": fields.String(
+            description="Desired trend among: rising, fading. For `class=(CTA) Blazar`, two specific trends are available: low_state, new_low_state.",
+            example="rising",
+            required=False,
+        ),
         "n": fields.Integer(
             description="Last N alerts to transfer between stopping date and starting date. Default is 100.",
             example=10,
@@ -52,7 +57,7 @@ ARGS = ns.model(
         ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'i:magpsf,i:jd'. If not specified, transfer all columns.",
-            example="i:objectId,i:jd,i:magpsf,i:fid",
+            example="i:objectId,i:jd,i:magpsf,i:fid,d:mag_rate,d:blazar_stats_m0",
             required=False,
         ),
         "output-format": fields.String(
