@@ -27,6 +27,7 @@ APIURL = sys.argv[1]
 def classsearch(
     myclass="Early SN Ia candidate",
     n=10,
+    trend=None,
     startdate=None,
     stopdate=None,
     output_format="json",
@@ -40,6 +41,9 @@ def classsearch(
 
     if cols is not None:
         payload.update({"columns": cols})
+
+    if trend is not None:
+        payload.update({"trend": trend})
 
     r = requests.post("{}/api/v1/latests".format(APIURL), json=payload)
 
@@ -153,6 +157,63 @@ def test_classsearch_and_cols_without_sort() -> None:
     assert len(pdf.columns) == 1, len(pdf.columns)
 
     assert "i:objectId" in pdf.columns
+
+
+def test_general_trends() -> None:
+    """
+    Examples
+    --------
+    >>> test_general_trends()
+    """
+    start = "2024-11-03 12:30:00"
+    stop = "2024-12-03 12:30:00"
+    pdf = classsearch(
+        myclass="Early SN Ia candidate",
+        startdate=start,
+        stopdate=stop,
+    )
+    pdf_rising = classsearch(
+        myclass="Early SN Ia candidate",
+        trend="rising",
+        startdate=start,
+        stopdate=stop,
+    )
+    pdf_fading = classsearch(
+        myclass="Early SN Ia candidate",
+        trend="fading",
+        startdate=start,
+        stopdate=stop,
+    )
+
+    assert len(pdf) == len(pdf_rising) + len(pdf_fading), (len(pdf), len(pdf_rising))
+
+    assert np.all(pdf_rising["d:mag_rate"].to_numpy() < 0)
+    assert np.all(pdf_fading["d:mag_rate"].to_numpy() > 0)
+
+
+def test_blazar_trends() -> None:
+    """
+    Examples
+    --------
+    >>> test_blazar_trends()
+    """
+    start = "2024-11-01 12:30:00"
+    stop = "2024-12-01 12:30:00"
+    pdf_low_state = classsearch(
+        myclass="(CTA) Blazar",
+        trend="low_state",
+        startdate=start,
+        stopdate=stop,
+    )
+    pdf_new_low_state = classsearch(
+        myclass="(CTA) Blazar",
+        trend="new_low_state",
+        startdate=start,
+        stopdate=stop,
+    )
+
+    assert len(pdf_low_state) == 5, len(pdf_low_state)
+    assert len(pdf_new_low_state) == 0  # to be changed later
 
 
 def test_query_url() -> None:
