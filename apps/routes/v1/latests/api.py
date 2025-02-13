@@ -31,7 +31,7 @@ ARGS = ns.model(
             required=True,
         ),
         "trend": fields.String(
-            description="Desired trend among: rising, fading.",
+            description="Desired trend among: rising, fading. For `class=(CTA) Blazar`, two specific trends are available: low_state, new_low_state.",
             example="rising",
             required=False,
         ),

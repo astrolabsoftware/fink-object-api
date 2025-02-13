@@ -40,21 +40,21 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     ----------
     out: pandas dataframe
     """
-    if "trend" in payload and payload["trend"] not in ["rising", "fading", "low_state"]:
+    if "trend" in payload and payload["trend"] not in ["rising", "fading", "low_state", "new_low_state"]:
         msg = """
         {} is not a valid trend.
-        Trend must be among: rising, fading, low_state
+        Trend must be among: rising, fading, low_state, new_low_state
         """.format(payload["trend"])
         return Response(msg, 400)
 
     if (
-        payload.get("trend", None) == "low_state"
+        payload.get("trend", None) in ["low_state", "new_low_state"]
         and payload.get("class", None) != "(CTA) Blazar"
     ):
         msg = """
-        low_state trend is only implemented for the `(CTA) Blazar` class.
+        {} trend is only implemented for the `(CTA) Blazar` class.
         {} class can accept trend among: rising, fading.
-        """.format(payload["class"])
+        """.format(payload["trend"], payload["class"])
         return Response(msg, 400)
 
     if "n" not in payload:
@@ -176,5 +176,8 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         pdf = pdf[pdf["d:mag_rate"] < 0]
     elif payload.get("trend", None) == "fading":
         pdf = pdf[pdf["d:mag_rate"] > 0]
+    elif payload.get("trend", None) == "new_low_state":
+        # TODO: use fink-filters directly
+        pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
 
     return pdf
