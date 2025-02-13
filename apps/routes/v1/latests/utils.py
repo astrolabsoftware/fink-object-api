@@ -40,7 +40,12 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     ----------
     out: pandas dataframe
     """
-    if "trend" in payload and payload["trend"] not in ["rising", "fading", "low_state", "new_low_state"]:
+    if "trend" in payload and payload["trend"] not in [
+        "rising",
+        "fading",
+        "low_state",
+        "new_low_state",
+    ]:
         msg = """
         {} is not a valid trend.
         Trend must be among: rising, fading, low_state, new_low_state
