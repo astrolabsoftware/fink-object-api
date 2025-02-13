@@ -12,6 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from flask import Response
+
 import pandas as pd
 from astropy.time import Time
 
@@ -45,7 +47,10 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         """.format(payload["trend"])
         return Response(msg, 400)
 
-    if payload.get("trend", None) == "low_state" and payload.get("class", None) != "(CTA) Blazar":
+    if (
+        payload.get("trend", None) == "low_state"
+        and payload.get("class", None) != "(CTA) Blazar"
+    ):
         msg = """
         low_state trend is only implemented for the `(CTA) Blazar` class.
         {} class can accept trend among: rising, fading.
