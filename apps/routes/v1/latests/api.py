@@ -30,6 +30,11 @@ ARGS = ns.model(
             example="Early SN Ia candidate",
             required=True,
         ),
+        "trend": fields.String(
+            description="Desired trend among: rising, fading.",
+            example="rising",
+            required=False,
+        ),
         "n": fields.Integer(
             description="Last N alerts to transfer between stopping date and starting date. Default is 100.",
             example=10,

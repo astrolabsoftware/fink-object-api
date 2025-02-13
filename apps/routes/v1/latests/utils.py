@@ -38,6 +38,20 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     ----------
     out: pandas dataframe
     """
+    if "trend" in payload and payload["trend"] not in ["rising", "fading", "low_state"]:
+        msg = """
+        {} is not a valid trend.
+        Trend must be among: rising, fading, low_state
+        """.format(payload["trend"])
+        return Response(msg, 400)
+
+    if payload.get("trend", None) == "low_state" and payload.get("class", None) != "(CTA) Blazar":
+        msg = """
+        low_state trend is only implemented for the `(CTA) Blazar` class.
+        {} class can accept trend among: rising, fading.
+        """.format(payload["class"])
+        return Response(msg, 400)
+
     if "n" not in payload:
         nalerts = 10
     else:
@@ -74,6 +88,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     is_tns = payload["class"].startswith("(TNS)") and (
         payload["class"].split("(TNS) ")[1] in tns_classes
     )
+    is_cta_blazar = payload["class"] == "(CTA) Blazar"
     if is_tns:
         client = connect_to_hbase_table("ztf.tns")
         classname = payload["class"].split("(TNS) ")[1]
@@ -88,6 +103,25 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
             0,
             True,
             True,
+        )
+        schema_client = client.schema()
+        group_alerts = True
+    elif is_cta_blazar:
+        # CTAO Blazars with low states
+        # To be changed when more trend will appear, like flares
+        client = connect_to_hbase_table("ztf.low_state_blazars")
+
+        client.setLimit(nalerts)
+        client.setRangeScan(True)
+        client.setReversed(True)
+
+        results = client.scan(
+            "",
+            f"key:key:{jd_start}_,key:key:{jd_stop}_",
+            cols,
+            0,
+            False,
+            False,
         )
         schema_client = client.schema()
         group_alerts = True
@@ -131,5 +165,11 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         truncated=truncated,
         with_constellation=True,
     )
+
+    # Search for trend
+    if payload.get("trend", None) == "rising":
+        pdf = pdf[pdf["d:mag_rate"] < 0]
+    elif payload.get("trend", None) == "fading":
+        pdf = pdf[pdf["d:mag_rate"] > 0]
 
     return pdf
