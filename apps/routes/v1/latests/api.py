@@ -57,7 +57,7 @@ ARGS = ns.model(
         ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'i:magpsf,i:jd'. If not specified, transfer all columns.",
-            example="i:objectId,i:jd,i:magpsf,i:fid",
+            example="i:objectId,i:jd,i:magpsf,i:fid,d:mag_rate,d:blazar_stats_m0",
             required=False,
         ),
         "output-format": fields.String(
