@@ -30,7 +30,7 @@ def extract_feature(string, pos):
     string = string.replace("NaN", "np.nan")
     mylist = list(eval(string))
 
-    if np.inan(mylist):
+    if np.isnan(mylist):
         return np.nan
     elif isinstance(mylist, list):
         if len(mylist) > 0:
