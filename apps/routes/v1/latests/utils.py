@@ -30,13 +30,10 @@ def extract_feature(string, pos):
     string = string.replace("NaN", "np.nan")
     mylist = list(eval(string))
 
-    if np.isnan(mylist):
-        return np.nan
-    elif isinstance(mylist, list):
+    if isinstance(mylist, list):
         if len(mylist) > 0:
             return list(eval(string))[pos]
-        else:
-            return np.nan
+    return np.nan
 
 @profile
 def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.DataFrame:
