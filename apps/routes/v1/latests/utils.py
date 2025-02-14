@@ -14,6 +14,7 @@
 # limitations under the License.
 from flask import Response
 
+import numpy as np
 import pandas as pd
 from astropy.time import Time
 
@@ -22,6 +23,12 @@ from apps.utils.decoding import format_hbase_output
 
 from line_profiler import profile
 
+
+def extract_feature(string, pos):
+    """
+    """
+    string = string.replace("NaN", "np.nan")
+    return list(eval(string))[pos]
 
 @profile
 def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.DataFrame:
@@ -181,16 +188,16 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     if payload.get("trend", None) == "rising":
         f0 = pdf["d:mag_rate"] < 0
         if "d:lc_features_g" in pdf.columns:
-            f1 = pdf["d:lc_features_g"].apply(lambda x: list(eval(x))[9]) < 0
-            f2 = pdf["d:lc_features_r"].apply(lambda x: list(eval(x))[9]) < 0
+            f1 = pdf["d:lc_features_g"].apply(lambda x: extract_feature(x, 9)) < 0
+            f2 = pdf["d:lc_features_r"].apply(lambda x: extract_feature(x, 9)) < 0
             pdf = pdf[f0 & (f1 | f2)]
         else:
             pdf = pdf[f0]
     elif payload.get("trend", None) == "fading":
         f0 = pdf["d:mag_rate"] > 0
         if "d:lc_features_g" in pdf.columns:
-            f1 = pdf["d:lc_features_g"].apply(lambda x: list(eval(x))[9]) > 0
-            f2 = pdf["d:lc_features_r"].apply(lambda x: list(eval(x))[9]) > 0
+            f1 = pdf["d:lc_features_g"].apply(lambda x: extract_feature(x, 9)) > 0
+            f2 = pdf["d:lc_features_r"].apply(lambda x: extract_feature(x, 9)) > 0
             pdf = pdf[f0 & (f1 | f2)]
         else:
             pdf = pdf[f0]
