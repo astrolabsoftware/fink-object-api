@@ -25,14 +25,17 @@ from line_profiler import profile
 
 
 def extract_feature(string, pos):
-    """
-    """
-    mylist = [float(num.strip()) if num.strip() != 'NaN' else np.nan for num in string.strip('{}').split(',')] 
+    """ """
+    mylist = [
+        float(num.strip()) if num.strip() != "NaN" else np.nan
+        for num in string.strip("{}").split(",")
+    ]
 
     if isinstance(mylist, list):
         if len(mylist) > pos:
             return mylist[pos]
     return np.nan
+
 
 @profile
 def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.DataFrame:
