@@ -201,7 +201,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     # Search for trend
     # TODO: add fink-filters here!
     if payload.get("trend", None) == "rising":
-        f0 = pdf["d:mag_rate"] < 0
+        f0 = (pdf["d:mag_rate"] < 0) & not pdf["d:from_upper"]
         if "d:lc_features_g" in pdf.columns:
             # pos=9 is linear trend
             f1 = pdf.apply(lambda row: add_trend(row, 9), axis=1) < 0
@@ -209,7 +209,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         else:
             pdf = pdf[f0]
     elif payload.get("trend", None) == "fading":
-        f0 = pdf["d:mag_rate"] > 0
+        f0 = (pdf["d:mag_rate"] > 0) & not pdf["d:from_upper"]
         if "d:lc_features_g" in pdf.columns:
             # pos=9 is linear trend
             f1 = pdf.apply(lambda row: add_trend(row, 9), axis=1) > 0
