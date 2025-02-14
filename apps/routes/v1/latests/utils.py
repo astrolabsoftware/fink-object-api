@@ -31,8 +31,8 @@ def extract_feature(string, pos):
     mylist = list(eval(string))
 
     if isinstance(mylist, list):
-        if len(mylist) > 0:
-            return list(eval(string))[pos]
+        if len(mylist) > pos:
+            return mylist[pos]
     return np.nan
 
 @profile
