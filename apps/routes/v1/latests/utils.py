@@ -27,8 +27,7 @@ from line_profiler import profile
 def extract_feature(string, pos):
     """
     """
-    string = string.replace("NaN", "np.nan")
-    mylist = list(eval(string))
+    mylist = [float(num.strip()) if num.strip() != 'NaN' else np.nan for num in string.strip('{}').split(',')] 
 
     if isinstance(mylist, list):
         if len(mylist) > pos:
