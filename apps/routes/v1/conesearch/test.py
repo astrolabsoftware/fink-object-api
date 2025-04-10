@@ -199,7 +199,7 @@ def test_bad_request() -> None:
 
     msg = {
         "status": "error",
-        "text": ValueError("Invalid character at col 0 in angle 'kfdlkj'"),
+        "text": ValueError("Invalid character at col 0 parsing angle 'kfdlkj'"),
     }
     assert r.text == str(msg), r.text
 
