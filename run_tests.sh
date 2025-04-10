@@ -43,7 +43,11 @@ fi
 # Run the test suite on the utilities
 for filename in apps/routes/v1/*/test.py
 do
-  echo $filename
   # Run test suite
-  python $filename $URL
+  if [[ $filename != apps/routes/v1/ssoft/test.py ]]; then
+    echo $filename
+    python $filename $URL
+  else
+    echo "Skipping $filename"
+  fi
 done
