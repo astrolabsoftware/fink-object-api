@@ -197,8 +197,8 @@ def test_blazar_trends() -> None:
     --------
     >>> test_blazar_trends()
     """
-    start = "2024-11-01 12:30:00"
-    stop = "2024-12-01 12:30:00"
+    start = "2025-02-02 12:30:00"
+    stop = "2025-03-02 12:30:00"
     pdf_low_state = classsearch(
         myclass="(CTA) Blazar",
         trend="low_state",
@@ -212,7 +212,7 @@ def test_blazar_trends() -> None:
         stopdate=stop,
     )
 
-    assert len(pdf_low_state) == 5, len(pdf_low_state)
+    assert len(pdf_low_state) == 7, len(pdf_low_state)
     assert len(pdf_new_low_state) == 0  # to be changed later
 
 

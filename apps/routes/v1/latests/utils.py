@@ -176,13 +176,14 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         with_constellation=True,
     )
 
-    # Search for trend
-    if payload.get("trend", None) == "rising":
-        pdf = pdf[pdf["d:mag_rate"] < 0]
-    elif payload.get("trend", None) == "fading":
-        pdf = pdf[pdf["d:mag_rate"] > 0]
-    elif payload.get("trend", None) == "new_low_state":
-        # TODO: use fink-filters directly
-        pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
+    if len(pdf) > 0:
+        # Search for trend
+        if payload.get("trend", None) == "rising":
+            pdf = pdf[pdf["d:mag_rate"] < 0]
+        elif payload.get("trend", None) == "fading":
+            pdf = pdf[pdf["d:mag_rate"] > 0]
+        elif payload.get("trend", None) == "new_low_state":
+            # TODO: use fink-filters directly
+            pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
 
     return pdf
