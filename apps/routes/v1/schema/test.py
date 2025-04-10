@@ -55,7 +55,16 @@ def check_recent_columns(columns, objectId):
         outside_obtained = [i for i in definition if i not in obtained]
 
         # We discard image on purpose for speed
-        outside_obtained = [i for i in outside_obtained if i not in ['cutoutDifference_stampData', 'cutoutScience_stampData', 'cutoutTemplate_stampData']]
+        outside_obtained = [
+            i
+            for i in outside_obtained
+            if i
+            not in [
+                "cutoutDifference_stampData",
+                "cutoutScience_stampData",
+                "cutoutTemplate_stampData",
+            ]
+        ]
 
         assert len(outside_obtained) == 0, (
             "Not in obtained fields",
