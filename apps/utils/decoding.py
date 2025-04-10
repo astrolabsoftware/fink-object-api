@@ -22,7 +22,7 @@ import numpy as np
 from astropy.time import Time
 from astropy.coordinates import SkyCoord, get_constellation
 
-from fink_filters.classification import extract_fink_classification_
+from fink_filters.ztf.classification import extract_fink_classification_
 
 from line_profiler import profile
 
