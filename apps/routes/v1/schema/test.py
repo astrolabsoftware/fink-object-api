@@ -54,11 +54,8 @@ def check_recent_columns(columns, objectId):
 
         outside_obtained = [i for i in definition if i not in obtained]
 
-        # If all Plx and e_Plx are null, the columns are not transfered from HBase
-        # This happens e.g. for Solar System objects
-        # Let's hack it...
-        # TODO: find a better cast in xmatch@fink-science for null values
-        outside_obtained = [i for i in outside_obtained if i not in ["Plx", "e_Plx"]]
+        # We discard image on purpose for speed
+        outside_obtained = [i for i in outside_obtained if i not in ['cutoutDifference_stampData', 'cutoutScience_stampData', 'cutoutTemplate_stampData']]
 
         assert len(outside_obtained) == 0, (
             "Not in obtained fields",
@@ -171,14 +168,16 @@ def test_recent_object() -> None:
     --------
     >>> test_recent_object()
     """
+    # Need a class that bring objects frequently (to have new cols)
     r = requests.post(
         "{}/api/v1/latests".format(APIURL),
-        json={"class": "Solar System MPC", "n": 1, "columns": "i:objectId"},
+        json={"class": "SN candidate", "n": 1, "columns": "i:objectId"},
     )
 
     assert r.status_code == 200, r.content
 
     objectId = r.json()[0]["i:objectId"]
+    # Not that we discard images on purpose for speed
     r2 = requests.post(
         "{}/api/v1/objects".format(APIURL),
         json={
@@ -186,7 +185,7 @@ def test_recent_object() -> None:
             "columns": "*",
             "output-format": "json",
             "withupperlim": True,
-            "withcutouts": True,
+            "withcutouts": False,
         },
     )
 
