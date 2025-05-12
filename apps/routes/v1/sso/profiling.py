@@ -18,6 +18,7 @@ from apps.routes.v1.sso.utils import extract_sso_data
 
 payload = {
     "n_or_d": "Julienpeloton",
+    "withEphem": True,
 }
 
 extract_sso_data(payload)
