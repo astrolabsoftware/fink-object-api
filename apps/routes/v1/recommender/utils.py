@@ -41,6 +41,9 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
     else:
         nobjects = int(payload["n"])
 
+    if "classifier" not in payload:
+        classifier = "FINK_CLASS"
+
     user_config = extract_configuration("config.yml")
 
     gr, classifiers = connect_to_graph()
