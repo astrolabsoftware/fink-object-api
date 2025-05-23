@@ -14,7 +14,6 @@
 # limitations under the License.
 import requests
 import pandas as pd
-import numpy as np
 
 import io
 import sys
@@ -74,10 +73,10 @@ def test_stability() -> None:
     >>> test_n_object()
     """
     pdf1 = get_recommendation(oid=OID, n=20)
-    pdf1 = get_recommendation(oid=OID, n=10)
+    pdf2 = get_recommendation(oid=OID, n=10)
 
     assert len(pdf1) == 20, len(pdf1)
-    assert len(pdf2) == 20, len(pdf2)
+    assert len(pdf2) == 10, len(pdf2)
 
     # first 10 must be the same
     assert pdf1.head(10).equals(pdf2), (pdf1, pdf2)

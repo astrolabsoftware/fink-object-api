@@ -57,6 +57,7 @@ def connect_to_hbase_table(
 
     return client
 
+
 @profile
 def connect_to_graph():
     """Return a client connected to a graph"""
@@ -67,8 +68,9 @@ def connect_to_graph():
 
     # TODO: add definition of IP/PORT/TABLE/SCHEMA here in new version of client
     gr = gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.FinkGremlinRecipiesG(jc)
-    
+
     return gr, gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.Classifiers
+
 
 @profile
 def create_or_update_hbase_table(

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
-from numpy import array as nparray
+import requests
 
 from apps.utils.client import connect_to_graph
 from apps.utils.utils import extract_configuration
@@ -53,21 +53,16 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
     # Classify source
     func = getattr(classifiers, classifier_name)
     gr.classifySource(
-        func, 
-        payload["objectId"], 
-        '{}:{}:{}'.format(
-            user_config["HBASEIP"], 
-            user_config["ZOOPORT"], 
-            user_config["SCHEMAVER"]
-        ), 
-        False, 
-        None
+        func,
+        payload["objectId"],
+        "{}:{}:{}".format(
+            user_config["HBASEIP"], user_config["ZOOPORT"], user_config["SCHEMAVER"]
+        ),
+        False,
+        None,
     )
 
-    closest_sources = gr.sourceNeighborhood(
-        payload["objectId"], 
-        classifier_name
-    )
+    closest_sources = gr.sourceNeighborhood(payload["objectId"], classifier_name)
     out = {"i:objectId": [], "v:distance": [], "v:classification": []}
     for index, (oid, distance) in enumerate(closest_sources.items()):
         if index > nobjects:
@@ -75,10 +70,7 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
 
         r = requests.post(
             "https://api.fink-portal.org/api/v1/objects",
-            json={
-                "objectId": oid,
-                "output-format": "json"
-            }
+            json={"objectId": oid, "output-format": "json"},
         )
         out["v:classification"].append(r.json()[0]["v:classification"])
         out["i:objectId"].append(oid)

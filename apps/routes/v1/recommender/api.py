@@ -26,7 +26,7 @@ ARGS = ns.model(
     "objects",
     {
         "objectId": fields.String(
-            description='ZTF Object ID',
+            description="ZTF Object ID",
             example="ZTF21abfmbix",
             required=True,
         ),
