@@ -42,7 +42,7 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
         nobjects = int(payload["n"])
 
     if "classifier" not in payload:
-        classifier_name = "FINK_CLASS"
+        classifier_name = "FINK_PORTAL"
     else:
         classifier_name = payload["classifier"]
 
