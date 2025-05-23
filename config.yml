@@ -21,3 +21,6 @@ NLIMIT: 10000
 WEBHDFS:
 USER:
 NAMENODE:
+
+# Graph
+PROPERTIES: conf/IJCLab.properties
