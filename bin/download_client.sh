@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2024 AstroLab Software
+# Copyright 2024-2025 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 BASEURL=https://hrivnac.web.cern.ch/Activities/Packages/Lomikel
-CLIENTVERSION=03.04.00x
+CLIENTVERSION=03.06.00
 
-
-files="Lomikel-$CLIENTVERSION-ext.jar Lomikel-$CLIENTVERSION.exe.jar Lomikel-$CLIENTVERSION-HBase.jar Lomikel-$CLIENTVERSION-HBase.exe.jar Lomikel-$CLIENTVERSION.jar"
+files="Lomikel-$CLIENTVERSION-ext.jar Lomikel-$CLIENTVERSION.exe.jar Lomikel-$CLIENTVERSION-HBase.jar Lomikel-$CLIENTVERSION-Janus.jar Lomikel-$CLIENTVERSION-Janus.exe.jar Lomikel-$CLIENTVERSION-HBase.exe.jar Lomikel-$CLIENTVERSION.jar"
 
 for file in $files; do
         echo $file
