@@ -42,14 +42,16 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
         nobjects = int(payload["n"])
 
     if "classifier" not in payload:
-        classifier = "FINK_CLASS"
+        classifier_name = "FINK_CLASS"
+    else:
+        classifier_name = payload["classifier"]
 
     user_config = extract_configuration("config.yml")
 
     gr, classifiers = connect_to_graph()
 
     # Classify source
-    func = getattr(classifiers, payload["classifier"])
+    func = getattr(classifiers, classifier_name)
     gr.classifySource(
         func, 
         payload["objectId"], 
@@ -64,7 +66,7 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
 
     closest_sources = gr.sourceNeighborhood(
         payload["objectId"], 
-        payload["classifier"]
+        classifier_name
     )
     out = {"i:objectId": [], "v:distance": [], "v:classification": []}
     for index, (oid, distance) in enumerate(closest_sources.items()):
