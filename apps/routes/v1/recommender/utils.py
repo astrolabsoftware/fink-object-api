@@ -62,7 +62,9 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
 
     closest_sources = gr.sourceNeighborhood(payload["objectId"], classifier_name, nobjects)
     out = {"i:objectId": [], "v:distance": [], "v:classification": []}
-    for index, (oid, distance) in enumerate(closest_sources.items()):
+    for index, (k, _) in enumerate(closest_sources.items()):
+        oid = k.getKey()
+        distance = k.getValue()
         r = requests.post(
             "https://api.fink-portal.org/api/v1/objects",
             json={"objectId": oid, "output-format": "json"},
