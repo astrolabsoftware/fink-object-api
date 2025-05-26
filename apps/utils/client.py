@@ -68,6 +68,11 @@ def connect_to_graph():
 
     # TODO: add definition of IP/PORT/TABLE/SCHEMA here in new version of client
     gr = gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.FinkGremlinRecipiesG(jc)
+    gr.fhclient(
+        "{}:{}:{}".format(
+            config["HBASEIP"], config["ZOOPORT"], config["SCHEMAVER"]
+        ),
+    )
 
     return gr, gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.Classifiers
 

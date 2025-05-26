@@ -36,7 +36,7 @@ ARGS = ns.model(
             required=True,
         ),
         "n": fields.Integer(
-            description="N closest objects. Default is 10",
+            description="N closest objects (upper bound). Default is 10",
             example=10,
             required=False,
         ),

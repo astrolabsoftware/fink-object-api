@@ -55,19 +55,14 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
     gr.classifySource(
         func,
         payload["objectId"],
-        "{}:{}:{}".format(
-            user_config["HBASEIP"], user_config["ZOOPORT"], user_config["SCHEMAVER"]
-        ),
+        None,
         False,
         None,
     )
 
-    closest_sources = gr.sourceNeighborhood(payload["objectId"], classifier_name)
+    closest_sources = gr.sourceNeighborhood(payload["objectId"], classifier_name, nobjects)
     out = {"i:objectId": [], "v:distance": [], "v:classification": []}
     for index, (oid, distance) in enumerate(closest_sources.items()):
-        if index > nobjects:
-            break
-
         r = requests.post(
             "https://api.fink-portal.org/api/v1/objects",
             json={"objectId": oid, "output-format": "json"},
