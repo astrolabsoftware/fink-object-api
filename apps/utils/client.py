@@ -69,7 +69,7 @@ def connect_to_graph(tablename="ztf"):
     # TODO: add definition of IP/PORT/TABLE/SCHEMA here in new version of client
     gr = gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.FinkGremlinRecipiesG(jc)
     gr.fhclient(
-            "{}:{}:{}:{}".format(
+        "{}:{}:{}:{}".format(
             config["HBASEIP"], config["ZOOPORT"], tablename, config["SCHEMAVER"]
         ),
     )

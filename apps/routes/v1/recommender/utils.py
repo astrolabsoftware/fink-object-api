@@ -16,7 +16,6 @@ import pandas as pd
 import requests
 
 from apps.utils.client import connect_to_graph
-from apps.utils.utils import extract_configuration
 
 from line_profiler import profile
 
@@ -46,8 +45,6 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
     else:
         classifier_name = payload["classifier"]
 
-    user_config = extract_configuration("config.yml")
-
     gr, classifiers = connect_to_graph()
 
     # Classify source
@@ -60,7 +57,9 @@ def extract_similar_objects(payload: dict) -> pd.DataFrame:
         None,
     )
 
-    closest_sources = gr.sourceNeighborhood(payload["objectId"], classifier_name, nobjects)
+    closest_sources = gr.sourceNeighborhood(
+        payload["objectId"], classifier_name, nobjects
+    )
     out = {"i:objectId": [], "v:distance": [], "v:classification": []}
     for index, (k, _) in enumerate(closest_sources.items()):
         oid = k.getKey()
