@@ -59,6 +59,25 @@ def connect_to_hbase_table(
 
 
 @profile
+def connect_to_graph(tablename="ztf"):
+    """Return a client connected to a graph"""
+    config = extract_configuration("config.yml")
+    gateway = JavaGateway(auto_convert=True)
+
+    jc = gateway.jvm.com.Lomikel.Januser.JanusClient(config["PROPERTIES"])
+
+    # TODO: add definition of IP/PORT/TABLE/SCHEMA here in new version of client
+    gr = gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.FinkGremlinRecipiesG(jc)
+    gr.fhclient(
+        "{}:{}:{}:{}".format(
+            config["HBASEIP"], config["ZOOPORT"], tablename, config["SCHEMAVER"]
+        ),
+    )
+
+    return gr, gateway.jvm.com.astrolabsoftware.FinkBrowser.Januser.Classifiers
+
+
+@profile
 def create_or_update_hbase_table(
     tablename: str,
     families: list,

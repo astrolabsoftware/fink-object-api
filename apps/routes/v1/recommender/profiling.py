@@ -1,5 +1,4 @@
-#!/bin/bash
-# Copyright 2024-2025 AstroLab Software
+# Copyright 2025 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-BASEURL=https://hrivnac.web.cern.ch/Activities/Packages/Lomikel
-CLIENTVERSION=03.06.00
+"""Call extract_similar_objects"""
 
-files="Lomikel-$CLIENTVERSION-ext.jar Lomikel-$CLIENTVERSION.exe.jar Lomikel-$CLIENTVERSION-HBase.jar Lomikel-$CLIENTVERSION-Janus.jar Lomikel-$CLIENTVERSION-Janus.exe.jar Lomikel-$CLIENTVERSION-HBase.exe.jar Lomikel-$CLIENTVERSION.jar"
+from apps.routes.v1.recommender.utils import extract_similar_objects
 
-for file in $files; do
-        echo $file
-        wget --directory-prefix=. $BASEURL/$file
-done
+payload = {
+    "objectId": "ZTF21abfmbix",
+}
+
+extract_similar_objects(payload)
