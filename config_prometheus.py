@@ -17,7 +17,8 @@ from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
 
 def when_ready(server):
-    GunicornPrometheusMetrics.start_http_server_when_ready(os.get_env("METRIC_PORT"))
+    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9090))
+    GunicornPrometheusMetrics.start_http_server_when_ready(PORT)
 
 
 def child_exit(server, worker):
