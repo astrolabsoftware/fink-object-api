@@ -85,7 +85,15 @@ ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /
 WantedBy=multi-user.target
 ```
 
-Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. In the `~/bashrc`, define also `METRIC_PORT` for prometheus if you want metrics to be exported (optional). Update the `config.yml`, reload units and launch the application:
+Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Update the `config.yml` with your configuration, and in the `~/bashrc`, define also Prometheus variables if you want metrics to be exported (optional): 
+
+```bash
+export PROMETHEUS_MULTIPROC_DIR=/tmp
+export prometheus_multiproc_dir=/tmp
+export PROMETHEUS_METRIC_PORT=<your exporter port>
+```
+
+Finally reload units and launch the application:
 
 ```bash
 systemctl daemon-reload
