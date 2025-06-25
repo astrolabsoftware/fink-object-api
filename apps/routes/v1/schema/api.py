@@ -293,6 +293,16 @@ class Schema(Resource):
                     "type": "float",
                     "doc": "Feature for characterising CTAO blazar state. Related to low state duration.",
                 },
+                {
+                    "name": "gaiaClass",
+                    "type": "str",
+                    "doc": "Name of best class from Gaia DR3 Part 4. Variability (I/358/vclassre).",
+                },
+                {
+                    "name": "gaiaVarFlag",
+                    "type": "int",
+                    "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
+                },
             ],
         )
 
