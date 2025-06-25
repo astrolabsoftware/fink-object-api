@@ -81,6 +81,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             }
             return Response(str(rep), 400)
 
+    if truncated and "i:ssnamenr" not in cols:
+        cols += ",i:ssnamenr"
+
     n_or_d = str(payload["n_or_d"])
 
     if "," in n_or_d:
