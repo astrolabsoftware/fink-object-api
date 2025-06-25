@@ -79,13 +79,21 @@ User=root
 Group=root
 WorkingDirectory=/opt/fink-object-api
 
-ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=1 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
+ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /opt/fink-object-api/config_prometheus.py --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=1 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Update the `config.yml`, reload units and launch the application:
+Make sure you change `PORT2` with your actual port. Make sure also to update path to `gunicorn`. Update the `config.yml` with your configuration, and in the `~/bashrc`, define also Prometheus variables if you want metrics to be exported (optional): 
+
+```bash
+export PROMETHEUS_MULTIPROC_DIR=/tmp
+export prometheus_multiproc_dir=/tmp
+export PROMETHEUS_METRIC_PORT=<your exporter port>
+```
+
+Finally reload units and launch the application:
 
 ```bash
 systemctl daemon-reload

@@ -14,6 +14,7 @@
 # limitations under the License.
 from flask import Flask, Blueprint
 from flask_restx import Api
+from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
 from apps import __version__
 
@@ -38,6 +39,7 @@ from apps.routes.v1.metadata.api import ns as ns_metadata
 config = extract_configuration("config.yml")
 
 app = Flask("Fink REST API")
+metrics = GunicornPrometheusMetrics(app)
 
 # Master blueprint
 blueprint = Blueprint("api", __name__, url_prefix="/")
