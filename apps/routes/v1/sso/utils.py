@@ -72,6 +72,15 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     ):
         with_cutouts = True
 
+    if with_cutouts and truncated:
+        # Check mandatory fields
+        if "i:objectId" not in cols or "i:candid" not in cols:
+            rep = {
+                "status": "error",
+                "text": "You need to add 'i:objectId,i:candid' to the columns.\n",
+            }
+            return Response(str(rep), 400)
+
     n_or_d = str(payload["n_or_d"])
 
     if "," in n_or_d:
