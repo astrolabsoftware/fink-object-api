@@ -72,6 +72,20 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     ):
         with_cutouts = True
 
+    if with_cutouts and truncated:
+        # Check mandatory fields
+        if "i:objectId" not in cols or "i:candid" not in cols:
+            rep = {
+                "status": "error",
+                "text": "You need to add 'i:objectId,i:candid' to the columns.\n",
+            }
+            return Response(str(rep), 400)
+
+    if truncated and "i:ssnamenr" not in cols:
+        # For name resolving, i:ssnamenr must be here
+        # In case the user forgot, let's add it silently
+        cols += ",i:ssnamenr"
+
     n_or_d = str(payload["n_or_d"])
 
     if "," in n_or_d:
@@ -187,14 +201,12 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
                 download_cutout(row["i:objectId"], row["i:candid"], cutout_kind)
             )
         pdf[colname] = cutouts
-        # pdf[colname] = pdf[["i:objectId", "i:candid"]].apply(
-        #    lambda x: pd.Series([download_cutout(x.iloc[0], x.iloc[1], cutout_kind)]),
-        #    axis=1,
-        # )
 
     if with_ephem:
-        # We should probably add a timeout
-        # and try/except in case of miriade shutdown
+        # TODO: In case truncated is True, check (before DB call)
+        #       the mandatory fields have been requested
+        # TODO: We should probably add a timeout and try/except
+        #       in case of miriade shutdown
         pdf = get_miriade_data(pdf, sso_colname="sso_name")
         if "i:magpsf_red" not in pdf.columns:
             rep = {
@@ -204,13 +216,11 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             return Response(str(rep), 400)
 
     if with_residuals:
-        # get phase curve parameters using
-        # the sHG1G2 model
+        # TODO: In case truncated is True, check (before DB call)
+        #       the mandatory fields have been requested
 
-        # Phase angle, in radians
+        # Get phase curve parameters using the sHG1G2 model
         phase = np.deg2rad(pdf["Phase"].values)
-
-        # Required for sHG1G2
         ra = np.deg2rad(pdf["i:ra"].values)
         dec = np.deg2rad(pdf["i:dec"].values)
 
