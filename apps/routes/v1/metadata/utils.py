@@ -63,8 +63,8 @@ def retrieve_metadata(objectId: str) -> pd.DataFrame:
         to_evaluate,
         "*",
         0,
-        False,
-        False,
+        True,
+        True,
     )
     pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
     client.close()
