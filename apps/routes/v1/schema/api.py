@@ -221,12 +221,12 @@ class Schema(Resource):
                 {
                     "name": "lc_features_g",
                     "type": "string",
-                    "doc": "Numerous light curve features for the g band (see https://github.com/astrolabsoftware/fink-science/tree/master/fink_science/ad_features). Stored as string of array.",
+                    "doc": "Numerous light curve features for the g band (see https://github.com/astrolabsoftware/fink-science/tree/master/fink_science/ztf/ad_features). Stored as string of array.",
                 },
                 {
                     "name": "lc_features_r",
                     "type": "string",
-                    "doc": "Numerous light curve features for the r band (see https://github.com/astrolabsoftware/fink-science/tree/master/fink_science/ad_features). Stored as string of array.",
+                    "doc": "Numerous light curve features for the r band (see https://github.com/astrolabsoftware/fink-science/tree/master/fink_science/ztf/ad_features). Stored as string of array.",
                 },
                 {
                     "name": "jd_first_real_det",
