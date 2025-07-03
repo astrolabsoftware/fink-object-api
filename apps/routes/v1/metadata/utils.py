@@ -25,7 +25,7 @@ from line_profiler import profile
 @profile
 def post_metadata(payload: dict) -> Response:
     """Upload metadata in Fink"""
-    client = connect_to_hbase_table("ztf.metadata")
+    client = connect_to_hbase_table("ztf.metadata", schema_name="schema")
     encoded = payload["internal_name"].replace(" ", "")
     client.put(
         payload["objectId"].strip(),
@@ -53,7 +53,7 @@ def post_metadata(payload: dict) -> Response:
 @profile
 def retrieve_metadata(objectId: str) -> pd.DataFrame:
     """Retrieve metadata in Fink given a ZTF object ID"""
-    client = connect_to_hbase_table("ztf.metadata")
+    client = connect_to_hbase_table("ztf.metadata", schema_name="schema")
     to_evaluate = f"key:key:{objectId}"
     results = client.scan(
         "",
@@ -71,7 +71,7 @@ def retrieve_metadata(objectId: str) -> pd.DataFrame:
 @profile
 def retrieve_oid(metaname: str, field: str) -> pd.DataFrame:
     """Retrieve a ZTF object ID given metadata in Fink"""
-    client = connect_to_hbase_table("ztf.metadata")
+    client = connect_to_hbase_table("ztf.metadata", schema_name="schema")
     to_evaluate = f"d:{field}:{metaname}:exact"
     results = client.scan(
         "",
