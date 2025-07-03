@@ -57,7 +57,7 @@ def retrieve_metadata(objectId: str) -> pd.DataFrame:
     if objectId.startswith("ZTF"):
         to_evaluate = f"key:key:{objectId}"
     elif objectId == "all":
-        to_evaluate = "key:key"
+        to_evaluate = "key:key:ZTF"
     results = client.scan(
         "",
         to_evaluate,
