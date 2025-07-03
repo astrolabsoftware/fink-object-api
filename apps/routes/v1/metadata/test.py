@@ -69,7 +69,7 @@ def test_internal_name() -> None:
     pdf = get_metadata(
         internal_name=urllib.parse.quote_plus("Fink J042203.10+362318.7")
     )
-    oid = pdf["key:key"].values[0]
+    oid = pdf["i:objectId"].values[0]
 
     assert oid == "ZTF20aahjjjm", oid
 
@@ -90,7 +90,7 @@ def test_internal_name_encoded() -> None:
         internal_name_encoded=urllib.parse.quote_plus("FinkJ061603.51+080222.8")
     )
 
-    oid = pdf["key:key"].values[0]
+    oid = pdf["i:objectId"].values[0]
 
     assert oid == "ZTF17aaagtdb", oid
 
@@ -99,6 +99,17 @@ def test_internal_name_encoded() -> None:
     assert pdf["d:username"].values[0] == "pruzhinskaya", pdf
     assert pdf["d:comments"].values[0] == "Candidate to CV, credit", pdf
     assert pdf["d:internal_name"].values[0] == "Fink J061603.51+080222.8", pdf
+
+
+def test_get_all() -> None:
+    """
+    Examples
+    --------
+    >>> test_get_all()
+    """
+    pdf = get_metadata(objectId="all")
+    assert len(pdf) > 1, pdf
+
 
 
 if __name__ == "__main__":
