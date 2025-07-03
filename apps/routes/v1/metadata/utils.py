@@ -54,7 +54,10 @@ def post_metadata(payload: dict) -> Response:
 def retrieve_metadata(objectId: str) -> pd.DataFrame:
     """Retrieve metadata in Fink given a ZTF object ID"""
     client = connect_to_hbase_table("ztf.metadata")
-    to_evaluate = f"key:key:{objectId}"
+    if objectId.startswith("ZTF"):
+        to_evaluate = f"key:key:{objectId}"
+    elif objectId == "all":
+        to_evaluate = "key:key"
     results = client.scan(
         "",
         to_evaluate,
