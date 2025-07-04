@@ -111,7 +111,6 @@ def test_get_all() -> None:
     assert len(pdf) > 1, pdf
 
 
-
 if __name__ == "__main__":
     """ Execute the test suite """
     import sys
