@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import urllib.parse
 import requests
 import pandas as pd
 
@@ -24,8 +25,8 @@ APIURL = sys.argv[1]
 OID = "ZTF21abfmbix"
 
 
-def get_metadata(objectId=None, internal_name=None, internal_name_decoded=None):
-    """Query metadata"""
+def get_metadata(objectId=None, internal_name=None, internal_name_encoded=None):
+    """Query metadata using GET"""
     if objectId is not None:
         r = requests.get("{}/api/v1/metadata?objectId={}".format(APIURL, objectId))
 
@@ -34,9 +35,11 @@ def get_metadata(objectId=None, internal_name=None, internal_name_decoded=None):
             "{}/api/v1/metadata?internal_name={}".format(APIURL, internal_name)
         )
 
-    if internal_name_decoded is not None:
+    if internal_name_encoded is not None:
         r = requests.get(
-            "{}/api/v1/metadata?internal_name_decoded={}".format(APIURL, internal_name)
+            "{}/api/v1/metadata?internal_name_encoded={}".format(
+                APIURL, internal_name_encoded
+            )
         )
 
     assert r.status_code == 200, r.content
@@ -54,9 +57,58 @@ def test_objectId() -> None:
     """
     pdf = get_metadata(objectId="ZTF23aaaatwl")
 
-    assert not pdf.empty
+    assert pdf["d:comments"].values[0] == "coucou", pdf
 
-    assert pdf["d:comments"].values[0] == "coucou"
+
+def test_internal_name() -> None:
+    """
+    Examples
+    --------
+    >>> test_internal_name()
+    """
+    pdf = get_metadata(
+        internal_name=urllib.parse.quote_plus("Fink J042203.10+362318.7")
+    )
+    oid = pdf["i:objectId"].values[0]
+
+    assert oid == "ZTF20aahjjjm", oid
+
+    # Get metadata
+    pdf = get_metadata(objectId=oid)
+    assert pdf["d:username"].values[0] == "pruzhinskaya", pdf
+    assert pdf["d:comments"].values[0] == "Candidate to red dwarf flare, credit", pdf
+    assert pdf["d:internal_name_encoded"].values[0] == "FinkJ042203.10+362318.7", pdf
+
+
+def test_internal_name_encoded() -> None:
+    """
+    Examples
+    --------
+    >>> test_internal_name_encoded()
+    """
+    pdf = get_metadata(
+        internal_name_encoded=urllib.parse.quote_plus("FinkJ061603.51+080222.8")
+    )
+
+    oid = pdf["i:objectId"].values[0]
+
+    assert oid == "ZTF17aaagtdb", oid
+
+    # Get metadata
+    pdf = get_metadata(objectId=oid)
+    assert pdf["d:username"].values[0] == "pruzhinskaya", pdf
+    assert pdf["d:comments"].values[0] == "Candidate to CV, credit", pdf
+    assert pdf["d:internal_name"].values[0] == "Fink J061603.51+080222.8", pdf
+
+
+def test_get_all() -> None:
+    """
+    Examples
+    --------
+    >>> test_get_all()
+    """
+    pdf = get_metadata(objectId="all")
+    assert len(pdf) > 1, pdf
 
 
 if __name__ == "__main__":

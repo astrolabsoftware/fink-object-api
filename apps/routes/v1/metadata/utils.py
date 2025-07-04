@@ -54,16 +54,21 @@ def post_metadata(payload: dict) -> Response:
 def retrieve_metadata(objectId: str) -> pd.DataFrame:
     """Retrieve metadata in Fink given a ZTF object ID"""
     client = connect_to_hbase_table("ztf.metadata")
-    to_evaluate = f"key:key:{objectId}"
+    if objectId.startswith("ZTF"):
+        to_evaluate = f"key:key:{objectId}"
+    elif objectId == "all":
+        to_evaluate = "key:key:ZTF"
     results = client.scan(
         "",
         to_evaluate,
         "*",
         0,
-        False,
-        False,
+        True,
+        True,
     )
     pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+    pdf = pdf.rename(columns={"key:key": "i:objectId"})
+    pdf = pdf.drop(columns=["key:time"])
     client.close()
     return pdf
 
@@ -82,6 +87,8 @@ def retrieve_oid(metaname: str, field: str) -> pd.DataFrame:
         True,
     )
     pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+    pdf = pdf.rename(columns={"key:key": "i:objectId"})
+    pdf = pdf.drop(columns=["key:time"])
     client.close()
 
     return pdf
