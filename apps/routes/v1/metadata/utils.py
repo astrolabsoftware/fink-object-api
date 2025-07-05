@@ -66,10 +66,16 @@ def retrieve_metadata(objectId: str) -> pd.DataFrame:
         True,
         True,
     )
-    pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
-    pdf = pdf.rename(columns={"key:key": "i:objectId"})
-    pdf = pdf.drop(columns=["key:time"])
+
+    if len(results) == 0:
+        pdf = pd.DataFrame()
+    else:
+        pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+        pdf = pdf.rename(columns={"key:key": "i:objectId"})
+        pdf = pdf.drop(columns=["key:time"])
+
     client.close()
+
     return pdf
 
 
@@ -86,9 +92,14 @@ def retrieve_oid(metaname: str, field: str) -> pd.DataFrame:
         True,
         True,
     )
-    pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
-    pdf = pdf.rename(columns={"key:key": "i:objectId"})
-    pdf = pdf.drop(columns=["key:time"])
+
+    if len(results) == 0:
+        pdf = pd.DataFrame()
+    else:
+        pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+        pdf = pdf.rename(columns={"key:key": "i:objectId"})
+        pdf = pdf.drop(columns=["key:time"])
+
     client.close()
 
     return pdf
