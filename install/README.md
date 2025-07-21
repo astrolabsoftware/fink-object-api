@@ -40,7 +40,8 @@ After=network.target
 User=root
 Group=root
 WorkingDirectory=/opt/fink-object-api/bin
-
+Restart=on-failure
+RestartSec=5s
 ExecStart=/bin/sh -c 'source /root/.bashrc; exec java -cp "Lomikel-03.04.00x-HBase.exe.jar:py4j0.10.9.7.jar:gson-2.11.0.jar" com.Lomikel.Py4J.LomikelGatewayServer 2>&1 >> /tmp/fink_gateway.out'
 
 [Install]
@@ -78,8 +79,9 @@ Requires=fink_gateway.service fink_cutout_api.service
 User=root
 Group=root
 WorkingDirectory=/opt/fink-object-api
-
-ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /opt/fink-object-api/config_prometheus.py --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=1 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
+Restart=on-failure
+RestartSec=5s
+ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /opt/fink-object-api/config_prometheus.py --max-requests 500 --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=4 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
 WantedBy=multi-user.target
