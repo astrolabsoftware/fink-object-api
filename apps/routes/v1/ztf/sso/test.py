@@ -73,11 +73,12 @@ def test_simple_ssosearch() -> None:
 
     assert not pdf.empty
 
-    assert np.all(pdf["i:ssnamenr"].to_numpy() > 0)
-
     assert np.all(pdf["d:roid"].to_numpy() == 3)
 
-    assert len(pdf.groupby("i:ssnamenr").count()) == 1
+    assert len(pdf.groupby("i:ssnamenr").count()) == 2, np.unique(pdf["i:ssnamenr"])
+
+    assert "Benoitcarry" in pdf["i:ssnamenr"].to_numpy()
+    assert "8467" in pdf["i:ssnamenr"].to_numpy()
 
 
 def test_ephem() -> None:
@@ -197,7 +198,7 @@ def test_multiple_ssosearch() -> None:
 
     assert not pdf.empty
 
-    assert len(pdf.groupby("i:ssnamenr").count()) == 2
+    assert len(pdf.groupby("i:ssnamenr").count()) == 3, np.unique(pdf["i:ssnamenr"])
 
     assert len(pdf.groupby("sso_name").count()) == 2
 
@@ -210,7 +211,7 @@ def test_with_ephem_multiple_ssosearch() -> None:
     """
     pdf = ssosearch(n_or_d="8467,1922", withEphem=True)
 
-    assert len(pdf.groupby("i:ssnamenr").count()) == 2
+    assert len(pdf.groupby("i:ssnamenr").count()) == 3, np.unique(pdf["i:ssnamenr"])
     assert len(pdf.groupby("sso_name").count()) == 2
     assert len(pdf.groupby("sso_number").count()) == 2
 
