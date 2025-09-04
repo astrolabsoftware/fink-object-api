@@ -215,8 +215,8 @@ def test_with_ephem_multiple_ssosearch() -> None:
     assert len(pdf.groupby("sso_name").count()) == 2
     assert len(pdf.groupby("sso_number").count()) == 2
 
-    assert 8467 in np.unique(pdf["i:ssnamenr"].to_numpy())
-    assert 1922 in np.unique(pdf["i:ssnamenr"].to_numpy())
+    assert "8467" in np.unique(pdf["i:ssnamenr"].to_numpy())
+    assert "1922" in np.unique(pdf["i:ssnamenr"].to_numpy())
 
     pdf1 = ssosearch(n_or_d="8467", withEphem=True)
     pdf2 = ssosearch(n_or_d="1922", withEphem=True)
