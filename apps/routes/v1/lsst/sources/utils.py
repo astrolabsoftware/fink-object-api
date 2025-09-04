@@ -43,10 +43,14 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
     if "," in payload["diaObjectId"]:
         # multi-objects search
         splitids = payload["diaObjectId"].split(",")
-        objectids = [f"key:key:{i.strip()}" for i in splitids]
+        splitids = [i.split() for i in splitids]
+        # add salt
+        objectids = [f"key:key:{i[-3:]}_{i}" for i in splitids]
     else:
         # single object search
-        objectids = ["key:key:{}".format(payload["diaObjectId"])]
+        objectids = [
+            "key:key:{}_{}".format(payload["diaObjectId"][-3:], payload["diaObjectId"])
+        ]
 
     # if "withupperlim" in payload and str(payload["withupperlim"]) == "True":
     #     withupperlim = True
