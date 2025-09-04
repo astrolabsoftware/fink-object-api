@@ -18,7 +18,11 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.ztf.metadata.utils import post_metadata, retrieve_metadata, retrieve_oid
+from apps.routes.v1.ztf.metadata.utils import (
+    post_metadata,
+    retrieve_metadata,
+    retrieve_oid,
+)
 
 ns = Namespace("api/v1/metadata", "Get user-defined metadata attached to objects")
 
