@@ -223,7 +223,7 @@ def test_with_ephem_multiple_ssosearch() -> None:
 
     assert len(pdf) == len(pdf1) + len(pdf2)
 
-    m1 = pdf["i:ssnamenr"] == "8467"
+    m1 = pdf["i:ssnamenr"].isin(["8467", "Benoitcarry"])
     assert len(pdf[m1].to_numpy()) == len(pdf1.to_numpy()), (
         pdf[m1].to_numpy(),
         pdf1.to_numpy(),
