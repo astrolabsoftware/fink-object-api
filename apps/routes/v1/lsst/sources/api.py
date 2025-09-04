@@ -20,10 +20,10 @@ from apps.utils.utils import send_tabular_data
 
 from apps.routes.v1.lsst.objects.utils import extract_object_data
 
-ns = Namespace("api/v1/objects", "Get diaSource data based on Rubin diaObjectId")
+ns = Namespace("api/v1/sources", "Get diaSource data based on Rubin diaObjectId")
 
 ARGS = ns.model(
-    "objects",
+    "sources",
     {
         "diaObjectId": fields.String(
             description='single Rubin Object ID, or a comma-separated list of object ID, e.g. "396895411240977"',
