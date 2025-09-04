@@ -1,4 +1,4 @@
-# Copyright 2024 AstroLab Software
+# Copyright 2024-2025 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,21 +20,21 @@ from apps import __version__
 
 from apps.utils.utils import extract_configuration
 
-from apps.routes.v1.objects.api import ns as ns_objects
-from apps.routes.v1.cutouts.api import ns as ns_cutouts
-from apps.routes.v1.latests.api import ns as ns_latests
-from apps.routes.v1.classes.api import ns as ns_classes
-from apps.routes.v1.conesearch.api import ns as ns_conesearch
-from apps.routes.v1.sso.api import ns as ns_sso
-from apps.routes.v1.resolver.api import ns as ns_resolver
-from apps.routes.v1.tracklet.api import ns as ns_tracklet
-from apps.routes.v1.schema.api import ns as ns_schema
-from apps.routes.v1.skymap.api import ns as ns_skymap
-from apps.routes.v1.statistics.api import ns as ns_statistics
-from apps.routes.v1.ssocand.api import ns as ns_ssocand
-from apps.routes.v1.anomaly.api import ns as ns_anomaly
-from apps.routes.v1.ssoft.api import ns as ns_ssoft
-from apps.routes.v1.metadata.api import ns as ns_metadata
+from apps.routes.v1.ztf.objects.api import ns as ns_objects
+from apps.routes.v1.ztf.cutouts.api import ns as ns_cutouts
+from apps.routes.v1.ztf.latests.api import ns as ns_latests
+from apps.routes.v1.ztf.classes.api import ns as ns_classes
+from apps.routes.v1.ztf.conesearch.api import ns as ns_conesearch
+from apps.routes.v1.ztf.sso.api import ns as ns_sso
+from apps.routes.v1.ztf.resolver.api import ns as ns_resolver
+from apps.routes.v1.ztf.tracklet.api import ns as ns_tracklet
+from apps.routes.v1.ztf.schema.api import ns as ns_schema
+from apps.routes.v1.ztf.skymap.api import ns as ns_skymap
+from apps.routes.v1.ztf.statistics.api import ns as ns_statistics
+from apps.routes.v1.ztf.ssocand.api import ns as ns_ssocand
+from apps.routes.v1.ztf.anomaly.api import ns as ns_anomaly
+from apps.routes.v1.ztf.ssoft.api import ns as ns_ssoft
+from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
 
 config = extract_configuration("config.yml")
 
