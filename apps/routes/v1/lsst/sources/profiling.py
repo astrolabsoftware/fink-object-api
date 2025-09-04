@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.lsst.objects.utils import extract_object_data
+from apps.routes.v1.lsst.sources.utils import extract_object_data
 
 payload = {
     "objectId": "396895411240974",
