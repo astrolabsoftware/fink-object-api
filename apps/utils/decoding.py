@@ -153,6 +153,7 @@ def format_hbase_output(
 
     return pdfs
 
+
 @profile
 def format_lsst_hbase_output(
     hbase_output,
@@ -192,7 +193,11 @@ def format_lsst_hbase_output(
     pdfs = pdfs.copy()  # Fix Pandas' "DataFrame is highly fragmented" warning
 
     # Display only the last alert
-    if group_alerts and ("i:midpointMjdTai" in pdfs.columns) and ("i:diaObjectId" in pdfs.columns):
+    if (
+        group_alerts
+        and ("i:midpointMjdTai" in pdfs.columns)
+        and ("i:diaObjectId" in pdfs.columns)
+    ):
         pdfs["i:midpointMjdTai"] = pdfs["i:midpointMjdTai"].astype(float)
         pdfs = pdfs.loc[pdfs.groupby("i:diaObjectId")["i:midpointMjdTai"].idxmax()]
 

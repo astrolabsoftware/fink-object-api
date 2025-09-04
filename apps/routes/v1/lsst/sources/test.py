@@ -95,6 +95,7 @@ def test_column_selection() -> None:
 
     assert len(pdf.columns) == 2, "I count {} columns".format(len(pdf.columns))
 
+
 def test_formatting() -> None:
     """
     Examples

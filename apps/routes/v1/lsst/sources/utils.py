@@ -13,11 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
-from numpy import array as nparray
 
-from apps.utils.utils import download_cutout
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import format_lsst_hbase_output, hbase_to_dict
+from apps.utils.decoding import format_lsst_hbase_output
 
 from line_profiler import profile
 
@@ -77,7 +75,7 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
 
     schema_client = client.schema()
 
-    pdf = format_hbase_output(
+    pdf = format_lsst_hbase_output(
         results,
         schema_client,
         group_alerts=False,
