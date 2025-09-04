@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.template.utils import my_function
+from apps.routes.v1.ztf.template.utils import my_function
 
 payload = {
     "arg1": "toto",

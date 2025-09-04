@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.resolver.utils import resolve_name
+from apps.routes.v1.ztf.resolver.utils import resolve_name
 
 ns = Namespace(
     "api/v1/resolver", "Resolve astronomical names to ZTF alert names, and vice-versa"

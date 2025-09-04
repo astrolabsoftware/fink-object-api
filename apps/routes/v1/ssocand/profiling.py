@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call get_ssocand"""
 
-from apps.routes.v1.ssocand.utils import get_ssocand
+from apps.routes.v1.ztf.ssocand.utils import get_ssocand
 
 payload = {
     "kind": "lightcurves",

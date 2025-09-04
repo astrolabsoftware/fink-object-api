@@ -15,7 +15,7 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.ztf.sso.utils import extract_sso_data
 
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data

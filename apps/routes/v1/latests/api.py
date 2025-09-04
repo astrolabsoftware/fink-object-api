@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.latests.utils import extract_object_from_class
+from apps.routes.v1.ztf.latests.utils import extract_object_from_class
 
 ns = Namespace("api/v1/latests", "Get object data based their class")
 

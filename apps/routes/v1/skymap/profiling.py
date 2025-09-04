@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call search_in_skymap"""
 
-from apps.routes.v1.skymap.utils import search_in_skymap
+from apps.routes.v1.ztf.skymap.utils import search_in_skymap
 
 payload = {"event_name": "S230709bi", "credible_level": 0.2}
 

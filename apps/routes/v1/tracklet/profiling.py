@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call get_tracklet"""
 
-from apps.routes.v1.tracklet.utils import get_tracklet
+from apps.routes.v1.ztf.tracklet.utils import get_tracklet
 
 payload = {
     "date": "2024-11-03",

@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call get_anomalous_alerts"""
 
-from apps.routes.v1.anomaly.utils import get_anomalous_alerts
+from apps.routes.v1.ztf.anomaly.utils import get_anomalous_alerts
 
 payload = {
     "n": 10000,

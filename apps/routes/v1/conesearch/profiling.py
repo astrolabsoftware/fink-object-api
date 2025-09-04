@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call run_conesearch"""
 
-from apps.routes.v1.conesearch.utils import run_conesearch
+from apps.routes.v1.ztf.conesearch.utils import run_conesearch
 
 # Conesearch in the
 payload_galactic = {"ra": 347.661215, "dec": 61.588129, "radius": 3600}

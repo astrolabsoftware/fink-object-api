@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.skymap.utils import search_in_skymap
+from apps.routes.v1.ztf.skymap.utils import search_in_skymap
 
 ns = Namespace("api/v1/skymap", "Return Fink/ZTF alerts within a GW skymap")
 

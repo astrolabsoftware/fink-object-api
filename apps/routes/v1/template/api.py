@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.template.utils import my_function
+from apps.routes.v1.ztf.template.utils import my_function
 
 ns = Namespace("api/v1/template", "Template")
 

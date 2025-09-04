@@ -22,7 +22,7 @@ APIURL = sys.argv[1]
 
 
 def bayestartest(
-    bayestar="apps/routes/v1/skymap/bayestar.fits.gz",
+    bayestar="apps/routes/v1/ztf/skymap/bayestar.fits.gz",
     event_name="",
     credible_level=0.1,
     n_day_before=1,

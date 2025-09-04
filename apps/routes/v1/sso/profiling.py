@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.sso.utils import extract_sso_data
+from apps.routes.v1.ztf.sso.utils import extract_sso_data
 
 payload = {
     "n_or_d": "Julienpeloton",

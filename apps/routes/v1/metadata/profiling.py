@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.metadata.utils import retrieve_metadata, retrieve_oid
+from apps.routes.v1.ztf.metadata.utils import retrieve_metadata, retrieve_oid
 
 payload1 = {
     "objectId": "ZTF21abfmbix",

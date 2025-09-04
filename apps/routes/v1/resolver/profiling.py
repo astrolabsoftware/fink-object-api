@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call extract_object_data"""
 
-from apps.routes.v1.resolver.utils import resolver_name
+from apps.routes.v1.ztf.resolver.utils import resolver_name
 
 payload_tns = {"resolver": "tns", "name": "ZTF24abxxltd"}
 payload_sso = {"resolver": "ssodnet", "name": "Julienpeloton"}

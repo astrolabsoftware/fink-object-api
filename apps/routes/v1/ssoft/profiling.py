@@ -15,7 +15,7 @@
 """Call get_ssoft"""
 
 import pandas as pd
-from apps.routes.v1.ssoft.utils import get_ssoft
+from apps.routes.v1.ztf.ssoft.utils import get_ssoft
 
 payload = {"version": "2024.11", "flavor": "SHG1G2"}
 

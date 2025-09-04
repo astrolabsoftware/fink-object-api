@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.ssocand.utils import get_ssocand
+from apps.routes.v1.ztf.ssocand.utils import get_ssocand
 
 ns = Namespace("api/v1/ssocand", "Get data about Solar System candidates found by Fink")
 

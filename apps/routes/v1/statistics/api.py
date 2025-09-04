@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.statistics.utils import get_statistics
+from apps.routes.v1.ztf.statistics.utils import get_statistics
 
 ns = Namespace(
     "api/v1/statistics", "Get statistics about Fink and the ZTF alert stream"

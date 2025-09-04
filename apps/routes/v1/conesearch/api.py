@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.conesearch.utils import run_conesearch
+from apps.routes.v1.ztf.conesearch.utils import run_conesearch
 
 ns = Namespace("api/v1/conesearch", "Get object data based on coordinates")
 
