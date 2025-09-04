@@ -40,11 +40,11 @@ if [[ -f $URL ]]; then
   exit
 fi
 
-# Run the test suite on the utilities
-for filename in apps/routes/v1/*/test.py
+# Run the ZTF test suite on the utilities
+for filename in apps/routes/v1/ztf/*/test.py
 do
   # Run test suite
-  if [[ $filename != apps/routes/v1/ssoft/test.py ]]; then
+  if [[ $filename != apps/routes/v1/ztf/ssoft/test.py ]]; then
     echo $filename
     python $filename $URL
   else
