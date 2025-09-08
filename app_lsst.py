@@ -21,6 +21,7 @@ from apps import __version__
 from apps.utils.utils import extract_configuration
 
 from apps.routes.v1.lsst.sources.api import ns as ns_sources
+from apps.routes.v1.lsst.objects.api import ns as ns_objects
 
 config = extract_configuration("config.yml")
 
@@ -53,6 +54,7 @@ app.config["JSON_SORT_KEYS"] = False
 
 # Register namespace
 api.add_namespace(ns_sources)
+api.add_namespace(ns_objects)
 
 # Register blueprint
 app.register_blueprint(blueprint)
