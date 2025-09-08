@@ -31,7 +31,7 @@ ARGS = ns.model(
             required=True,
         ),
         "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'i:magpsf,i:jd'. If not specified, transfer all columns.",
+            description="Comma-separated data columns to transfer, e.g. 'i:midpointMjdTai,i:psfFlux,i:band'. If not specified, transfer all columns.",
             example="i:midpointMjdTai,i:psfFlux,i:band",
             required=False,
         ),
@@ -48,7 +48,7 @@ ARGS = ns.model(
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Objects(Resource):
     def get(self):
-        """Retrieve object data from the Fink/LSST database based on their name"""
+        """Retrieve lightcurve data from the Fink/LSST database based on their name"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -58,7 +58,7 @@ class Objects(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Retrieve object data from the Fink/LSST database based on their name"""
+        """Retrieve lightcurve data from the Fink/LSST database based on their name"""
         # get payload from the query URL
         payload = request.args
 

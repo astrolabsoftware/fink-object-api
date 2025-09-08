@@ -37,7 +37,7 @@ def get_an_object(
         "output-format": output_format,
     }
 
-    r = requests.post("{}/api/v1/objects".format(APIURL), json=payload)
+    r = requests.post("{}/api/v1/sources".format(APIURL), json=payload)
 
     assert r.status_code == 200, r.content
 

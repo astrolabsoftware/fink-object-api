@@ -24,7 +24,7 @@ from line_profiler import profile
 def extract_object_data(payload: dict) -> pd.DataFrame:
     """Extract data returned by HBase and format it in a Pandas dataframe
 
-    Data is from /api/v1/objects
+    Data is from /api/v1/sources
 
     Parameters
     ----------
