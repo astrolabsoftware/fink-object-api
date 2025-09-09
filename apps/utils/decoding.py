@@ -49,7 +49,7 @@ def format_hbase_output(
     with_constellation: bool = True,
     escape_slash: bool = False,
 ):
-    """ """
+    """Decode the raw HBase payload from Fink/ZTF database into a DataFrame"""
     if len(hbase_output) == 0:
         return pd.DataFrame({})
 
@@ -150,6 +150,60 @@ def format_hbase_output(
     # sort values by time
     if "i:jd" in pdfs.columns:
         pdfs = pdfs.sort_values("i:jd", ascending=False)
+
+    return pdfs
+
+
+@profile
+def format_lsst_hbase_output(
+    hbase_output,
+    schema_client,
+    group_alerts: bool,
+    truncated: bool = False,
+    extract_color: bool = True,
+    with_constellation: bool = True,
+    escape_slash: bool = False,
+):
+    """Decode the raw HBase payload from Fink/LSST database into a DataFrame"""
+    if len(hbase_output) == 0:
+        return pd.DataFrame({})
+
+    # Construct the dataframe
+    pdfs = pd.DataFrame.from_dict(
+        hbase_to_dict(hbase_output, escape_slash=escape_slash), orient="index"
+    )
+
+    # Remove hbase specific fields
+    for _ in ["key:key", "key:time"]:
+        if _ in pdfs.columns:
+            pdfs = pdfs.drop(columns=_)
+
+    # Type conversion
+    for col in pdfs.columns:
+        pdfs[col] = convert_datatype(
+            pdfs[col],
+            hbase_type_converter[schema_client.type(col)],
+        )
+
+    # cast 'nan' into `[]` for easier json decoding
+    for col in ["d:lc_features_g", "d:lc_features_r"]:
+        if col in pdfs.columns:
+            pdfs[col] = pdfs[col].replace("nan", "[]")
+
+    pdfs = pdfs.copy()  # Fix Pandas' "DataFrame is highly fragmented" warning
+
+    # Display only the last alert
+    if (
+        group_alerts
+        and ("i:midpointMjdTai" in pdfs.columns)
+        and ("i:diaObjectId" in pdfs.columns)
+    ):
+        pdfs["i:midpointMjdTai"] = pdfs["i:midpointMjdTai"].astype(float)
+        pdfs = pdfs.loc[pdfs.groupby("i:diaObjectId")["i:midpointMjdTai"].idxmax()]
+
+    # sort values by time
+    if "i:midpointMjdTai" in pdfs.columns:
+        pdfs = pdfs.sort_values("i:midpointMjdTai", ascending=False)
 
     return pdfs
 

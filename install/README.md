@@ -81,7 +81,7 @@ Group=root
 WorkingDirectory=/opt/fink-object-api
 Restart=on-failure
 RestartSec=5s
-ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /opt/fink-object-api/config_prometheus.py --max-requests 500 --log-file=/tmp/fink_object_api.log app:app -b :PORT2 --workers=4 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
+ExecStart=/bin/sh -c 'source /root/.bashrc; exec /opt/fink-env/bin/gunicorn -c /opt/fink-object-api/config_prometheus.py --max-requests 500 --log-file=/tmp/fink_object_api.log app_ztf:app -b :PORT2 --workers=4 --threads=8 --timeout 180 --chdir /opt/fink-object-api --bind unix:/run/fink_object_api.sock 2>&1 >> /tmp/fink_object_api.out'
 
 [Install]
 WantedBy=multi-user.target
