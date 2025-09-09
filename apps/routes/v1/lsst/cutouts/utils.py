@@ -70,6 +70,8 @@ def format_and_send_cutout(payload: dict):
         filename = filename + ".png"
     elif output_format == "FITS":
         filename = filename + ".fits"
+    elif output_format == "array":
+        pass
     else:
         rep = {
             "status": "error",
