@@ -38,7 +38,7 @@ def cutouttest(
 ):
     """Perform a cutout search in the Science Portal using the Fink REST API"""
     payload = {
-        "objectId": objectId,
+        "diaObjectId": diaObjectId,
         "kind": kind,  # Science, Template, Difference
         "stretch": stretch,  # sigmoid[default], linear, sqrt, power, log, asinh
         "colormap": colormap,  # Valid matplotlib colormap name (see matplotlib.cm). Default is grayscale.
