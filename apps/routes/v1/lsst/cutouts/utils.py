@@ -68,14 +68,12 @@ def format_and_send_cutout(payload: dict):
 
     if output_format == "PNG":
         filename = filename + ".png"
-    elif output_format == "JPEG":
-        filename = filename + ".jpg"
     elif output_format == "FITS":
         filename = filename + ".fits"
     else:
         rep = {
             "status": "error",
-            "text": "output-format must be one of: PNG, JPEG, FITS, or array.\n",
+            "text": "output-format must be one of: PNG, FITS, or array.\n",
         }
         return Response(str(rep), 400)
 
