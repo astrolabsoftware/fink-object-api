@@ -17,7 +17,7 @@
 from apps.routes.v1.lsst.objects.utils import extract_object_data
 
 payload = {
-    "diaObjectId": "396895411240974",
+    "diaObjectId": "169298438257115164",
 }
 
 extract_object_data(payload)
