@@ -14,7 +14,7 @@
 # limitations under the License.
 """Call format_and_send_cutout"""
 
-from apps.routes.v1.ztf.cutouts.utils import format_and_send_cutout
+from apps.routes.v1.lsst.cutouts.utils import format_and_send_cutout
 from flask import Flask
 
 app = Flask("Profile cutouts")
