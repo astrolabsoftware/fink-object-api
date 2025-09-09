@@ -22,11 +22,11 @@ import sys
 APIURL = sys.argv[1]
 
 # Implement random name generator
-OID = "396895411240977"
+OID = "169298438257115164"
 
 
 def get_an_object(
-    oid="396895411240977",
+    oid="169298438257115164",
     output_format="json",
     columns="*",
 ):
@@ -140,7 +140,7 @@ def test_multiple_objects() -> None:
     --------
     >>> test_multiple_objects()
     """
-    OIDS_ = ["396895411240990", "396895411240984", "396895411240974"]
+    OIDS_ = ["169298438257115164", "169298437583405159", "169298437355340113"]
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
 
