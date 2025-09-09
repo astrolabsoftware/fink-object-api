@@ -54,7 +54,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     else:
         cols = "*"
 
-    n = int(payload.get("n", 100))
+    n = int(payload.get("n", 1000))
 
     # Conesearch with optional date range
     client = connect_to_hbase_table("rubin.pixel128")

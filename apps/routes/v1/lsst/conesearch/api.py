@@ -41,7 +41,7 @@ ARGS = ns.model(
             required=True,
         ),
         "n": fields.Integer(
-            description="Maximal number of alerts to return. Default is 100.",
+            description="Maximal number of alerts to return. Default is 1000.",
             example=10,
             required=False,
         ),
