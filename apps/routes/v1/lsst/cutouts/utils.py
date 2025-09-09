@@ -54,8 +54,11 @@ def format_and_send_cutout(payload: dict):
         stretch = "sigmoid"
 
     if payload["kind"] == "All" and payload["output-format"] != "array":
-        # TODO: error 400
-        pass
+        rep = {
+            "status": "error",
+            "text": "The option `kind=All` is only compatible with `output-format=array`.\n",
+        }
+        return Response(str(rep), 400)
 
     # default name based on parameters
     filename = "{}_{}".format(
@@ -69,6 +72,12 @@ def format_and_send_cutout(payload: dict):
         filename = filename + ".jpg"
     elif output_format == "FITS":
         filename = filename + ".fits"
+    else:
+        rep = {
+            "status": "error",
+            "text": "output-format must be one of: PNG, JPEG, FITS, or array.\n",
+        }
+        return Response(str(rep), 400)
 
     # Query the Database (object query)
     client = connect_to_hbase_table("rubin.cutouts")
