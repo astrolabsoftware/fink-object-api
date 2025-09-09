@@ -68,8 +68,7 @@ def test_simple_conesearch() -> None:
     """
     ra0 = 193.8217
     dec0 = 2.897
-    radius = 5
-
+    radius = 5.0
     pdf = conesearch(ra=ra0, dec=dec0, radius=radius)
 
     # Not empty
@@ -84,7 +83,7 @@ def test_simple_conesearch() -> None:
 
     sep = coord0.separation(coord1).degree * 3600
 
-    assert sep <= 5, sep
+    assert sep <= radius, sep
 
 
 def test_conesearch_with_dates() -> None:

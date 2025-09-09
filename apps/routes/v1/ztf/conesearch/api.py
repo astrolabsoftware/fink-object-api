@@ -37,11 +37,11 @@ ARGS = ns.model(
         ),
         "radius": fields.Float(
             description="Conesearch radius in arcsec. Maximum is 18,000 arcseconds (5 degrees).",
-            example=10 / 3600.0,
+            example=10.0,
             required=True,
         ),
         "n": fields.Integer(
-            description="Maximal number of alerts to return. Default is 1000. Default is 1000.",
+            description="Maximal number of alerts to return. Default is 1000.",
             example=10,
             required=False,
         ),
