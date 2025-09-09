@@ -72,9 +72,13 @@ def format_and_send_cutout(payload: dict):
 
     # Query the Database (object query)
     client = connect_to_hbase_table("rubin.cutouts")
+
+    # Salted key
+    rowkey = "key:key:{}_{}".format(payload["diaObjectId"][-3:], payload["diaObjectId"])
+
     results = client.scan(
         "",
-        "key:key:{}".format(payload["diaObjectId"]),
+        rowkey,
         "d:hdfs_path,i:midpointMjdTai,i:diaSourceId,i:diaObjectId",
         0,
         False,
