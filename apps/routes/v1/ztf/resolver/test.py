@@ -161,7 +161,7 @@ def test_simbad_resolver() -> None:
     # One object found
     assert len(pdf) == 1
 
-    assert pdf["oname"].to_numpy()[0].replace(" ", "").startswith("NVSS"), pdf[
+    assert pdf["oname"].to_numpy()[0].replace(" ", "").startswith("Mrk"), pdf[
         "oname"
     ].to_numpy()[0]
 
