@@ -214,6 +214,7 @@ def request_cutout(json_payload, output_format, cutout_api_url):
         r0 = requests.post(
             "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
         )
+        # FIXME: raise of error
         cutout = io.BytesIO(r0.content)
     elif output_format in ["PNG", "array"]:
         json_payload.update({"return_type": "array"})
@@ -221,4 +222,5 @@ def request_cutout(json_payload, output_format, cutout_api_url):
             "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
         )
         cutout = json.loads(r0.content)
+        # FIXME: raise for error
     return cutout
