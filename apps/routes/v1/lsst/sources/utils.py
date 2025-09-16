@@ -48,9 +48,13 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
         objectids = [f"key:key:{i[-3:]}_{i}" for i in splitids]
     else:
         # single object search
-        objectids = [
-            "key:key:{}_{}".format(payload["diaObjectId"][-3:], payload["diaObjectId"])
-        ]
+        salt = payload["diaObjectId"][-3:]
+
+        if "midpointMjdTai" in payload:
+            key = "{}_{}".format(payload["diaObjectId"], payload["midpointMjdTai"])
+        else:
+            key = payload["diaObjectId"]
+        objectids = ["key:key:{}_{}".format(salt, key)]
 
     # if "withupperlim" in payload and str(payload["withupperlim"]) == "True":
     #     withupperlim = True
