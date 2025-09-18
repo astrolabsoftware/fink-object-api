@@ -66,6 +66,7 @@ def test_single_object() -> None:
 
     assert not pdf.empty
 
+
 def test_single_object_with_date() -> None:
     """
     Examples

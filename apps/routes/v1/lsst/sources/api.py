@@ -31,7 +31,7 @@ ARGS = ns.model(
             required=True,
         ),
         "midpointMjdTai": fields.Float(
-            description='If set, only transfer data for the corresponding observation at time midpointMjdTai (float). This is particularly useful for performance if you are only interested in the data for one source. Note that it does not work if diaObjectId is a comma-separated list. If not specified, transfer data for all sources.',
+            description="If set, only transfer data for the corresponding observation at time midpointMjdTai (float). This is particularly useful for performance if you are only interested in the data for one source. Note that it does not work if diaObjectId is a comma-separated list. If not specified, transfer data for all sources.",
             required=False,
         ),
         "columns": fields.String(
