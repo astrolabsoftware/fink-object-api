@@ -26,6 +26,8 @@ from fink_filters.ztf.classification import extract_fink_classification_
 
 from line_profiler import profile
 
+pd.set_option("future.no_silent_downcasting", True)
+
 # For int we use `Int64` due to the presence of NaN
 # See https://pandas.pydata.org/pandas-docs/version/1.3/user_guide/integer_na.html
 hbase_type_converter = {
@@ -35,7 +37,7 @@ hbase_type_converter = {
     "double": float,
     "string": str,
     "fits/image": str,
-    "boolean": bool,
+    "boolean": str,
 }
 
 
@@ -96,6 +98,9 @@ def format_hbase_output(
             pdfs[col],
             hbase_type_converter[schema_client.type(col)],
         )
+
+    # Booleans
+    pdfs = pdfs.replace(to_replace={"true": True, "false": False})
 
     # cast 'nan' into `[]` for easier json decoding
     for col in ["d:lc_features_g", "d:lc_features_r"]:
@@ -184,6 +189,9 @@ def format_lsst_hbase_output(
             pdfs[col],
             hbase_type_converter[schema_client.type(col)],
         )
+
+    # Booleans
+    pdfs = pdfs.replace(to_replace={"true": True, "false": False})
 
     # cast 'nan' into `[]` for easier json decoding
     for col in ["d:lc_features_g", "d:lc_features_r"]:

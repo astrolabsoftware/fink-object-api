@@ -22,11 +22,12 @@ import sys
 APIURL = sys.argv[1]
 
 # Implement random name generator
-OID = "169298438257115164"
+OID = "169298433216610349"
 
 
 def get_an_object(
-    oid="169298438257115164",
+    oid="169298433216610349",
+    midpointMjdTai=None,
     output_format="json",
     columns="*",
 ):
@@ -36,6 +37,9 @@ def get_an_object(
         "columns": columns,
         "output-format": output_format,
     }
+
+    if midpointMjdTai is not None:
+        payload.update({"midpointMjdTai": midpointMjdTai})
 
     r = requests.post("{}/api/v1/sources".format(APIURL), json=payload)
 
@@ -61,6 +65,17 @@ def test_single_object() -> None:
     pdf = get_an_object(oid=OID)
 
     assert not pdf.empty
+
+
+def test_single_object_with_date() -> None:
+    """
+    Examples
+    --------
+    >>> test_single_object_with_date()
+    """
+    pdf = get_an_object(oid=OID, midpointMjdTai=60924.3322219485)
+
+    assert len(pdf) == 1, len(pdf)
 
 
 def test_single_object_csv() -> None:
@@ -140,12 +155,14 @@ def test_multiple_objects() -> None:
     --------
     >>> test_multiple_objects()
     """
-    OIDS_ = ["169298438257115164", "169298437583405159", "169298437355340113"]
+    OIDS_ = [OID, "169342391073374215"]
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
+    assert not pdf.empty, OIDS
+    assert "i:diaObjectId" in pdf.columns, pdf.columns
 
     n_oids = len(np.unique(pdf.groupby("i:diaObjectId").count()["i:ra"]))
-    assert n_oids == 3
+    assert n_oids == 2
 
     n_oids_single = 0
     len_object = 0

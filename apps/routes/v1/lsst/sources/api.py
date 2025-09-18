@@ -26,12 +26,16 @@ ARGS = ns.model(
     "sources",
     {
         "diaObjectId": fields.String(
-            description='single Rubin Object ID, or a comma-separated list of object ID, e.g. "396895411240977"',
-            example="396895411240977",
+            description='single Rubin Object ID as STRING, or a comma-separated list of object ID, e.g. "169298433216610349"',
+            example="169298433216610349",
             required=True,
         ),
+        "midpointMjdTai": fields.Float(
+            description="If set, only transfer data for the corresponding observation at time midpointMjdTai (float). This is particularly useful for performance if you are only interested in the data for one source. Note that it does not work if diaObjectId is a comma-separated list. If not specified, transfer data for all sources.",
+            required=False,
+        ),
         "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'i:midpointMjdTai,i:psfFlux,i:band'. If not specified, transfer all columns.",
+            description="Comma-separated data columns to transfer, e.g. 'i:midpointMjdTai,i:psfFlux,i:band'. If not specified, transfer all columns (slow).",
             example="i:midpointMjdTai,i:psfFlux,i:band",
             required=False,
         ),
