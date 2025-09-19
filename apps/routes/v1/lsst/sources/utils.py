@@ -66,7 +66,7 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
     else:
         truncated = True
 
-    client = connect_to_hbase_table("rubin.diaSource")
+    client = connect_to_hbase_table("rubin.diaSource_static")
 
     # Get data from the main table
     results = {}
