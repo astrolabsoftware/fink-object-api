@@ -24,7 +24,7 @@ from astropy.time import Time
 from astropy.coordinates import SkyCoord
 
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import format_hbase_output
+from apps.utils.decoding import format_lsst_hbase_output
 from apps.utils.utils import isoify_time
 
 from line_profiler import profile
@@ -47,10 +47,10 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     """
     if "columns" in payload:
         cols = payload["columns"].replace(" ", "")
-        if "i:ra" not in cols:
-            cols = ",".join([cols, "i:ra"])
-        if "i:dec" not in cols:
-            cols = ",".join([cols, "i:dec"])
+        if "s:ra" not in cols:
+            cols = ",".join([cols, "s:ra"])
+        if "s:dec" not in cols:
+            cols = ",".join([cols, "s:dec"])
     else:
         cols = "*"
 
@@ -119,7 +119,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
 
     client.close()
 
-    pdf = format_hbase_output(
+    pdf = format_lsst_hbase_output(
         results,
         schema_client,
         truncated=True,
@@ -132,25 +132,25 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     if "startdate" in payload:
         # Filter out alerts that vary in the past
         mjd_start = Time(isoify_time(payload["startdate"]), scale="tai").mjd
-        pdf = pdf[pdf["i:firstDiaSourceMjdTai"] >= mjd_start]
+        pdf = pdf[pdf["o:firstDiaSourceMjdTai"] >= mjd_start]
 
         if "window" in payload:
             # Also filter out alerts that vary in the future
             window = float(payload["window"])
             mjd_stop = mjd_start + window
-            pdf = pdf[pdf["i:lastDiaSourceMjdTai"] <= mjd_stop]
+            pdf = pdf[pdf["o:lastDiaSourceMjdTai"] <= mjd_stop]
 
     if "stopdate" in payload:
         # Filter out alerts that vary in the future
         mjd_stop = Time(isoify_time(payload["stopdate"]), scale="tai").mjd
-        pdf = pdf[pdf["i:lastDiaSourceMjdTai"] <= mjd_stop]
+        pdf = pdf[pdf["o:lastDiaSourceMjdTai"] <= mjd_stop]
 
     # For conesearch, sort by distance
     if len(pdf) > 0:
         sep = coord.separation(
             SkyCoord(
-                pdf["i:ra"],
-                pdf["i:dec"],
+                pdf["s:ra"],
+                pdf["s:dec"],
                 unit="deg",
             ),
         ).deg

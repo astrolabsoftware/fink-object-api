@@ -23,7 +23,7 @@ from astropy.time import Time
 from astropy.coordinates import SkyCoord
 
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import format_lsst_hbase_output
+from apps.utils.decoding import format_hbase_output
 from apps.utils.utils import isoify_time
 
 from line_profiler import profile
@@ -148,7 +148,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
 
     client.close()
 
-    pdf = format_lsst_hbase_output(
+    pdf = format_hbase_output(
         results,
         schema_client,
         truncated=True,
