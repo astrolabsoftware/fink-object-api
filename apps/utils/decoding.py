@@ -194,7 +194,7 @@ def format_lsst_hbase_output(
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
 
     # cast 'nan' into `[]` for easier json decoding
-    for col in ["d:lc_features_g", "d:lc_features_r"]:
+    for col in ["fs:lc_features_g", "fs:lc_features_r"]:
         if col in pdfs.columns:
             pdfs[col] = pdfs[col].replace("nan", "[]")
 
