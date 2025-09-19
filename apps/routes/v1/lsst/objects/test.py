@@ -93,7 +93,7 @@ def test_column_selection() -> None:
     --------
     >>> test_column_selection()
     """
-    pdf = get_an_object(oid=OID, columns="i:nDiaSources,i:firstDiaSourceMjdTai")
+    pdf = get_an_object(oid=OID, columns="o:nDiaSources,o:firstDiaSourceMjdTai")
 
     assert len(pdf.columns) == 2, "I count {} columns".format(len(pdf.columns))
 
@@ -119,14 +119,14 @@ def test_multiple_objects() -> None:
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
 
-    n_oids = len(np.unique(pdf.groupby("i:diaObjectId").count()["i:ra"]))
+    n_oids = len(np.unique(pdf.groupby("o:diaObjectId").count()["o:ra"]))
     assert n_oids == 3
 
     n_oids_single = 0
     len_object = 0
     for oid in OIDS_:
         pdf_ = get_an_object(oid=oid)
-        n_oid = len(np.unique(pdf_.groupby("i:diaObjectId").count()["i:ra"]))
+        n_oid = len(np.unique(pdf_.groupby("o:diaObjectId").count()["o:ra"]))
         n_oids_single += n_oid
         len_object += len(pdf_)
 

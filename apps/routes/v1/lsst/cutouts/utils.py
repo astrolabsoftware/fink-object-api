@@ -88,7 +88,7 @@ def format_and_send_cutout(payload: dict):
     results = client.scan(
         "",
         rowkey,
-        "d:hdfs_path,i:midpointMjdTai,i:diaSourceId,i:diaObjectId",
+        "r:hdfs_path,s:midpointMjdTai,s:diaSourceId,o:diaObjectId",
         0,
         False,
         False,
@@ -110,7 +110,7 @@ def format_and_send_cutout(payload: dict):
     json_payload = {}
     # Extract only the alert of interest
     if "diaSourceId" in payload:
-        mask = pdf["i:diaSourceId"].astype(str) == str(payload["diaSourceId"])
+        mask = pdf["s:diaSourceId"].astype(str) == str(payload["diaSourceId"])
         json_payload.update({"diaSourceId": str(payload["diaSourceId"])})
         pos_target = np.where(mask)[0][0]
     else:
@@ -120,9 +120,9 @@ def format_and_send_cutout(payload: dict):
 
     json_payload.update(
         {
-            "hdfsPath": pdf["d:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
+            "hdfsPath": pdf["r:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
             "kind": payload["kind"],
-            "diaObjectId": str(pdf["i:diaObjectId"].to_numpy()[pos_target]),
+            "diaObjectId": str(pdf["o:diaObjectId"].to_numpy()[pos_target]),
         }
     )
 
