@@ -59,30 +59,6 @@ def extract_schema(payload: dict) -> Response:
     root_rubin_names = ["observation_reason", "target_name", "diaSourceId"]
     root_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
 
-    # root level should be everywhere
-    root_list.append(
-        {
-            "name": "fink_broker_version",
-            "type": "string",
-            "doc": "fink-broker schema version used",
-        },
-    )
-
-    root_list.append(
-        {
-            "name": "fink_science_version",
-            "type": "string",
-            "doc": "fink-science schema version used",
-        },
-    )
-    root_list.append(
-        {
-            "name": "lsst_schema_version",
-            "type": "string",
-            "doc": "LSST schema version used",
-        },
-    )
-
     # Fink Science modules
     fink_science = [
         {
@@ -170,11 +146,22 @@ def extract_schema(payload: dict) -> Response:
             "type": "int",
             "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
         },
+        {
+            "name": "fink_broker_version",
+            "type": "string",
+            "doc": "fink-broker schema version used",
+        },
+        {
+            "name": "fink_science_version",
+            "type": "string",
+            "doc": "fink-science schema version used",
+        },
+        {
+            "name": "lsst_schema_version",
+            "type": "string",
+            "doc": "LSST schema version used",
+        },
     ]
-
-    # # Sort by name
-    # rubin_schema = rubin_schema.sort_values("name")
-    # fink_science = fink_science.sort_values("name")
 
     # categories = [
     #     "diaSourceId",
@@ -224,7 +211,6 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/conesearch":
-        # root, diaObject, fink
         types = {
             "Rubin original fields (r:)": sort_dict(
                 {
@@ -236,6 +222,15 @@ def extract_schema(payload: dict) -> Response:
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
                     for i in fink_science
+                }
+            ),
+        }
+    elif payload["endpoint"] == "/api/v1/cutouts":
+        types = {
+            "Rubin original cutouts (b:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in cutoutDifference + cutoutTemplate + cutoutScience
                 }
             ),
         }
