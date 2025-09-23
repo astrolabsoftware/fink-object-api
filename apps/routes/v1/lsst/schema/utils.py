@@ -23,16 +23,14 @@ def flatten_nested(schema, entry_name):
     """
     blobs = [cat["type"] for cat in schema["fields"] if cat["name"] == entry_name][0]
 
-    # Take the dict entry (non-null)
-    mask = [isinstance(blob, dict) for blob in blobs]
-
-    if sum(mask) == 0:
-        # plain
-        index = 0
-    else:
+    if isinstance(blobs, list):
+        # nullable entry
+        # Take the dict entry (non-null)
+        mask = [isinstance(blob, dict) for blob in blobs]
         index = mask.index(True)
-
-    dic = blobs[index]
+        dic = blobs[index]
+    else:
+        dic = blobs
 
     return dic["fields"]
 
