@@ -166,21 +166,6 @@ def extract_schema(payload: dict) -> Response:
         },
     ]
 
-    # categories = [
-    #     "diaSourceId",
-    #     "observation_reason",
-    #     "target_name",
-    #     "diaSource",
-    #     "prvDiaSources",
-    #     "prvDiaForcedSources",
-    #     "diaObject",
-    #     "ssSource",
-    #     "MPCORB",
-    #     "cutoutDifference",
-    #     "cutoutScience",
-    #     "cutoutTemplate",
-    # ]
-
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
@@ -218,7 +203,9 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in flatten_nested(rubin_schema, "diaSource") + flatten_nested(rubin_schema, "diaObject") + root_list
+                    for i in flatten_nested(rubin_schema, "diaSource")
+                    + flatten_nested(rubin_schema, "diaObject")
+                    + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
