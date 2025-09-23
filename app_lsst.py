@@ -24,6 +24,7 @@ from apps.routes.v1.lsst.sources.api import ns as ns_sources
 from apps.routes.v1.lsst.objects.api import ns as ns_objects
 from apps.routes.v1.lsst.conesearch.api import ns as ns_conesearch
 from apps.routes.v1.lsst.cutouts.api import ns as ns_cutouts
+from apps.routes.v1.lsst.schema.api import ns as ns_schema
 
 config = extract_configuration("config.yml")
 
@@ -59,6 +60,7 @@ api.add_namespace(ns_sources)
 api.add_namespace(ns_objects)
 api.add_namespace(ns_conesearch)
 api.add_namespace(ns_cutouts)
+api.add_namespace(ns_schema)
 
 # Register blueprint
 app.register_blueprint(blueprint)
