@@ -18,9 +18,9 @@ import requests
 
 from line_profiler import profile
 
+
 def flatten_nested(schema, entry_name):
-    """
-    """
+    """ """
     blobs = [cat["type"] for cat in schema["fields"] if cat["name"] == entry_name][0]
 
     if isinstance(blobs, list):
@@ -34,10 +34,11 @@ def flatten_nested(schema, entry_name):
 
     return dic["fields"]
 
-def sort_list(alist):
-    """
-    """
-    return sorted(alist, key=lambda x: list(x.keys())[0])
+
+def sort_dict(adict):
+    """ """
+    return {key: adict[key] for key in sorted(adict.keys())}
+
 
 @profile
 def extract_schema(payload: dict) -> Response:
@@ -175,24 +176,37 @@ def extract_schema(payload: dict) -> Response:
     # rubin_schema = rubin_schema.sort_values("name")
     # fink_science = fink_science.sort_values("name")
 
-    categories = ['diaSourceId', 'observation_reason', 'target_name', 'diaSource',
-            'prvDiaSources', 'prvDiaForcedSources', 'diaObject', 'ssSource',
-            'MPCORB', 'cutoutDifference', 'cutoutScience', 'cutoutTemplate']
+    # categories = [
+    #     "diaSourceId",
+    #     "observation_reason",
+    #     "target_name",
+    #     "diaSource",
+    #     "prvDiaSources",
+    #     "prvDiaForcedSources",
+    #     "diaObject",
+    #     "ssSource",
+    #     "MPCORB",
+    #     "cutoutDifference",
+    #     "cutoutScience",
+    #     "cutoutTemplate",
+    # ]
 
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
-            "Rubin original fields (r:)": sort_list({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in flatten_nested(rubin_schema, "diaSource") + root_list
-            }),
-            "Fink science module outputs (f:)": sort_list({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in fink_science
-            })
+            "Rubin original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in flatten_nested(rubin_schema, "diaSource") + root_list
+                }
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in fink_science
+                }
+            ),
         }
-
-
 
     # types = {
     #     "ZTF original fields (i:)": {
