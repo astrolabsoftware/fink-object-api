@@ -34,6 +34,11 @@ def flatten_nested(schema, entry_name):
 
     return dic["fields"]
 
+def sort_list(alist):
+    """
+    """
+    return sorted(alist, key=lambda x: x[0])
+
 @profile
 def extract_schema(payload: dict) -> Response:
     """Retrieve the data schema
@@ -177,14 +182,14 @@ def extract_schema(payload: dict) -> Response:
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
-            "Rubin original fields (r:)": {
+            "Rubin original fields (r:)": sort_list({
                 i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
                 for i in flatten_nested(rubin_schema, "diaSource") + root_list
-            },
-            "Fink science module outputs (f:)": {
+            }),
+            "Fink science module outputs (f:)": sort_list({
                 i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
                 for i in fink_science
-            }
+            })
         }
 
 
