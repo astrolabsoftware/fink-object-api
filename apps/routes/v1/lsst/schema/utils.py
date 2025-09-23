@@ -37,7 +37,7 @@ def flatten_nested(schema, entry_name):
 def sort_list(alist):
     """
     """
-    return sorted(alist, key=lambda x: x[0])
+    return sorted(alist, key=lambda x: list(x.keys())[0])
 
 @profile
 def extract_schema(payload: dict) -> Response:
