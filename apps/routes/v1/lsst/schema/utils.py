@@ -26,7 +26,7 @@ def flatten_nested(schema, entry_name):
     # Take the dict entry (non-null)
     mask = [isinstance(blob, dict) for blob in blobs]
 
-    dic = blob[mask.index(True)]
+    dic = blobs[mask.index(True)]
 
     return dic["fields"]
 
