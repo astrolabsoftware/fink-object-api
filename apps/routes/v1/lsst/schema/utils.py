@@ -60,7 +60,7 @@ def extract_schema(payload: dict) -> Response:
     root_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
 
     cutout_rubin_names = ["cutoutDifference", "cutoutTemplate", "cutoutScience"]
-    cutout_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
+    cutout_list = [i for i in rubin_schema["fields"] if i["name"] in cutout_rubin_names]
 
     # Fink Science modules
     fink_science = [
