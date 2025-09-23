@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.lsst.schema.utils import extra_schema
+from apps.routes.v1.lsst.schema.utils import extract_schema
 
 ns = Namespace("api/v1/schema", "Retrieve the data schema for a given endpoint for Fink/Rubin API")
 
@@ -60,7 +60,7 @@ class Schema(Resource):
         if rep["status"] != "ok":
             return Response(str(rep), 400)
 
-        out = extra_schema(payload)
+        out = extract_schema(payload)
 
         if isinstance(out, Response):
             return out
