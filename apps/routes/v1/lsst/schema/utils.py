@@ -59,6 +59,9 @@ def extract_schema(payload: dict) -> Response:
     root_rubin_names = ["observation_reason", "target_name", "diaSourceId"]
     root_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
 
+    cutout_rubin_names = ["cutoutDifference", "cutoutTemplate", "cutoutScience"]
+    cutout_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
+
     # Fink Science modules
     fink_science = [
         {
@@ -230,7 +233,7 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original cutouts (b:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in cutoutDifference + cutoutTemplate + cutoutScience
+                    for i in cutout_list
                 }
             ),
         }
