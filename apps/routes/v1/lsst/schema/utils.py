@@ -45,14 +45,12 @@ def extract_schema(payload: dict) -> Response:
     )
     rubin_schema = r.json()
 
-    rubin_categories = [cat["name"] for cat in rubin_schema["fields"]]
-
     # root level should be everywhere
     root_rubin_names = ["observation_reason", "target_name", "diaSourceId"]
     root_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
 
     # root level should be everywhere
-    root_list = root_list.append(
+    root_list.append(
         {
             "name": "fink_broker_version",
             "type": "string",
@@ -60,14 +58,14 @@ def extract_schema(payload: dict) -> Response:
         },
     )
 
-    root_list = root_list.append(
+    root_list.append(
         {
             "name": "fink_science_version",
             "type": "string",
             "doc": "fink-science schema version used",
         },
     )
-    root_list = root_list.append(
+    root_list.append(
         {
             "name": "lsst_schema_version",
             "type": "string",
