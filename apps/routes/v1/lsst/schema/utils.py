@@ -237,31 +237,16 @@ def extract_schema(payload: dict) -> Response:
                 }
             ),
         }
-
-    # types = {
-    #     "ZTF original fields (i:)": {
-    #         i: {"type": j, "doc": k}
-    #         for i, j, k in zip(
-    #             rubin_schema.name, rubin_schema.type, rubin_schema.doc
-    #         )
-    #     },
-    #     "ZTF original cutouts (b:)": {
-    #         i: {"type": j, "doc": k}
-    #         for i, j, k in zip(ztf_cutouts.name, ztf_cutouts.type, ztf_cutouts.doc)
-    #     },
-    #     "Fink science module outputs (d:)": {
-    #         i: {"type": j, "doc": k}
-    #         for i, j, k in zip(
-    #             fink_science.name, fink_science.type, fink_science.doc
-    #         )
-    #     },
-    #     "Fink on-the-fly added values (v:)": {
-    #         i: {"type": j, "doc": k}
-    #         for i, j, k in zip(
-    #             fink_derived.name, fink_derived.type, fink_derived.doc
-    #         )
-    #     },
-    # }
+    elif payload["endpoint"] == "/api/v1/sso":
+        # FIXME: what about MPCORB & ssObject?
+        types = {
+            "Rubin original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in flatten_nested(rubin_schema, "ssSource") + root_list
+                }
+            ),
+        }
 
     response = Response(json.dumps(types), 200)
     response.headers.set("Content-Type", "application/json")
