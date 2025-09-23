@@ -194,7 +194,7 @@ def format_lsst_hbase_output(
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
 
     # cast 'nan' into `[]` for easier json decoding
-    for col in ["fs:lc_features_g", "fs:lc_features_r"]:
+    for col in ["f:lc_features_g", "f:lc_features_r"]:
         if col in pdfs.columns:
             pdfs[col] = pdfs[col].replace("nan", "[]")
 
@@ -203,15 +203,15 @@ def format_lsst_hbase_output(
     # Display only the last alert
     if (
         group_alerts
-        and ("s:midpointMjdTai" in pdfs.columns)
-        and ("s:diaObjectId" in pdfs.columns)
+        and ("r:midpointMjdTai" in pdfs.columns)
+        and ("r:diaObjectId" in pdfs.columns)
     ):
-        pdfs["s:midpointMjdTai"] = pdfs["s:midpointMjdTai"].astype(float)
-        pdfs = pdfs.loc[pdfs.groupby("s:diaObjectId")["s:midpointMjdTai"].idxmax()]
+        pdfs["r:midpointMjdTai"] = pdfs["r:midpointMjdTai"].astype(float)
+        pdfs = pdfs.loc[pdfs.groupby("r:diaObjectId")["r:midpointMjdTai"].idxmax()]
 
     # sort values by time
-    if "s:midpointMjdTai" in pdfs.columns:
-        pdfs = pdfs.sort_values("s:midpointMjdTai", ascending=False)
+    if "r:midpointMjdTai" in pdfs.columns:
+        pdfs = pdfs.sort_values("r:midpointMjdTai", ascending=False)
 
     return pdfs
 

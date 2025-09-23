@@ -106,7 +106,7 @@ def test_column_selection() -> None:
     --------
     >>> test_column_selection()
     """
-    pdf = get_an_object(oid=OID, columns="s:midpointMjdTai,s:psfFlux")
+    pdf = get_an_object(oid=OID, columns="r:midpointMjdTai,r:psfFlux")
 
     assert len(pdf.columns) == 2, "I count {} columns".format(len(pdf.columns))
 
@@ -120,11 +120,11 @@ def test_formatting() -> None:
     pdf = get_an_object(oid=OID)
 
     # stupid python cast...
-    assert isinstance(pdf["s:band"].to_numpy()[0], str), type(
-        pdf["s:band"].to_numpy()[0]
+    assert isinstance(pdf["r:band"].to_numpy()[0], str), type(
+        pdf["r:band"].to_numpy()[0]
     )
-    assert isinstance(pdf["s:psfFlux"].to_numpy()[0], np.double), type(
-        pdf["s:psfFlux"].to_numpy()[0]
+    assert isinstance(pdf["r:psfFlux"].to_numpy()[0], np.double), type(
+        pdf["r:psfFlux"].to_numpy()[0]
     )
 
 
@@ -135,7 +135,7 @@ def test_misc() -> None:
     >>> test_misc()
     """
     pdf = get_an_object(oid=OID)
-    assert np.all(pdf["s:midpointMjdTai"].to_numpy() > 0)
+    assert np.all(pdf["r:midpointMjdTai"].to_numpy() > 0)
 
 
 def test_bad_request() -> None:
@@ -159,16 +159,16 @@ def test_multiple_objects() -> None:
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
     assert not pdf.empty, OIDS
-    assert "s:diaObjectId" in pdf.columns, pdf.columns
+    assert "r:diaObjectId" in pdf.columns, pdf.columns
 
-    n_oids = len(np.unique(pdf.groupby("s:diaObjectId").count()["s:ra"]))
+    n_oids = len(np.unique(pdf.groupby("r:diaObjectId").count()["r:ra"]))
     assert n_oids == 2
 
     n_oids_single = 0
     len_object = 0
     for oid in OIDS_:
         pdf_ = get_an_object(oid=oid)
-        n_oid = len(np.unique(pdf_.groupby("s:diaObjectId").count()["s:ra"]))
+        n_oid = len(np.unique(pdf_.groupby("r:diaObjectId").count()["r:ra"]))
         n_oids_single += n_oid
         len_object += len(pdf_)
 

@@ -47,10 +47,10 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     """
     if "columns" in payload:
         cols = payload["columns"].replace(" ", "")
-        if "s:ra" not in cols:
-            cols = ",".join([cols, "s:ra"])
-        if "s:dec" not in cols:
-            cols = ",".join([cols, "s:dec"])
+        if "r:ra" not in cols:
+            cols = ",".join([cols, "r:ra"])
+        if "r:dec" not in cols:
+            cols = ",".join([cols, "r:dec"])
     else:
         cols = "*"
 
@@ -132,25 +132,25 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     if "startdate" in payload:
         # Filter out alerts that vary in the past
         mjd_start = Time(isoify_time(payload["startdate"]), scale="tai").mjd
-        pdf = pdf[pdf["o:firstDiaSourceMjdTai"] >= mjd_start]
+        pdf = pdf[pdf["r:firstDiaSourceMjdTai"] >= mjd_start]
 
         if "window" in payload:
             # Also filter out alerts that vary in the future
             window = float(payload["window"])
             mjd_stop = mjd_start + window
-            pdf = pdf[pdf["o:lastDiaSourceMjdTai"] <= mjd_stop]
+            pdf = pdf[pdf["r:lastDiaSourceMjdTai"] <= mjd_stop]
 
     if "stopdate" in payload:
         # Filter out alerts that vary in the future
         mjd_stop = Time(isoify_time(payload["stopdate"]), scale="tai").mjd
-        pdf = pdf[pdf["o:lastDiaSourceMjdTai"] <= mjd_stop]
+        pdf = pdf[pdf["r:lastDiaSourceMjdTai"] <= mjd_stop]
 
     # For conesearch, sort by distance
     if len(pdf) > 0:
         sep = coord.separation(
             SkyCoord(
-                pdf["s:ra"],
-                pdf["s:dec"],
+                pdf["r:ra"],
+                pdf["r:dec"],
                 unit="deg",
             ),
         ).deg
