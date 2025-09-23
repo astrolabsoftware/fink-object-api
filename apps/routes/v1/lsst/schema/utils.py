@@ -207,6 +207,38 @@ def extract_schema(payload: dict) -> Response:
                 }
             ),
         }
+    elif payload["endpoint"] == "/api/v1/objects":
+        # root, diaObject, fink
+        types = {
+            "Rubin original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in flatten_nested(rubin_schema, "diaObject") + root_list
+                }
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in fink_science
+                }
+            ),
+        }
+    elif payload["endpoint"] == "/api/v1/conesearch":
+        # root, diaObject, fink
+        types = {
+            "Rubin original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in flatten_nested(rubin_schema, "diaSource") + flatten_nested(rubin_schema, "diaObject") + root_list
+                }
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in fink_science
+                }
+            ),
+        }
 
     # types = {
     #     "ZTF original fields (i:)": {
