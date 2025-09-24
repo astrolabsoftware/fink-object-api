@@ -19,14 +19,14 @@ from apps.utils.utils import check_args
 
 from apps.routes.v1.lsst.cutouts.utils import format_and_send_cutout
 
-ns = Namespace("api/v1/cutouts", "Get cutout data based on Rubin diaObjectId")
+ns = Namespace("api/v1/cutouts", "Get cutout alert data based on Rubin diaSourceId")
 
 ARGS = ns.model(
     "cutouts",
     {
-        "diaObjectId": fields.String(
-            description="Rubin Object ID",
-            example="169298438257115164",
+        "diaSourceId": fields.String(
+            description="diaSource ID (long integer) of the alert.",
+            example="169298437355340113",
             required=True,
         ),
         "kind": fields.String(
@@ -36,11 +36,6 @@ ARGS = ns.model(
         ),
         "output-format": fields.String(
             description="PNG[default], FITS, array", example="PNG", required=False
-        ),
-        "diaSourceId": fields.String(
-            description="diaSource ID (long integer) of the alert belonging to the object with `diaObjectId`. If not filled, the cutouts of the latest alert is returned",
-            example="169298437355340113",
-            required=False,
         ),
         "stretch": fields.String(
             description="Stretch function to be applied. Available: sigmoid[default], linear, sqrt, power, log.",
