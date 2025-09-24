@@ -16,11 +16,7 @@ import requests
 from flask import Response
 
 import pandas as pd
-import numpy as np
 
-from apps.utils.utils import (
-    resolve_sso_name,
-)
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
 
@@ -28,6 +24,7 @@ from apps.utils.decoding import format_hbase_output
 # from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
 
 from line_profiler import profile
+
 
 def resolve_packed(n_or_d):
     """Resolve all packed names corresponding to input n_or_d"""
