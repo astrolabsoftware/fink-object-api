@@ -18,7 +18,7 @@ from flask import Response
 import pandas as pd
 
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import format_hbase_output
+from apps.utils.decoding import format_lsst_hbase_output
 
 # from fink_utils.sso.miriade import get_miriade_data
 # from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
@@ -163,7 +163,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     if len(results) == 0:
         return pd.DataFrame()
 
-    pdf = format_hbase_output(
+    pdf = format_lsst_hbase_output(
         results,
         schema_client,
         group_alerts=False,
