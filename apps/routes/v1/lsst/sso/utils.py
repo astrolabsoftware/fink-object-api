@@ -141,7 +141,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         sso_names[id_] = sso_name
 
     # Get data from the main table
-    client = connect_to_hbase_table("ztf.ssnamenr")
+    client = connect_to_hbase_table("rubin.diaSource_sso")
     results = {}
     for element in packed:
         salt = element[1:3]
