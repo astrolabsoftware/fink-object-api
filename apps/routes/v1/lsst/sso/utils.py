@@ -24,8 +24,8 @@ from apps.utils.utils import (
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
 
-from fink_utils.sso.miriade import get_miriade_data
-from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
+# from fink_utils.sso.miriade import get_miriade_data
+# from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
 
 from line_profiler import profile
 
