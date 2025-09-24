@@ -62,7 +62,7 @@ def format_and_send_cutout(payload: dict):
 
     # default name based on parameters
     filename = "{}_{}".format(
-        payload["diaObjectId"],
+        payload["diaSourceId"],
         payload["kind"],
     )
 
@@ -83,12 +83,12 @@ def format_and_send_cutout(payload: dict):
     client = connect_to_hbase_table("rubin.cutouts")
 
     # Salted key
-    rowkey = "key:key:{}_{}".format(payload["diaObjectId"][-3:], payload["diaObjectId"])
+    rowkey = "key:key:{}_{}".format(payload["diaSourceId"][-3:], payload["diaSourceId"])
 
     results = client.scan(
         "",
         rowkey,
-        "r:hdfs_path,r:midpointMjdTai,r:diaSourceId,r:diaObjectId",
+        "r:hdfs_path,r:midpointMjdTai,r:diaSourceId",
         0,
         False,
         False,
@@ -107,25 +107,6 @@ def format_and_send_cutout(payload: dict):
         escape_slash=False,
     )
 
-    json_payload = {}
-    # Extract only the alert of interest
-    if "diaSourceId" in payload:
-        mask = pdf["r:diaSourceId"].astype(str) == str(payload["diaSourceId"])
-        json_payload.update({"diaSourceId": str(payload["diaSourceId"])})
-        pos_target = np.where(mask)[0][0]
-    else:
-        # pdf has been sorted in `format_hbase_output`
-        pdf = pdf.iloc[0:1]
-        pos_target = 0
-
-    json_payload.update(
-        {
-            "hdfsPath": pdf["r:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
-            "kind": payload["kind"],
-            "diaObjectId": str(pdf["r:diaObjectId"].to_numpy()[pos_target]),
-        }
-    )
-
     if pdf.empty:
         return send_file(
             io.BytesIO(),
@@ -133,6 +114,12 @@ def format_and_send_cutout(payload: dict):
             as_attachment=True,
             download_name=filename,
         )
+
+    json_payload = {
+        "hdfsPath": pdf["r:hdfs_path"].to_numpy()[0].split(":8020")[1],
+        "kind": payload["kind"],
+        "diaSourceId": str(payload["diaSourceId"]),
+    }
 
     # Extract cutouts
     user_config = extract_configuration("config.yml")
