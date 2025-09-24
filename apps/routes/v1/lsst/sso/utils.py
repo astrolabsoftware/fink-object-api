@@ -99,10 +99,10 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     n_or_d = str(payload["n_or_d"])
 
     if "," in n_or_d:
-        ids = n_or_d.replace(" ", "").split(",")
+        ids = [i.strip() for i in n_or_d.split(",")]
         multiple_objects = True
     else:
-        ids = [n_or_d.replace(" ", "")]
+        ids = [n_or_d.strip()]
         multiple_objects = False
 
     # We cannot do multi-object and phase curve computation
