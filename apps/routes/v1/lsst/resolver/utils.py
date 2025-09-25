@@ -150,7 +150,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
                 "{}/api/v1/sso".format(config["APIURL"]),
                 json={
                     "n_or_d": name,
-                    "columns": "r:mpcDesignation,r:ssObjectId",
+                    "columns": "r:mpcDesignation,r:ssObjectId,r:diaSourceId",
                 },
             )
             pdf = pd.read_json(io.BytesIO(r.content))
