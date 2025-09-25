@@ -118,11 +118,6 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             else:
                 pdf = pd.DataFrame()
 
-    # FIXME: For SSO it is not clear what to do for Rubin.
-    #        For ZTF, we needed to resolve the bizarre ssnamenr field, but
-    #        here Rubin gives a valid designation. On the other hand,
-    #        we might want to resolve a ssObjectId to a SSO name.
-    #        So we need the reverse search, but not the direct one.
     elif resolver == "ssodnet":
         if reverse:
             # ssObjectId -> packed_name
