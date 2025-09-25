@@ -234,6 +234,18 @@ def extract_schema(payload: dict) -> Response:
                     for i in flatten_nested(rubin_schema, "ssSource") + root_list
                 }
             ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in [
+                        {
+                            "name": "sso_name",
+                            "type": "str",
+                            "doc": "Resolved name from quaero",
+                        }  # Manual entry from the /api/v1/sso route
+                    ]
+                }
+            ),
         }
 
     response = Response(json.dumps(types), 200)
