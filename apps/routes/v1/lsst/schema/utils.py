@@ -50,6 +50,7 @@ def extract_schema(payload: dict) -> Response:
 
     """
     # LSST candidate fields
+    # FIXME: allow user to input a version?
     r = requests.get(
         "https://usdf-alert-schemas-dev.slac.stanford.edu/subjects/alert-packet/versions/latest/schema"
     )
@@ -225,12 +226,23 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/sso":
-        # FIXME: what about MPCORB & ssObject?
         types = {
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
                     for i in flatten_nested(rubin_schema, "ssSource") + root_list
+                }
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in [
+                        {
+                            "name": "sso_name",
+                            "type": "str",
+                            "doc": "Resolved name from quaero",
+                        }  # Manual entry from the /api/v1/sso route
+                    ]
                 }
             ),
         }
