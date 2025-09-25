@@ -22,9 +22,7 @@ from apps.routes.v1.lsst.resolver.utils import resolve_name
 
 DESCRIPTION = "Resolve astronomical names to LSST IDs, and vice-versa"
 
-ns = Namespace(
-    "api/v1/resolver", DESCRIPTION
-)
+ns = Namespace("api/v1/resolver", DESCRIPTION)
 
 ARGS = ns.model(
     "resolver",

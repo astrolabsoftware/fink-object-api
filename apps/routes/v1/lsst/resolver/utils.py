@@ -76,7 +76,8 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             )
         else:
             # indices are case-insensitive
-            to_evaluate = f"key:key:{name.lower()}"
+            # salt is last letter of the name
+            to_evaluate = f"key:key:{name.lower()[-1]}_{name.lower()}"
             results = client.scan(
                 "",
                 to_evaluate,
