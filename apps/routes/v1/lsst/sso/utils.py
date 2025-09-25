@@ -80,7 +80,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     else:
         truncated = True
 
-    with_ephem, with_residuals = False, False, False
+    with_ephem, with_residuals = False, False
     if "withResiduals" in payload and (
         payload["withResiduals"] == "True" or payload["withResiduals"] is True
     ):
