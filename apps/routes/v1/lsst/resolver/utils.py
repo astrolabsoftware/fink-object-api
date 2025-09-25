@@ -19,6 +19,7 @@ import pandas as pd
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import hbase_to_dict
+from apps.utils.utils import extract_configuration
 
 from line_profiler import profile
 
@@ -122,62 +123,36 @@ def resolve_name(payload: dict) -> pd.DataFrame:
     #        here Rubin gives a valid designation. On the other hand,
     #        we might want to resolve a ssObjectId to a SSO name.
     #        So we need the reverse search, but not the direct one.
-    # elif resolver == "ssodnet":
-    #     if reverse:
-    #         # ZTF alerts -> ssnmanenr
-    #         client = connect_to_hbase_table("ztf")
-    #         to_evaluate = f"key:key:{name}"
-    #         client.setLimit(nmax)
-    #         results = client.scan(
-    #             "",
-    #             to_evaluate,
-    #             "i:objectId,i:ssnamenr",
-    #             0,
-    #             False,
-    #             False,
-    #         )
-    #         client.close()
-    #         pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+    elif resolver == "ssodnet":
+        if reverse:
+            # ssObjectId -> packed_name
+            client = connect_to_hbase_table("rubin.sso_resolver")
 
-    #         # ssnmanenr -> MPC name & number
-    #         if not pdf.empty:
-    #             client = connect_to_hbase_table("ztf.sso_resolver")
-    #             ssnamenrs = npunique(pdf["i:ssnamenr"].to_numpy())
-    #             results = {}
-    #             for ssnamenr in ssnamenrs:
-    #                 result = client.scan(
-    #                     "",
-    #                     f"i:ssnamenr:{ssnamenr}:exact",
-    #                     "i:number,i:name,i:ssnamenr",
-    #                     0,
-    #                     False,
-    #                     False,
-    #                 )
-    #                 results.update(result)
-    #             client.close()
-    #             pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
-    #     else:
-    #         # MPC -> ssnamenr
-    #         # keys follow the pattern <name>-<deduplication>
-    #         client = connect_to_hbase_table("ztf.sso_resolver")
+            to_evaluate = f"key:key:{name[-3:]}_{name}"
+            client.setLimit(nmax)
+            results = client.scan(
+                "",
+                to_evaluate,
+                "*",
+                0,
+                False,
+                False,
+            )
+            client.close()
+            pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+        else:
+            # SSO name or number -> ssObjectId
+            client = connect_to_hbase_table("rubin.ssObject")
 
-    #         if nmax == 1:
-    #             # Prefix with internal marker
-    #             to_evaluate = f"key:key:{name.lower()}-"
-    #         elif nmax > 1:
-    #             # This enables e.g. autocompletion tasks
-    #             client.setLimit(nmax)
-    #             to_evaluate = f"key:key:{name.lower()}"
+            config = extract_configuration("config.yml")
 
-    #         results = client.scan(
-    #             "",
-    #             to_evaluate,
-    #             "i:ssnamenr,i:name,i:number",
-    #             0,
-    #             False,
-    #             False,
-    #         )
-    #         client.close()
-    #         pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+            r = requests.post(
+                "{}/api/v1/sso".format(config["APIURL"]),
+                json={
+                    "n_or_d": name,
+                    "columns": "r:mpcDesignation,r:ssObjectId",
+                },
+            )
+            pdf = pd.read_json(io.BytesIO(r.content))
 
     return pdf
