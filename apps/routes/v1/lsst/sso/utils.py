@@ -89,7 +89,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     if "withEphem" in payload and (
         payload["withEphem"] == "True" or payload["withEphem"] is True
     ):
-        with_ephem = True
+        with_ephem = True  # noqa: F841
 
     if truncated and "r:mpcDesignation" not in cols:
         # For name resolving, i:ssnamenr must be here
