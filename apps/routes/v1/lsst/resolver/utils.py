@@ -39,7 +39,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
     out: pandas dataframe
     """
     resolver = payload["resolver"]
-    name = payload["name"]
+    name = payload["name_or_id"]
     if "nmax" in payload:
         nmax = payload["nmax"]
     else:
