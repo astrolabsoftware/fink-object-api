@@ -226,7 +226,6 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/sso":
-        # FIXME: what about MPCORB & ssObject?
         types = {
             "Rubin original fields (r:)": sort_dict(
                 {
