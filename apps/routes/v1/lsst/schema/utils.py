@@ -50,6 +50,7 @@ def extract_schema(payload: dict) -> Response:
 
     """
     # LSST candidate fields
+    # FIXME: allow user to input a version?
     r = requests.get(
         "https://usdf-alert-schemas-dev.slac.stanford.edu/subjects/alert-packet/versions/latest/schema"
     )

@@ -80,7 +80,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     else:
         truncated = True
 
-    with_ephem, with_residuals, with_cutouts = False, False, False
+    with_ephem, with_residuals = False, False, False
     if "withResiduals" in payload and (
         payload["withResiduals"] == "True" or payload["withResiduals"] is True
     ):
@@ -138,7 +138,8 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             return Response(str(rep), 400)
 
         packed += aliases
-        sso_names[id_] = sso_name
+        for alias in aliases:
+            sso_names[alias] = sso_name
 
     # Get data from the main table
     client = connect_to_hbase_table("rubin.diaSource_sso")
@@ -170,6 +171,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         truncated=truncated,
         extract_color=False,
     )
+
+    # Propagate transformation
+    pdf["f:sso_name"] = pdf["r:mpcDesignation"].apply(lambda x: sso_names[x])
 
     # if with_ephem:
     #     # TODO: In case truncated is True, check (before DB call)
