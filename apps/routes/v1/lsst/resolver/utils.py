@@ -15,7 +15,6 @@
 import io
 import requests
 import pandas as pd
-# from numpy import unique as npunique
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import hbase_to_dict

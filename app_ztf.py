@@ -38,7 +38,7 @@ from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
 
 config = extract_configuration("config.yml")
 
-app = Flask("Fink REST API")
+app = Flask("Fink/ZTF REST API")
 metrics = GunicornPrometheusMetrics(app)
 
 # Master blueprint
@@ -46,7 +46,7 @@ blueprint = Blueprint("api", __name__, url_prefix="/")
 api = Api(
     blueprint,
     version=__version__,
-    title="Fink object API",
+    title="Fink/ZTF object API",
     description="REST API to access data from Fink",
 )
 

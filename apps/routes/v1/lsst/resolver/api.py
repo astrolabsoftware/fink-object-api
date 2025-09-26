@@ -28,12 +28,14 @@ ARGS = ns.model(
     "resolver",
     {
         "resolver": fields.String(
-            description="Resolver among: `simbad`, `tns`",
+            description="Resolver among: `simbad`, `ssodnet`, `tns`",
             example="tns",
             required=True,
         ),
         "name_or_id": fields.String(
-            description="Object name to resolve.", example="SN 2024abtt", required=True
+            description="Astronomical object name or ID (if reverse is True) to resolve.",
+            example="SN 2024abtt",
+            required=True,
         ),
         "reverse": fields.Boolean(
             description="If True, resolve LSST diaObjectId instead. Default is False.",
