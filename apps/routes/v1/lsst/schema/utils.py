@@ -66,21 +66,21 @@ def extract_schema(payload: dict) -> Response:
             base_url, major_version, minor_version, major_version, minor_version
         )
     )
-    diaSource_schema = r_diaSource.json()
+    diaSource_schema = r_diaSource.json()["fields"]
 
     r_diaObject = requests.get(
         "{}/{}/{}/lsst.v{}_{}.diaObject.avsc".format(
             base_url, major_version, minor_version, major_version, minor_version
         )
     )
-    diaObject_schema = r_diaObject.json()
+    diaObject_schema = r_diaObject.json()["fields"]
 
     r_ssSource = requests.get(
         "{}/{}/{}/lsst.v{}_{}.ssSource.avsc".format(
             base_url, major_version, minor_version, major_version, minor_version
         )
     )
-    ssSource_schema = r_ssSource.json()
+    ssSource_schema = r_ssSource.json()["fields"]
 
     # Fink Science modules
     fink_science = [
