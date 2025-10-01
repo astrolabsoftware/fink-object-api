@@ -32,7 +32,7 @@ pd.set_option("future.no_silent_downcasting", True)
 # See https://pandas.pydata.org/pandas-docs/version/1.3/user_guide/integer_na.html
 hbase_type_converter = {
     "integer": "Int64",
-    "long": int,
+    "long": "Int64",
     "float": float,
     "double": float,
     "string": str,
