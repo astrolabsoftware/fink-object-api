@@ -85,104 +85,124 @@ def extract_schema(payload: dict) -> Response:
     # Fink Science modules
     fink_science = [
         {
-            "name": "cdsxmatch",
+            "name": "crossmatches_simbad_otype",
             "type": "string",
             "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://api.fink-portal.org/api/v1/classes",
         },
         {
-            "name": "gcvs",
+            "name": "crossmatches_gcvs_type",
             "type": "string",
             "doc": "Object type of the closest source from GCVS catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "vsx",
+            "name": "crossmatches_vizier:B/vsx/vsx_Type",
             "type": "string",
             "doc": "Object type of the closest source from VSX catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "DR3Name",
+            "name": "crossmatches_vizier:I/355/gaiadr3_DR3Name",
             "type": "string",
             "doc": "Unique source designation of closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "Plx",
+            "name": "crossmatches_vizier:I/355/gaiadr3_Plx",
             "type": "double",
             "doc": "Absolute stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "e_Plx",
+            "name": "crossmatches_vizier:I/355/gaiadr3_e_Plx",
             "type": "double",
             "doc": "Standard error of the stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "x3hsp",
+            "name": "crossmatches_x3hsp_type",
             "type": "string",
             "doc": "Counterpart (cross-match) to the 3HSP catalog if exists within 1 arcminute.",
         },
         {
-            "name": "x4lac",
+            "name": "crossmatches_x4lac_type",
             "type": "string",
             "doc": "Counterpart (cross-match) to the 4LAC DR3 catalog if exists within 1 arcminute.",
         },
         {
-            "name": "mangrove_HyperLEDA_name",
+            "name": "crossmatches_mangrove_HyperLEDA_name",
             "type": "string",
             "doc": "HyperLEDA source designation of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "mangrove_2MASS_name",
+            "name": "crossmatches_mangrove_2MASS_name",
             "type": "string",
             "doc": "2MASS source designation of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "mangrove_lum_dist",
+            "name": "crossmatches_mangrove_lum_dist",
             "type": "string",
             "doc": "Luminosity distance of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "mangrove_ang_dist",
+            "name": "crossmatches_mangrove_ang_dist",
             "type": "string",
             "doc": "Angular distance of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "spicy_id",
+            "name": "crossmatches_vizier:J/ApJS/254/33/table1_SPICY",
             "type": "string",
             "doc": "Unique source designation of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
         {
-            "name": "spicy_class",
+            "name": "crossmatches_vizier:J/ApJS/254/33/table1_class",
             "type": "string",
             "doc": "Class name of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
         {
-            "name": "tns",
+            "name": "crossmatches_tns_type",
             "type": "string",
             "doc": "TNS label, if it exists.",
         },
         {
-            "name": "gaiaClass",
+            "name": "crossmatches_vizier:I/358/vclassre_Class",
             "type": "str",
             "doc": "Name of best class from Gaia DR3 Part 4. Variability (I/358/vclassre).",
         },
         {
-            "name": "gaiaVarFlag",
+            "name": "crossmatches_vizier:I/355/gaiadr3_VarFlag",
             "type": "int",
             "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
         },
         {
+            "name": "classifiers_cats_class",
+            "type": "int",
+            "doc": "CATS classifier broad class prediction with the highest probability. 11=SN-like, 12=Fast (e.g. KN, ulens, Novae, ...), 13=Long (e.g. SLSN, TDE, ...), 21=Periodic (e.g. RRLyrae, EB, ...), 22=Non-periodic (e.g. AGN). See https://arxiv.org/abs/2404.08798",
+        },
+        {
+            "name": "classifiers_earlySNIa_score",
+            "type": "float",
+            "doc": "Score (0...1) for the early SN Ia classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
+        },
+        {
+            "name": "classifiers_slsn_score",
+            "type": "float",
+            "doc": "Score (0...1) for the super-luminous SN classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
+        },
+        {
+            "name": "classifiers_snnSnVsOthers_score",
+            "type": "float",
+            "doc": "Score (0...1) for the SN classifier (binary classifier) using SuperNNova. See https://arxiv.org/abs/2404.08798",
+        },
+        {
             "name": "fink_broker_version",
             "type": "string",
-            "doc": "fink-broker schema version used",
+            "doc": "fink-broker schema version used to process the alert",
         },
         {
             "name": "fink_science_version",
             "type": "string",
-            "doc": "fink-science schema version used",
+            "doc": "fink-science schema version used to process the alert",
         },
         {
             "name": "lsst_schema_version",
             "type": "string",
-            "doc": "LSST schema version used",
+            "doc": "LSST schema version used to generate the alert",
         },
     ]
 
