@@ -195,8 +195,8 @@ def format_lsst_hbase_output(
                 hbase_type_converter[schema_client.type(col)],
             )
         else:
-            # Column is only NaN so it was not transferred
-            new_columns[col] = np.nan
+            # Column is only None so it was not transferred
+            new_columns[col] = None
 
     # Create a new DataFrame with the new columns (overwrite)
     pdfs = pd.DataFrame(new_columns)
