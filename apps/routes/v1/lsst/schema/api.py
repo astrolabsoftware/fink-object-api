@@ -31,6 +31,16 @@ ARGS = ns.model(
             example="/api/v1/sources",
             required=True,
         ),
+        "major_version": fields.Integer(
+            description="Major version. Default is latest.",
+            example=9,
+            required=False,
+        ),
+        "minor_version": fields.Integer(
+            description="Minor version. Default is latest.",
+            example=0,
+            required=False,
+        ),
     },
 )
 

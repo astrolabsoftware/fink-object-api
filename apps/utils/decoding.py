@@ -183,12 +183,23 @@ def format_lsst_hbase_output(
         if _ in pdfs.columns:
             pdfs = pdfs.drop(columns=_)
 
-    # Type conversion
-    for col in pdfs.columns:
-        pdfs[col] = convert_datatype(
-            pdfs[col],
-            hbase_type_converter[schema_client.type(col)],
-        )
+    # Create a dictionary to hold the new columns
+    new_columns = {}
+
+    # Use fixed schema
+    for col in schema_client.columnNames():
+        if col in pdfs.columns:
+            # Type conversion
+            new_columns[col] = convert_datatype(
+                pdfs[col],
+                hbase_type_converter[schema_client.type(col)],
+            )
+        else:
+            # Column is only NaN so it was not transferred
+            new_columns[col] = np.nan
+
+    # Create a new DataFrame with the new columns (overwrite)
+    pdfs = pd.DataFrame(new_columns)
 
     # Booleans
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
@@ -197,8 +208,6 @@ def format_lsst_hbase_output(
     for col in ["f:lc_features_g", "f:lc_features_r"]:
         if col in pdfs.columns:
             pdfs[col] = pdfs[col].replace("nan", "[]")
-
-    pdfs = pdfs.copy()  # Fix Pandas' "DataFrame is highly fragmented" warning
 
     # Display only the last alert
     if (
