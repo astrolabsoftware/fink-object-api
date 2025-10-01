@@ -99,7 +99,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             results = client.scan(
                 "",
                 to_evaluate,
-                "r:diaObjectId,f:cdsxmatch,r:ra,r:dec",
+                "r:diaObjectId,f:simbad_otype,r:ra,r:dec",
                 0,
                 False,
                 False,
