@@ -187,7 +187,12 @@ def format_lsst_hbase_output(
     new_columns = {}
 
     # Use fixed schema
-    for col in schema_client.columnNames():
+    if truncated:
+        cols = pdfs.columns
+    else:
+        schema_client.columnNames()
+
+    for col in cols:
         if col in pdfs.columns:
             # Type conversion
             new_columns[col] = convert_datatype(
@@ -198,7 +203,9 @@ def format_lsst_hbase_output(
             # Column is only None so it was not transferred
             # Initialize the column with None and set the correct dtype
             dtype = hbase_type_converter[schema_client.type(col)]
-            new_columns[col] = pd.Series([None] * len(pdfs), dtype=dtype, index=pdfs.index)
+            new_columns[col] = pd.Series(
+                [None] * len(pdfs), dtype=dtype, index=pdfs.index
+            )
 
     # Create a new DataFrame with the new columns (overwrite)
     pdfs = pd.DataFrame(new_columns)
