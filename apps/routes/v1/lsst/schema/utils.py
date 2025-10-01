@@ -83,7 +83,7 @@ def extract_schema(payload: dict) -> Response:
     ssSource_schema = r_ssSource.json()["fields"]
 
     # Fink Science modules
-    fink_science = [
+    fink_source_science = [
         {
             "name": "crossmatches_simbad_otype",
             "type": "string",
@@ -206,6 +206,34 @@ def extract_schema(payload: dict) -> Response:
         },
     ]
 
+    fink_object_science = [
+        {
+            "name": "is_cataloged",
+            "type": "boolean",
+            "doc": "True if the last diaSource (alert) of the diaObject (object) has a counterpart in either SIMBAD or Gaia DR3. False otherwise.",
+        },
+        {
+            "name": "is_sso",
+            "type": "boolean",
+            "doc": "True if the diaSource is associate to a known Solar System object. False otherwise.",
+        },
+        {
+            "name": "is_first",
+            "type": "boolean",
+            "doc": "True if the alert is not a Solar System object and has no history (first detection at this location).",
+        },
+        {
+            "name": "main_label_classifier",
+            "type": "int",
+            "doc": "Main prediction from Fink classifiers for the last received alert of this object. This is currently set to the CATS prediction only (f:classifiers_cats_class). Subject to change.",
+        },
+        {
+            "name": "main_label_crossmatch",
+            "type": "string",
+            "doc": "Main association from various crossmatches for the last received alert of this object. This is currently set to the SIMBAD label only (f:crossmatches_simbad_otype). Subject to change.",
+        },
+    ]
+
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
@@ -218,7 +246,7 @@ def extract_schema(payload: dict) -> Response:
             "Fink science module outputs (f:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in fink_science
+                    for i in fink_source_science
                 }
             ),
         }
@@ -234,7 +262,7 @@ def extract_schema(payload: dict) -> Response:
             "Fink science module outputs (f:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in fink_science
+                    for i in fink_object_science
                 }
             ),
         }
@@ -249,7 +277,7 @@ def extract_schema(payload: dict) -> Response:
             "Fink science module outputs (f:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in fink_science
+                    for i in fink_source_science + fink_object_science
                 }
             ),
         }
