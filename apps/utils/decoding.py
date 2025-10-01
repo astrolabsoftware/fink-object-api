@@ -190,7 +190,7 @@ def format_lsst_hbase_output(
     if truncated:
         cols = pdfs.columns
     else:
-        schema_client.columnNames()
+        cols = schema_client.columnNames()
 
     for col in cols:
         if col in pdfs.columns:
