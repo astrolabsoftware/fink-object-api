@@ -183,12 +183,17 @@ def format_lsst_hbase_output(
         if _ in pdfs.columns:
             pdfs = pdfs.drop(columns=_)
 
-    # Type conversion
-    for col in pdfs.columns:
-        pdfs[col] = convert_datatype(
-            pdfs[col],
-            hbase_type_converter[schema_client.type(col)],
-        )
+    # use fixed schema
+    for col in schema_client.columnNames():
+        if col in pdfs.columns:
+            # Type conversion
+            pdfs[col] = convert_datatype(
+                pdfs[col],
+                hbase_type_converter[schema_client.type(col)],
+            )
+        else:
+            # Column is only NaN so it was not transfered
+            pdfs[col] = np.nan
 
     # Booleans
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
