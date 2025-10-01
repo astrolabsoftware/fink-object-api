@@ -198,7 +198,7 @@ def format_lsst_hbase_output(
             # Column is only NaN so it was not transferred
             new_columns[col] = np.nan
 
-    # Create a new DataFrame with the new columns
+    # Create a new DataFrame with the new columns (overwrite)
     pdfs = pd.DataFrame(new_columns)
 
     # Booleans
@@ -208,8 +208,6 @@ def format_lsst_hbase_output(
     for col in ["f:lc_features_g", "f:lc_features_r"]:
         if col in pdfs.columns:
             pdfs[col] = pdfs[col].replace("nan", "[]")
-
-    pdfs = pdfs.copy()  # Fix Pandas' "DataFrame is highly fragmented" warning
 
     # Display only the last alert
     if (
