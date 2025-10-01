@@ -19,22 +19,6 @@ import requests
 from line_profiler import profile
 
 
-def flatten_nested(schema, entry_name):
-    """ """
-    blobs = [cat["type"] for cat in schema["fields"] if cat["name"] == entry_name][0]
-
-    if isinstance(blobs, list):
-        # nullable entry
-        # Take the dict entry (non-null)
-        mask = [isinstance(blob, dict) for blob in blobs]
-        index = mask.index(True)
-        dic = blobs[index]
-    else:
-        dic = blobs
-
-    return dic["fields"]
-
-
 def sort_dict(adict):
     """ """
     return {key: adict[key] for key in sorted(adict.keys())}
@@ -49,19 +33,54 @@ def extract_schema(payload: dict) -> Response:
     All fields are initially defined in `fink_broker.rubin.hbase_utils`
 
     """
-    # LSST candidate fields
-    # FIXME: allow user to input a version?
-    r = requests.get(
-        "https://usdf-alert-schemas-dev.slac.stanford.edu/subjects/alert-packet/versions/latest/schema"
+    if ("major_version" not in payload) or ("minor_version" not in payload):
+        # Get latest version
+        r = requests.get(
+            "https://raw.githubusercontent.com/lsst/alert_packet/refs/heads/main/python/lsst/alert/packet/schema/latest.txt"
+        )
+        version = "{}".format(r.json())
+        major_version, minor_version = [int(i) for i in version.split(".")]
+    else:
+        major_version = payload["major_version"]
+        minor_version = payload["minor_version"]
+
+    base_url = "https://raw.githubusercontent.com/lsst/alert_packet/refs/heads/main/python/lsst/alert/packet/schema"
+
+    r_root = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.alert.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
     )
-    rubin_schema = r.json()
+    root_schema = r_root.json()
 
     # root level should be everywhere
     root_rubin_names = ["observation_reason", "target_name", "diaSourceId"]
-    root_list = [i for i in rubin_schema["fields"] if i["name"] in root_rubin_names]
+    root_list = [i for i in root_schema["fields"] if i["name"] in root_rubin_names]
 
     cutout_rubin_names = ["cutoutDifference", "cutoutTemplate", "cutoutScience"]
-    cutout_list = [i for i in rubin_schema["fields"] if i["name"] in cutout_rubin_names]
+    cutout_list = [i for i in root_schema["fields"] if i["name"] in cutout_rubin_names]
+
+    # Other fields
+    r_diaSource = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.diaSource.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
+    )
+    diaSource_schema = r_diaSource.json()
+
+    r_diaObject = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.diaObject.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
+    )
+    diaObject_schema = r_diaObject.json()
+
+    r_ssSource = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.ssSource.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
+    )
+    ssSource_schema = r_ssSource.json()
 
     # Fink Science modules
     fink_science = [
@@ -173,7 +192,7 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in flatten_nested(rubin_schema, "diaSource") + root_list
+                    for i in diaSource_schema + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
@@ -189,7 +208,7 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in flatten_nested(rubin_schema, "diaObject") + root_list
+                    for i in diaObject_schema + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
@@ -204,9 +223,7 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in flatten_nested(rubin_schema, "diaSource")
-                    + flatten_nested(rubin_schema, "diaObject")
-                    + root_list
+                    for i in diaSource_schema + diaObject_schema + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
@@ -230,7 +247,7 @@ def extract_schema(payload: dict) -> Response:
             "Rubin original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in flatten_nested(rubin_schema, "ssSource") + root_list
+                    for i in ssSource_schema + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
