@@ -196,7 +196,9 @@ def format_lsst_hbase_output(
             )
         else:
             # Column is only None so it was not transferred
-            new_columns[col] = None
+            # Initialize the column with None and set the correct dtype
+            dtype = hbase_type_converter[schema_client.type(col)]
+            new_columns[col] = pd.Series([None] * len(pdfs), dtype=dtype)
 
     # Create a new DataFrame with the new columns (overwrite)
     pdfs = pd.DataFrame(new_columns)
