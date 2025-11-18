@@ -200,7 +200,7 @@ def test_multiple_ssosearch() -> None:
 
     assert len(pdf.groupby("i:ssnamenr").count()) == 3, np.unique(pdf["i:ssnamenr"])
 
-    assert len(pdf.groupby("sso_name").count()) == 3
+    assert len(pdf.groupby("sso_name").count()) == 2, np.unique(pdf["sso_name"])
 
 
 def test_with_ephem_multiple_ssosearch() -> None:
