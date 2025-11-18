@@ -85,107 +85,107 @@ def extract_schema(payload: dict) -> Response:
     # Fink Science modules
     fink_source_science = [
         {
-            "name": "crossmatches_simbad_otype",
+            "name": "xm_simbad_otype",
             "type": "string",
             "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://api.fink-portal.org/api/v1/classes",
         },
         {
-            "name": "crossmatches_gcvs_type",
+            "name": "xm_gcvs_type",
             "type": "string",
             "doc": "Object type of the closest source from GCVS catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "crossmatches_vizier:B/vsx/vsx_Type",
+            "name": "xm_vizier:B/vsx/vsx_Type",
             "type": "string",
             "doc": "Object type of the closest source from VSX catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "crossmatches_vizier:I/355/gaiadr3_DR3Name",
+            "name": "xm_vizier:I/355/gaiadr3_DR3Name",
             "type": "string",
             "doc": "Unique source designation of closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "crossmatches_vizier:I/355/gaiadr3_Plx",
+            "name": "xm_vizier:I/355/gaiadr3_Plx",
             "type": "double",
             "doc": "Absolute stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "crossmatches_vizier:I/355/gaiadr3_e_Plx",
+            "name": "xm_vizier:I/355/gaiadr3_e_Plx",
             "type": "double",
             "doc": "Standard error of the stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "crossmatches_x3hsp_type",
+            "name": "xm_x3hsp_type",
             "type": "string",
             "doc": "Counterpart (cross-match) to the 3HSP catalog if exists within 1 arcminute.",
         },
         {
-            "name": "crossmatches_x4lac_type",
+            "name": "xm_x4lac_type",
             "type": "string",
             "doc": "Counterpart (cross-match) to the 4LAC DR3 catalog if exists within 1 arcminute.",
         },
         {
-            "name": "crossmatches_mangrove_HyperLEDA_name",
+            "name": "xm_mangrove_HyperLEDA_name",
             "type": "string",
             "doc": "HyperLEDA source designation of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "crossmatches_mangrove_2MASS_name",
+            "name": "xm_mangrove_2MASS_name",
             "type": "string",
             "doc": "2MASS source designation of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "crossmatches_mangrove_lum_dist",
+            "name": "xm_mangrove_lum_dist",
             "type": "string",
             "doc": "Luminosity distance of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "crossmatches_mangrove_ang_dist",
+            "name": "xm_mangrove_ang_dist",
             "type": "string",
             "doc": "Angular distance of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "crossmatches_vizier:J/ApJS/254/33/table1_SPICY",
+            "name": "xm_vizier:J/ApJS/254/33/table1_SPICY",
             "type": "string",
             "doc": "Unique source designation of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
         {
-            "name": "crossmatches_vizier:J/ApJS/254/33/table1_class",
+            "name": "xm_vizier:J/ApJS/254/33/table1_class",
             "type": "string",
             "doc": "Class name of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
         {
-            "name": "crossmatches_tns_type",
+            "name": "xm_tns_type",
             "type": "string",
             "doc": "TNS label, if it exists.",
         },
         {
-            "name": "crossmatches_vizier:I/358/vclassre_Class",
+            "name": "xm_vizier:I/358/vclassre_Class",
             "type": "str",
             "doc": "Name of best class from Gaia DR3 Part 4. Variability (I/358/vclassre).",
         },
         {
-            "name": "crossmatches_vizier:I/355/gaiadr3_VarFlag",
+            "name": "xm_vizier:I/355/gaiadr3_VarFlag",
             "type": "int",
             "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
         },
         {
-            "name": "classifiers_cats_class",
+            "name": "clf_cats_class",
             "type": "int",
             "doc": "CATS classifier broad class prediction with the highest probability. 11=SN-like, 12=Fast (e.g. KN, ulens, Novae, ...), 13=Long (e.g. SLSN, TDE, ...), 21=Periodic (e.g. RRLyrae, EB, ...), 22=Non-periodic (e.g. AGN). See https://arxiv.org/abs/2404.08798",
         },
         {
-            "name": "classifiers_earlySNIa_score",
+            "name": "clf_earlySNIa_score",
             "type": "float",
             "doc": "Score (0...1) for the early SN Ia classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
         },
         {
-            "name": "classifiers_slsn_score",
+            "name": "clf_slsn_score",
             "type": "float",
             "doc": "Score (0...1) for the super-luminous SN classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
         },
         {
-            "name": "classifiers_snnSnVsOthers_score",
+            "name": "clf_snnSnVsOthers_score",
             "type": "float",
             "doc": "Score (0...1) for the SN classifier (binary classifier) using SuperNNova. See https://arxiv.org/abs/2404.08798",
         },
@@ -225,12 +225,12 @@ def extract_schema(payload: dict) -> Response:
         {
             "name": "main_label_classifier",
             "type": "int",
-            "doc": "Main prediction from Fink classifiers for the last received alert of this object. This is currently set to the CATS prediction only (f:classifiers_cats_class). Subject to change.",
+            "doc": "Main prediction from Fink classifiers for the last received alert of this object. This is currently set to the CATS prediction only (f:clf_cats_class). Subject to change.",
         },
         {
             "name": "main_label_crossmatch",
             "type": "string",
-            "doc": "Main association from various crossmatches for the last received alert of this object. This is currently set to the SIMBAD label only (f:crossmatches_simbad_otype). Subject to change.",
+            "doc": "Main association from various crossmatches for the last received alert of this object. This is currently set to the SIMBAD label only (f:xm_simbad_otype). Subject to change.",
         },
     ]
 
