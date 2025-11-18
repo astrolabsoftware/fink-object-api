@@ -18,6 +18,7 @@ from py4j.java_gateway import JavaGateway
 import json
 import pandas as pd
 import numpy as np
+import logging
 
 from astropy.time import Time
 from astropy.coordinates import SkyCoord, get_constellation
@@ -62,6 +63,9 @@ def format_hbase_output(
 
     # TODO: for not truncated, add a generic mechanism to
     #       add default field value.
+    for col in pdfs.columns:
+        if col.startswith("d:t2_"):
+            pdfs = pdfs.drop(columns=col)
 
     # Tracklet cell contains null if there is nothing
     # and so HBase won't transfer data -- ignoring the column
@@ -94,10 +98,13 @@ def format_hbase_output(
 
     # Type conversion
     for col in pdfs.columns:
-        pdfs[col] = convert_datatype(
-            pdfs[col],
-            hbase_type_converter[schema_client.type(col)],
-        )
+        try:
+            pdfs[col] = convert_datatype(
+                pdfs[col],
+                hbase_type_converter[schema_client.type(col)],
+            )
+        except KeyError:
+            logging.warning("Cannot cast columns {} -- not found in schema".format(col))
 
     # Booleans
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
