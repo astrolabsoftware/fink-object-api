@@ -1,4 +1,5 @@
 astropy
+astroquery
 flask
 flask-restx
 pandas
