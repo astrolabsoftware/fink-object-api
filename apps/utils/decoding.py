@@ -18,6 +18,7 @@ from py4j.java_gateway import JavaGateway
 import json
 import pandas as pd
 import numpy as np
+import logging
 
 from astropy.time import Time
 from astropy.coordinates import SkyCoord, get_constellation
@@ -32,7 +33,7 @@ pd.set_option("future.no_silent_downcasting", True)
 # See https://pandas.pydata.org/pandas-docs/version/1.3/user_guide/integer_na.html
 hbase_type_converter = {
     "integer": "Int64",
-    "long": int,
+    "long": "Int64",
     "float": float,
     "double": float,
     "string": str,
@@ -62,6 +63,9 @@ def format_hbase_output(
 
     # TODO: for not truncated, add a generic mechanism to
     #       add default field value.
+    for col in pdfs.columns:
+        if col.startswith("d:t2_"):
+            pdfs = pdfs.drop(columns=col)
 
     # Tracklet cell contains null if there is nothing
     # and so HBase won't transfer data -- ignoring the column
@@ -94,10 +98,13 @@ def format_hbase_output(
 
     # Type conversion
     for col in pdfs.columns:
-        pdfs[col] = convert_datatype(
-            pdfs[col],
-            hbase_type_converter[schema_client.type(col)],
-        )
+        try:
+            pdfs[col] = convert_datatype(
+                pdfs[col],
+                hbase_type_converter[schema_client.type(col)],
+            )
+        except KeyError:
+            logging.warning("Cannot cast columns {} -- not found in schema".format(col))
 
     # Booleans
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})
@@ -187,7 +194,12 @@ def format_lsst_hbase_output(
     new_columns = {}
 
     # Use fixed schema
-    for col in schema_client.columnNames():
+    if truncated:
+        cols = pdfs.columns
+    else:
+        cols = schema_client.columnNames()
+
+    for col in cols:
         if col in pdfs.columns:
             # Type conversion
             new_columns[col] = convert_datatype(
@@ -195,8 +207,12 @@ def format_lsst_hbase_output(
                 hbase_type_converter[schema_client.type(col)],
             )
         else:
-            # Column is only NaN so it was not transferred
-            new_columns[col] = np.nan
+            # Column is only None so it was not transferred
+            # Initialize the column with None and set the correct dtype
+            dtype = hbase_type_converter[schema_client.type(col)]
+            new_columns[col] = pd.Series(
+                [None] * len(pdfs), dtype=dtype, index=pdfs.index
+            )
 
     # Create a new DataFrame with the new columns (overwrite)
     pdfs = pd.DataFrame(new_columns)

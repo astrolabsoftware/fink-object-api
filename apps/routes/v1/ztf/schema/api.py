@@ -303,6 +303,16 @@ class Schema(Resource):
                     "type": "int",
                     "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
                 },
+                {
+                    "name": "is_transient",
+                    "type": "boolean",
+                    "doc": "True if the alert is considered as pure static transient. See https://zenodo.org/records/4054129.",
+                },
+                {
+                    "name": "slsn_score",
+                    "type": "float",
+                    "doc": "Superluminous supernovae classification score between 0 and 1. Return -1 if not enough points were available for feature extraction, if the alert is not considered a likely transient, or if the source is less than 30 days old.",
+                },
             ],
         )
 

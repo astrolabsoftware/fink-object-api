@@ -148,6 +148,8 @@ def check_old_columns(columns, objectId):
                 "blazar_stats_m2",
                 "gaiaVarFlag",
                 "gaiaClass",
+                "is_transient",
+                "slsn_score",
             ]
 
             outside_obtained = [i for i in definition if i not in obtained]
