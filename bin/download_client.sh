@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 BASEURL=https://hrivnac.web.cern.ch/Activities/Packages/Lomikel
-CLIENTVERSION=03.04.00x
-
+CLIENTVERSION=03.08.00
 
 files="Lomikel-$CLIENTVERSION-ext.jar Lomikel-$CLIENTVERSION.exe.jar Lomikel-$CLIENTVERSION-HBase.jar Lomikel-$CLIENTVERSION-HBase.exe.jar Lomikel-$CLIENTVERSION.jar"
 
