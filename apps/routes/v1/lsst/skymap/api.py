@@ -37,7 +37,7 @@ ARGS = ns.model(
         "credible_level": fields.Float(
             description="GW credible region threshold to look for. Note that the values in the resulting credible level map vary inversely with probability density: the most probable pixel is assigned to the credible level 0.0, and the least likely pixel is assigned the credible level 1.0.",
             example=0.1,
-            required=False,
+            required=True,
         ),
         "n_day_before": fields.Float(
             description="Number of day(s) to search before the event. Default is 1, max is 7.",
