@@ -97,11 +97,14 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     mjdstart = Time(header["DATE-OBS"], scale="utc").tai.mjd - n_day_before
     mjdend = mjdstart + n_day_after
 
+    # FIXME: filtering on time does not work as 
+    # r:firstDiaSourceMjdTai is not populated yet
     client = connect_to_hbase_table("rubin.pixel128")
-    client.setRangeScan(True)
+    # client.setRangeScan(True)
     results = {}
     for pix in pixs:
-        to_search = f"key:key:{pix}_{mjdstart},key:key:{pix}_{mjdend}"
+        # to_search = f"key:key:{pix}_{mjdstart},key:key:{pix}_{mjdend}"
+        to_search = f"key:key:{pix}_"
         result = client.scan(
             "",
             to_search,
