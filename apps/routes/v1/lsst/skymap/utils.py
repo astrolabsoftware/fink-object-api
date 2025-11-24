@@ -94,14 +94,14 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     # grouping by later.
 
     # 1 day before the event, to 6 days after the event
-    jdstart = Time(header["DATE-OBS"]).jd - n_day_before
-    jdend = jdstart + n_day_after
+    mjdstart = Time(header["DATE-OBS"], scale="utc").tai.mjd - n_day_before
+    mjdend = mjdstart + n_day_after
 
     client = connect_to_hbase_table("rubin.pixel128")
     client.setRangeScan(True)
     results = {}
     for pix in pixs:
-        to_search = f"key:key:{pix}_{jdstart},key:key:{pix}_{jdend}"
+        to_search = f"key:key:{pix}_{mjdstart},key:key:{pix}_{mjdend}"
         result = client.scan(
             "",
             to_search,
