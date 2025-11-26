@@ -30,13 +30,13 @@ ARGS = ns.model(
             required=False,
         ),
         "event_name": fields.String(
-            description="If provided, directly query GraceDB with the `event_name`. Not compatible with the argument `bayestar`.",
-            example="S230709bi",
+            description="If provided, directly query GraceDB with the `event_name`. Not compatible with the argument `file`.",
+            example="S251112cm",
             required=False,
         ),
         "credible_level": fields.Float(
             description="GW credible region threshold to look for. Note that the values in the resulting credible level map vary inversely with probability density: the most probable pixel is assigned to the credible level 0.0, and the least likely pixel is assigned the credible level 1.0.",
-            example=0.1,
+            example=0.45,
             required=True,
         ),
         "n_day_before": fields.Float(
