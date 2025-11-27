@@ -40,7 +40,7 @@ def get_statistics(payload: dict) -> pd.DataFrame:
     else:
         cols = "*"
 
-    client = connect_to_hbase_table("statistics_class")
+    client = connect_to_hbase_table("rubin.statistics")
     if "schema" in payload and str(payload["schema"]) == "True":
         # TODO: change the strategy to get the schema
         # The table schema changes everyday, so it is not very useful
