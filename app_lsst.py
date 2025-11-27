@@ -28,6 +28,7 @@ from apps.routes.v1.lsst.schema.api import ns as ns_schema
 from apps.routes.v1.lsst.sso.api import ns as ns_sso
 from apps.routes.v1.lsst.resolver.api import ns as ns_resolver
 from apps.routes.v1.lsst.skymap.api import ns as ns_skymap
+from apps.routes.v1.lsst.statistics.api import ns as ns_stats
 
 config = extract_configuration("config.yml")
 
@@ -67,6 +68,7 @@ api.add_namespace(ns_schema)
 api.add_namespace(ns_sso)
 api.add_namespace(ns_resolver)
 api.add_namespace(ns_skymap)
+api.add_namespace(ns_stats)
 
 # Register blueprint
 app.register_blueprint(blueprint)
