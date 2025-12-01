@@ -65,6 +65,9 @@ def get_statistics(payload: dict) -> pd.DataFrame:
         # See https://github.com/astrolabsoftware/fink-science-portal/issues/579
         pdf = pdf.replace(regex={r"^\x00.*$": 0})
 
+        # Rename key:key in f:night
+        pdf = pdf.rename(columns={"key:key": "f:night"})
+
     client.close()
 
     return pdf
