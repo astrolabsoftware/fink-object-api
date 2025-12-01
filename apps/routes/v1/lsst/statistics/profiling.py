@@ -14,10 +14,10 @@
 # limitations under the License.
 """Call get_statistics"""
 
-from apps.routes.v1.ztf.statistics.utils import get_statistics
+from apps.routes.v1.lsst.statistics.utils import get_statistics
 
 payload = {
-    "objectId": "20241104",
+    "date": "20250906",
 }
 
 get_statistics(payload)
