@@ -1,4 +1,4 @@
-# Copyright 2022 AstroLab Software
+# Copyright 2025 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,8 @@ import sys
 APIURL = sys.argv[1]
 
 
-def statstest(date="2021", columns="*", output_format="json"):
-    """Perform a stats search in the Science Portal using the Fink REST API"""
+def statstest(date="2025", columns="*", output_format="json"):
+    """Perform a stats search in the Science Portal using the Fink/LSST REST API"""
     payload = {
         "date": date,
         "columns": columns,
@@ -52,7 +52,7 @@ def test_stats() -> None:
     """
     pdf = statstest()
 
-    # Number of observation days in 2021
+    # Number of observation days in 2025
     assert len(pdf) == 254, len(pdf)
 
 
@@ -62,7 +62,7 @@ def test_a_day() -> None:
     --------
     >>> test_a_day()
     """
-    pdf = statstest(date="20211103")
+    pdf = statstest(date="20250907")
 
     assert len(pdf) == 1
 
@@ -80,11 +80,11 @@ def test_cols() -> None:
     --------
     >>> test_cols()
     """
-    pdf = statstest(columns="basic:exposures,class:Solar System MPC")
+    pdf = statstest(columns="f:night,f:alerts")
 
     assert not pdf.empty
 
-    assert len(pdf.columns) == 2 + 2, pdf.columns
+    assert len(pdf.columns) == 2, pdf.columns
 
 
 if __name__ == "__main__":
