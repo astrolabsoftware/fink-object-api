@@ -95,22 +95,22 @@ def extract_schema(payload: dict) -> Response:
             "doc": "Object type of the closest source from GCVS catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "xm_vizier:B/vsx/vsx_Type",
+            "name": "xm_vsx_Type",
             "type": "string",
             "doc": "Object type of the closest source from VSX catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "xm_vizier:I/355/gaiadr3_DR3Name",
+            "name": "xm_gaiadr3_DR3Name",
             "type": "string",
             "doc": "Unique source designation of closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "xm_vizier:I/355/gaiadr3_Plx",
+            "name": "xm_gaiadr3_Plx",
             "type": "double",
             "doc": "Absolute stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
         {
-            "name": "xm_vizier:I/355/gaiadr3_e_Plx",
+            "name": "xm_gaiadr3_e_Plx",
             "type": "double",
             "doc": "Standard error of the stellar parallax (in milli-arcsecond) of the closest source from Gaia catalog; if exists within 1 arcsec.",
         },
@@ -145,12 +145,12 @@ def extract_schema(payload: dict) -> Response:
             "doc": "Angular distance of closest source from Mangrove catalog; if exists within 1 arcmin.",
         },
         {
-            "name": "xm_vizier:J/ApJS/254/33/table1_SPICY",
+            "name": "xm_spicy_SPICY",
             "type": "string",
             "doc": "Unique source designation of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
         {
-            "name": "xm_vizier:J/ApJS/254/33/table1_class",
+            "name": "xm_spicy_class",
             "type": "string",
             "doc": "Class name of closest source from SPICY catalog; if exists within 1.2 arcsec.",
         },
@@ -160,12 +160,7 @@ def extract_schema(payload: dict) -> Response:
             "doc": "TNS label, if it exists.",
         },
         {
-            "name": "xm_vizier:I/358/vclassre_Class",
-            "type": "str",
-            "doc": "Name of best class from Gaia DR3 Part 4. Variability (I/358/vclassre).",
-        },
-        {
-            "name": "xm_vizier:I/355/gaiadr3_VarFlag",
+            "name": "xm_gaiadr3_VarFlag",
             "type": "int",
             "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
         },
