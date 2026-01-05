@@ -53,14 +53,14 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     if schema:
         if "flavor" in payload:
             flavor = payload["flavor"]
-            if flavor not in ["SSHG1G2", "SHG1G2", "HG1G2", "HG"]:
+            if flavor not in ["SOCCA", "SHG1G2", "HG1G2", "HG"]:
                 rep = {
                     "status": "error",
-                    "text": "flavor needs to be in ['SSHG1G2', 'SHG1G2', 'HG1G2', 'HG']\n",
+                    "text": "flavor needs to be in ['SOCCA', 'SHG1G2', 'HG1G2', 'HG']\n",
                 }
                 return Response(str(rep), 400)
-            elif flavor == "SSHG1G2":
-                ssoft_columns = {**COLUMNS, **COLUMNS_SSHG1G2}
+            elif flavor == "SOCCA":
+                ssoft_columns = {**COLUMNS, **COLUMNS_SOCCA}
             elif flavor == "SHG1G2":
                 ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
             elif flavor == "HG1G2":
@@ -99,10 +99,10 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
 
     if "flavor" in payload:
         flavor = payload["flavor"]
-        if flavor not in ["SSHG1G2", "SHG1G2", "HG1G2", "HG"]:
+        if flavor not in ["SOCCA", "SHG1G2", "HG1G2", "HG"]:
             rep = {
                 "status": "error",
-                "text": "flavor needs to be in ['SSHG1G2', 'SHG1G2', 'HG1G2', 'HG']\n",
+                "text": "flavor needs to be in ['SOCCA', 'SHG1G2', 'HG1G2', 'HG']\n",
             }
             return Response(str(rep), 400)
     else:
