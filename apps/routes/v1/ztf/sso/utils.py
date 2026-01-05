@@ -27,7 +27,7 @@ from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
 
 from fink_utils.sso.miriade import get_miriade_data
-from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
+from fink_utils.sso.spins import func_shg1g2, estimate_sso_params
 
 from line_profiler import profile
 
@@ -248,7 +248,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             pdf["residuals_shg1g2"] = 0.0
             for filt in np.unique(pdf["i:fid"]):
                 cond = pdf["i:fid"] == filt
-                model = func_hg1g2_with_spin(
+                model = func_shg1g2(
                     [phase[cond], ra[cond], dec[cond]],
                     outdic["H_{}".format(filt)],
                     outdic["G1_{}".format(filt)],
