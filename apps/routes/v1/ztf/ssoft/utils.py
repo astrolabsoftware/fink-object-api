@@ -27,7 +27,7 @@ from fink_utils.sso.ssoft import (
     COLUMNS_HG,
     COLUMNS_HG1G2,
     COLUMNS_SHG1G2,
-    COLUMNS_SSHG1G2,
+    COLUMNS_SOCCA,
 )
 
 from line_profiler import profile
