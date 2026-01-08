@@ -173,7 +173,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     )
 
     # Propagate transformation
-    pdf["f:sso_name"] = pdf["r:packed_primary_provisional_designation"].apply(lambda x: sso_names[x])
+    pdf["f:sso_name"] = pdf["r:packed_primary_provisional_designation"].apply(
+        lambda x: sso_names[x]
+    )
 
     # if with_ephem:
     #     # TODO: In case truncated is True, check (before DB call)
