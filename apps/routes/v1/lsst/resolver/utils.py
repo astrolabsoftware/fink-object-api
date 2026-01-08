@@ -136,7 +136,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
         else:
             # SSO name or number -> ssObjectId
-            client = connect_to_hbase_table("rubin.ssObject")
+            client = connect_to_hbase_table("rubin.mpc_orbits")
 
             config = extract_configuration("config.yml")
 
@@ -144,7 +144,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
                 "{}/api/v1/sso".format(config["APIURL"]),
                 json={
                     "n_or_d": name,
-                    "columns": "r:mpcDesignation,r:ssObjectId,r:diaSourceId",
+                    "columns": "r:packed_primary_provisional_designation,r:ssObjectId,r:diaSourceId",
                 },
             )
             pdf = pd.read_json(io.BytesIO(r.content))

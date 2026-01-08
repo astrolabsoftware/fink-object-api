@@ -91,10 +91,10 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     ):
         with_ephem = True  # noqa: F841
 
-    if truncated and "r:mpcDesignation" not in cols:
+    if truncated and "r:packed_primary_provisional_designation" not in cols:
         # For name resolving, i:ssnamenr must be here
         # In case the user forgot, let's add it silently
-        cols += ",r:mpcDesignation"
+        cols += ",r:packed_primary_provisional_designation"
 
     n_or_d = str(payload["n_or_d"])
 
@@ -173,7 +173,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     )
 
     # Propagate transformation
-    pdf["f:sso_name"] = pdf["r:mpcDesignation"].apply(lambda x: sso_names[x])
+    pdf["f:sso_name"] = pdf["r:packed_primary_provisional_designation"].apply(lambda x: sso_names[x])
 
     # if with_ephem:
     #     # TODO: In case truncated is True, check (before DB call)
