@@ -25,22 +25,23 @@ def when_ready(server):
 ## overriding the child_exit method so that it does what we want
 ## instead of using the function GunicornPrometheusMetrics.mark_process_dead
 
-def child_exit(server, worker):
-    """Deletes the files associated with the dead worker """
 
-    path = os.environ.get('PROMETHEUS_MULTIPROC_DIR')
+def child_exit(server, worker):
+    """Deletes the files associated with the dead worker"""
+
+    path = os.environ.get("PROMETHEUS_MULTIPROC_DIR")
 
     pid = worker.pid
 
     # Deletion of counter, gauge, and histogram files associated with this worker
-    for db_file in glob.glob(os.path.join(path, f'counter_{pid}.db')):
+    for db_file in glob.glob(os.path.join(path, f"counter_{pid}.db")):
         os.remove(db_file)
         print(f"File deleted : {db_file}")
 
-    for db_file in glob.glob(os.path.join(path, f'gauge_max_{pid}.db')):
+    for db_file in glob.glob(os.path.join(path, f"gauge_max_{pid}.db")):
         os.remove(db_file)
         print(f"File deleted : {db_file}")
 
-    for db_file in glob.glob(os.path.join(path, f'histogram_{pid}.db')):
+    for db_file in glob.glob(os.path.join(path, f"histogram_{pid}.db")):
         os.remove(db_file)
         print(f"File deleted : {db_file}")
