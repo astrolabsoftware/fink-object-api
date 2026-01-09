@@ -41,6 +41,10 @@ config = extract_configuration("config.yml")
 app = Flask("Fink/ZTF REST API")
 metrics = GunicornPrometheusMetrics(app)
 
+# call for a properly defined child_exit
+from config_prometheus import child_exit
+metrics.child_exit = child_exit
+
 # Master blueprint
 blueprint = Blueprint("api", __name__, url_prefix="/")
 api = Api(
