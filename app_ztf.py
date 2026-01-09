@@ -15,6 +15,7 @@
 from flask import Flask, Blueprint
 from flask_restx import Api
 from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
+from config_prometheus import child_exit
 
 from apps import __version__
 
@@ -42,7 +43,6 @@ app = Flask("Fink/ZTF REST API")
 metrics = GunicornPrometheusMetrics(app)
 
 # call for a properly defined child_exit
-from config_prometheus import child_exit
 metrics.child_exit = child_exit
 
 # Master blueprint
