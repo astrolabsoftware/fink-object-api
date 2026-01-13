@@ -12,10 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 from flask import Flask, Blueprint
 from flask_restx import Api
 from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
-from config_prometheus import child_exit
+from config_prometheus import child_exit, pre_fork, post_fork
+from prometheus_client import values
+from prometheus_client.values import MultiProcessValue
 
 from apps import __version__
 
@@ -39,11 +42,22 @@ from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
 
 config = extract_configuration("config.yml")
 
-app = Flask("Fink/ZTF REST API")
-metrics = GunicornPrometheusMetrics(app)
 
-# call for a properly defined child_exit
+def get_worker_id():
+    """return stable id for worker"""
+    return os.environ.get("GUNICORN_WORKER_ID", str(os.getpid()))
+
+
+# Overwrite ValueClass to use this id
+values.ValueClass = MultiProcessValue(process_identifier=get_worker_id)
+
+app = Flask("Fink/ZTF REST API")
+metrics = GunicornPrometheusMetrics(app, group_by="endpoint")
+
+# calls for a properly defined child_exit, pre_fork, post_fork
 metrics.child_exit = child_exit
+metrics.pre_fork = pre_fork
+metrics.post_fork = post_fork
 
 # Master blueprint
 blueprint = Blueprint("api", __name__, url_prefix="/")
