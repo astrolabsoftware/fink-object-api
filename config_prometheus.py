@@ -32,14 +32,32 @@ class GunicornWorkerIDsPool:
     """manage a collection of worker IDs for a Gunicorn server"""
 
     def __init__(self):
+        """
+        Initialize an empty pool of reserved worker IDs.
+
+        :param self: instance of the class
+        """
         self._reserved_IDs_pool = []
 
     def get_id(self):
+        """
+        Return a worker ID.
+        Reuse one from the pool if available, otherwise generate a new UUID.
+
+        :param self: instance of the class
+        :return str, a worker ID
+        """
         if not self._reserved_IDs_pool:
             return str(uuid.uuid4())
         return self._reserved_IDs_pool.pop()
 
     def add_id(self, worker_id):
+        """
+        Add a worker ID back to the pool for future reuse.
+
+        :param self: Instance of the class
+        :param worker_id: str, the worker ID to add back to the pool
+        """
         self._reserved_IDs_pool.append(worker_id)
 
 
@@ -51,8 +69,12 @@ gunicorn_worker_ids_pool = GunicornWorkerIDsPool()
 
 def child_exit(server, worker):
     """
-    called when a worker exits. Return the worker_id to the pool so it can be reused,
+    called when a worker exits.
+    Returns the worker_id to the pool so it can be reused,
     and marks the worker process ad dead for prometheus monitoring .
+
+    :param server: Gunicorn master server instance
+    :param worker: Gunicorn worker instance that exited
     """
     worker_id = getattr(worker, "worker_id", None)
     if worker_id:
@@ -64,6 +86,9 @@ def pre_fork(server, worker):
     """
     called by gunicorn master before a worker is forked. Assigns
     a unique worker_id from the pool to the worker .
+
+    :param server: Gunicorn master server instance
+    :param worker: Gunicorn worker instance about to be forked
     """
     setattr(worker, "worker_id", gunicorn_worker_ids_pool.get_id())
 
@@ -72,5 +97,8 @@ def post_fork(server, worker):
     """
     called by gunicorn master after a worker is forked. Expose
     the worker_id in the env for the worker process .
+
+    :param server: Gunicorn master server instance
+    :param worker: Gunicorn worker instance that was forked
     """
     os.environ["GUNICORN_WORKER_ID"] = getattr(worker, "worker_id", None)
