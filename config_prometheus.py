@@ -13,35 +13,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import uuid
 import glob
 from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
-
 def when_ready(server):
-    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9090))
+    path = os.environ.get("PROMETHEUS_MULTIPROC_DIR")
+    # cleaning up old .db files at server startup
+    if path:
+        for f in glob.glob(os.path.join(path, "*.db")):
+            os.remove(f)
+    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9000))
     GunicornPrometheusMetrics.start_http_server_when_ready(PORT)
 
+class GunicornWorkerIDsPool:
+    '''manage a collection of worker IDs for a Gunicorn server'''
 
-## overriding the child_exit method so that it does what we want
-## instead of using the function GunicornPrometheusMetrics.mark_process_dead
+    def __init__(self):
+        self._reserved_IDs_pool = []
+
+    def get_id(self):
+        if not self._reserved_IDs_pool:
+            return str(uuid.uuid4())
+        return self._reserved_IDs_pool.pop()
+
+    def add_id(self, worker_id):
+        self._reserved_IDs_pool.append(worker_id)
 
 
+# Instantiate once in the Gunicorn master process
+gunicorn_worker_ids_pool = GunicornWorkerIDsPool()
+
+# redifine gunicorn hooks for worker ID management and prometheus metrics integration
+  
 def child_exit(server, worker):
-    """Deletes the files associated with the dead worker"""
+    ''' 
+    called when a worker exits. Return the worker_id to the pool so it can be reused, 
+    and marks the worker process ad dead for prometheus monitoring . 
+    '''
+    worker_id = getattr(worker, 'worker_id', None)
+    if worker_id:gunicorn_worker_ids_pool.add_id(worker_id)
+    GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid)
 
-    path = os.environ.get("PROMETHEUS_MULTIPROC_DIR")
+def pre_fork(server,worker):
+    ''' 
+    called by gunicorn master before a worker is forked. Assigns
+    a unique worker_id from the pool to the worker .
+    '''
+    setattr(worker,'worker_id',gunicorn_worker_ids_pool.get_id())
 
-    pid = worker.pid
-
-    # Deletion of counter, gauge, and histogram files associated with this worker
-    for db_file in glob.glob(os.path.join(path, f"counter_{pid}.db")):
-        os.remove(db_file)
-        print(f"File deleted : {db_file}")
-
-    for db_file in glob.glob(os.path.join(path, f"gauge_max_{pid}.db")):
-        os.remove(db_file)
-        print(f"File deleted : {db_file}")
-
-    for db_file in glob.glob(os.path.join(path, f"histogram_{pid}.db")):
-        os.remove(db_file)
-        print(f"File deleted : {db_file}")
+def post_fork(server,worker):
+    '''
+    called by gunicorn master after a worker is forked. Expose 
+    the worker_id in the env for the worker process . 
+    '''
+    os.environ['GUNICORN_WORKER_ID'] = getattr(worker,'worker_id',None)
