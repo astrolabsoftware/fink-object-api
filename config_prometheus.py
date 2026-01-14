@@ -24,7 +24,7 @@ def when_ready(server):
     if path:
         for f in glob.glob(os.path.join(path, "*.db")):
             os.remove(f)
-    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9000))
+    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9090))
     GunicornPrometheusMetrics.start_http_server_when_ready(PORT)
 
 
