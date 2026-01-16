@@ -156,7 +156,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
 
             if nmax == 1:
                 # Prefix with internal marker
-                to_evaluate = f"key:key:{name.lower()}-"
+                to_evaluate = f"key:key:{name.lower()}@"
             elif nmax > 1:
                 # This enables e.g. autocompletion tasks
                 client.setLimit(nmax)
