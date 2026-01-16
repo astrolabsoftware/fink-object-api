@@ -32,7 +32,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
     Parameters
     ----------
     payload: dict
-        See https://api.fink-portal.org
+        See https://api.lsst.fink-portal.org
 
     Return
     ----------

@@ -97,7 +97,7 @@ def check_args(args: list, payload: dict) -> dict:
         if required_arg not in payload:
             rep = {
                 "status": "error",
-                "text": f"A value for `{required_arg}` is required. See https://api.fink-portal.org \n",
+                "text": f"A value for `{required_arg}` is required. See https://api.ztf.fink-portal.org \n",
             }
             return rep
     return {"status": "ok"}

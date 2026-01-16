@@ -87,7 +87,7 @@ def extract_schema(payload: dict) -> Response:
         {
             "name": "xm_simbad_otype",
             "type": "string",
-            "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://api.fink-portal.org/api/v1/classes",
+            "doc": "Object type of the closest source from SIMBAD database; if exists within 1 arcsec. See https://api.lsst.fink-portal.org/api/v1/classes",
         },
         {
             "name": "xm_gcvs_type",
