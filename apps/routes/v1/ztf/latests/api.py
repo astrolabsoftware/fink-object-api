@@ -26,7 +26,7 @@ ARGS = ns.model(
     "class",
     {
         "class": fields.String(
-            description="Fink derived label. See https://api.fink-portal.org/api/v1/classes for available tags.",
+            description="Fink derived label. See https://api.ztf.fink-portal.org/api/v1/classes for available tags.",
             example="Early SN Ia candidate",
             required=True,
         ),

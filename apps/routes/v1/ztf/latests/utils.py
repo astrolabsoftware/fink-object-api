@@ -32,7 +32,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     Parameters
     ----------
     payload: dict
-        See https://api.fink-portal.org
+        See https://api.ztf.fink-portal.org
     return_raw: bool
         If True, return the HBase output, else pandas DataFrame. Default is False.
 
