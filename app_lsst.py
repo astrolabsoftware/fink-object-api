@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ from apps.routes.v1.lsst.sso.api import ns as ns_sso
 from apps.routes.v1.lsst.resolver.api import ns as ns_resolver
 from apps.routes.v1.lsst.skymap.api import ns as ns_skymap
 from apps.routes.v1.lsst.statistics.api import ns as ns_stats
+from apps.routes.v1.lsst.tags.api import ns as ns_tags
 
 config = extract_configuration("config.yml")
 
@@ -69,6 +70,7 @@ api.add_namespace(ns_sso)
 api.add_namespace(ns_resolver)
 api.add_namespace(ns_skymap)
 api.add_namespace(ns_stats)
+api.add_namespace(ns_tags)
 
 # Register blueprint
 app.register_blueprint(blueprint)
