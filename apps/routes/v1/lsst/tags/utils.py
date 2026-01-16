@@ -81,14 +81,14 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
 
     if "startdate" not in payload:
         # start of the Fink operations
-        jd_start = Time("2019-11-01 00:00:00").jd
+        jd_start = Time("2019-11-01 00:00:00").mjd
     else:
-        jd_start = Time(payload["startdate"]).jd
+        jd_start = Time(payload["startdate"]).mjd
 
     if "stopdate" not in payload:
-        jd_stop = Time.now().jd
+        jd_stop = Time.now().mjd
     else:
-        jd_stop = Time(payload["stopdate"]).jd
+        jd_stop = Time(payload["stopdate"]).mjd
 
     if "columns" in payload:
         cols = payload["columns"].replace(" ", "")
