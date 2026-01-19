@@ -69,7 +69,8 @@ class Tags(Resource):
             # POST from query URL
             return self.post()
         else:
-            return jsonify(extract_tags())
+            out = {k: v for k, v in zip(extract_tags(True))}
+            return jsonify(out)
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):

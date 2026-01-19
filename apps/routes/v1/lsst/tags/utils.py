@@ -15,6 +15,7 @@
 from flask import Response
 
 import pandas as pd
+import importlib
 import pkgutil
 
 from apps.utils.client import connect_to_hbase_table
@@ -26,13 +27,21 @@ from line_profiler import profile
 from astropy.time import Time
 
 
-def extract_tags():
+def extract_tags(with_description=False):
     """Extract user-defined tags
+
+    Parameters
+    ----------
+    with_description: bool
+        If True, returns tags and descriptions.
+        Otherwise, returns only tags.
 
     Returns
     -------
-    out: list of str
+    tags: list of str
         List of tags
+    descriptions: list of str, optional
+        Long descriptions for tags
     """
     # User-defined topics
     userfilters = [
@@ -40,6 +49,11 @@ def extract_tags():
         for _, mod, _ in pkgutil.iter_modules(ffrl.__path__)
     ]
     tags = [userfilter.split(".")[-1] for userfilter in userfilters]
+
+    if with_description:
+        modules = [u.rsplit(".", maxsplit=1)[0] for u in userfilters]
+        descriptions = [importlib.import_module(u).DESCRIPTION for u in modules]
+        return tags, descriptions
 
     return tags
 
