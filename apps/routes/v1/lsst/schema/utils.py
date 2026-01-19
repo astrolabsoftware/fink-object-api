@@ -15,8 +15,11 @@
 from flask import Response
 import json
 import requests
+import logging
 
 from line_profiler import profile
+
+_LOG = logging.getLogger(__name__)
 
 
 def sort_dict(adict):
@@ -306,6 +309,25 @@ def extract_schema(payload: dict) -> Response:
                 }
             ),
         }
+    elif payload["endpoint"] == "/api/v1/tags":
+        types = {
+            "Rubin original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in diaSource_schema + root_list
+                }
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in fink_source_science
+                }
+            ),
+        }
+    else:
+        msg = "{} is not a valid endpoint".format(payload["endpoint"])
+        _LOG.warning(msg)
+        return Response(msg, 404)
 
     response = Response(json.dumps(types), 200)
     response.headers.set("Content-Type", "application/json")
