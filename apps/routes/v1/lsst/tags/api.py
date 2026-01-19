@@ -12,13 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response, request
+from flask import Response, request, jsonify
 from flask_restx import Namespace, Resource, fields
 
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.lsst.tags.utils import extract_object_data
+from apps.routes.v1.lsst.tags.utils import extract_object_data, extract_tags
 
 ns = Namespace("api/v1/tags", "Get latest Rubin alerts by tags")
 
@@ -69,8 +69,7 @@ class Tags(Resource):
             # POST from query URL
             return self.post()
         else:
-            # FIXME: return list of available class!
-            return Response(ns.description, 200)
+            return jsonify(extract_tags())
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
