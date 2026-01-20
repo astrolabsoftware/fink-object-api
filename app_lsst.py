@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 from flask import Flask, Blueprint
 from flask_restx import Api
 from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
@@ -35,6 +36,7 @@ from apps.routes.v1.lsst.statistics.api import ns as ns_stats
 from apps.routes.v1.lsst.tags.api import ns as ns_tags
 
 config = extract_configuration("config.yml")
+
 
 def get_worker_id():
     """return stable id for worker"""
