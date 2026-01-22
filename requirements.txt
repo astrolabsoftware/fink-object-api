@@ -4,8 +4,8 @@ flask
 flask-restx
 pandas
 numpy
-fink-filters==7.12
-fink-utils==0.51.0
+fink-filters==7.15-rc0
+fink-utils==0.52.0
 line_profiler
 requests
 pyarrow
