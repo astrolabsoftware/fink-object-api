@@ -34,6 +34,7 @@ from apps.routes.v1.lsst.resolver.api import ns as ns_resolver
 from apps.routes.v1.lsst.skymap.api import ns as ns_skymap
 from apps.routes.v1.lsst.statistics.api import ns as ns_stats
 from apps.routes.v1.lsst.tags.api import ns as ns_tags
+from apps.routes.v1.lsst.blocks.api import ns as ns_blocks
 
 config = extract_configuration("config.yml")
 
@@ -89,6 +90,7 @@ api.add_namespace(ns_resolver)
 api.add_namespace(ns_skymap)
 api.add_namespace(ns_stats)
 api.add_namespace(ns_tags)
+api.add_namespace(ns_blocks)
 
 # Register blueprint
 app.register_blueprint(blueprint)
