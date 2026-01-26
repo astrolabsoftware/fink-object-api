@@ -373,8 +373,8 @@ def extract_schema(payload: dict) -> Response:
                     i["name"]: {
                         "type": i["type"],
                         "doc": i.get("doc", "TBD"),
-                        "fink_broker_version": i["fink_broker_version"],
-                        "fink_science_version": i["fink_science_version"],
+                        "fink_broker_version": "--",
+                        "fink_science_version": "--",
                     }
                     for i in [
                         {
