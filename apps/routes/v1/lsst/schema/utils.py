@@ -300,7 +300,12 @@ def extract_schema(payload: dict) -> Response:
             ),
             "Fink science module outputs (f:)": sort_dict(
                 {
-                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
                     for i in fink_source_science
                 }
             ),
@@ -316,7 +321,12 @@ def extract_schema(payload: dict) -> Response:
             ),
             "Fink science module outputs (f:)": sort_dict(
                 {
-                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
                     for i in fink_object_science
                 }
             ),
@@ -331,7 +341,12 @@ def extract_schema(payload: dict) -> Response:
             ),
             "Fink science module outputs (f:)": sort_dict(
                 {
-                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
                     for i in fink_source_science + fink_object_science
                 }
             ),
@@ -355,7 +370,12 @@ def extract_schema(payload: dict) -> Response:
             ),
             "Fink science module outputs (f:)": sort_dict(
                 {
-                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
                     for i in [
                         {
                             "name": "sso_name",
@@ -376,7 +396,12 @@ def extract_schema(payload: dict) -> Response:
             ),
             "Fink science module outputs (f:)": sort_dict(
                 {
-                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
                     for i in fink_source_science
                 }
             ),
