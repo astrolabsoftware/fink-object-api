@@ -40,6 +40,14 @@ def get_statistics(payload: dict) -> pd.DataFrame:
     else:
         cols = "*"
 
+    if payload["date"] == "":
+        dates = "20"  # get all dates starting with 20XY
+    else:
+        dates = payload["date"]
+
+    if "f:night" in cols:
+        cols = cols.replace("f:night", "key")
+
     client = connect_to_hbase_table("rubin.statistics")
     if "schema" in payload and str(payload["schema"]) == "True":
         # TODO: change the strategy to get the schema
@@ -49,9 +57,7 @@ def get_statistics(payload: dict) -> pd.DataFrame:
         results = list(schema.columnNames())
         pdf = pd.DataFrame({"schema": results})
     else:
-        payload_date = payload["date"]
-
-        to_evaluate = f"key:key:{payload_date}"
+        to_evaluate = f"key:key:{dates}"
         results = client.scan(
             "",
             to_evaluate,
@@ -67,6 +73,9 @@ def get_statistics(payload: dict) -> pd.DataFrame:
 
         # Rename key:key in f:night
         pdf = pdf.rename(columns={"key:key": "f:night"})
+
+        if "key:time" in pdf.columns:
+            pdf = pdf.drop(columns=["key:time"])
 
     client.close()
 
