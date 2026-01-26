@@ -289,6 +289,86 @@ def extract_schema(payload: dict) -> Response:
         },
     ]
 
+    fink_statistics = [
+        {
+            "name": "night",
+            "type": "int",
+            "doc": "Number of alerts processed",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "alerts",
+            "type": "int",
+            "doc": "Number of alerts processed",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "alerts_<band>",
+            "type": "int",
+            "doc": "Number of alerts processed for band <band>",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "objects",
+            "type": "int",
+            "doc": "Number of unique objects for the night",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "is_sso",
+            "type": "int",
+            "doc": "Number of alerts associated to a Solar System objects",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "is_first",
+            "type": "int",
+            "doc": "Number of alerts with first detection",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "is_cataloged",
+            "type": "int",
+            "doc": "Number of alerts with a counterpart in SIMBAD or Gaia DR3.",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "visits",
+            "type": "int",
+            "doc": "Number of visits",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "fink_broker_version",
+            "type": "str",
+            "doc": "fink-broker version used to process the alert data",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "fink_science_version",
+            "type": "str",
+            "doc": "fink-science version used to process the alert data",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "lsst_schema_version",
+            "type": "str",
+            "doc": "LSST schema version used to generate alert data",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+    ]
+
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
@@ -403,6 +483,20 @@ def extract_schema(payload: dict) -> Response:
                         "fink_science_version": i["fink_science_version"],
                     }
                     for i in fink_source_science
+                }
+            ),
+        }
+    elif payload["endpoint"] == "/api/v1/statistics":
+        types = {
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_statistics
                 }
             ),
         }

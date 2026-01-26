@@ -49,33 +49,26 @@ def get_statistics(payload: dict) -> pd.DataFrame:
         cols = cols.replace("f:night", "key")
 
     client = connect_to_hbase_table("rubin.statistics")
-    if "schema" in payload and str(payload["schema"]) == "True":
-        # TODO: change the strategy to get the schema
-        # The table schema changes everyday, so it is not very useful
-        # Schema should use 3 things: /classes, basic:, and date
-        schema = client.schema()
-        results = list(schema.columnNames())
-        pdf = pd.DataFrame({"schema": results})
-    else:
-        to_evaluate = f"key:key:{dates}"
-        results = client.scan(
-            "",
-            to_evaluate,
-            cols,
-            0,
-            True,
-            True,
-        )
-        pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
 
-        # See https://github.com/astrolabsoftware/fink-science-portal/issues/579
-        pdf = pdf.replace(regex={r"^\x00.*$": 0})
+    to_evaluate = f"key:key:{dates}"
+    results = client.scan(
+        "",
+        to_evaluate,
+        cols,
+        0,
+        True,
+        True,
+    )
+    pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
 
-        # Rename key:key in f:night
-        pdf = pdf.rename(columns={"key:key": "f:night"})
+    # See https://github.com/astrolabsoftware/fink-science-portal/issues/579
+    pdf = pdf.replace(regex={r"^\x00.*$": 0})
 
-        if "key:time" in pdf.columns:
-            pdf = pdf.drop(columns=["key:time"])
+    # Rename key:key in f:night
+    pdf = pdf.rename(columns={"key:key": "f:night"})
+
+    if "key:time" in pdf.columns:
+        pdf = pdf.drop(columns=["key:time"])
 
     client.close()
 
