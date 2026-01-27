@@ -27,6 +27,34 @@ def sort_dict(adict):
     return {key: adict[key] for key in sorted(adict.keys())}
 
 
+def replace_hyphen_for_name(dic):
+    elem = dic.copy()
+    elem["name"] = elem["name"].replace("_", ".", 1)
+    return elem
+
+
+def add_prefix_section(dic, prefix=""):
+    elem = dic.copy()
+    elem["name"] = prefix + elem["name"]
+    return elem
+
+
+def reconstruct_fink_schema(fink_source, fink_object):
+    """ """
+    fink_source_reconstructed = [replace_hyphen_for_name(dic) for dic in fink_source]
+    fink_object_reconstructed = [
+        add_prefix_section(dic, "pred.") for dic in fink_object
+    ]
+
+    return fink_source_reconstructed, fink_object_reconstructed
+
+
+def reconstruct_lsst_schema(section, name):
+    """ """
+    section_reconstructed = [add_prefix_section(dic, "pred.") for dic in section]
+    return section_reconstructed
+
+
 @profile
 def extract_schema(payload: dict) -> Response:
     """Retrieve the data schema
@@ -84,6 +112,13 @@ def extract_schema(payload: dict) -> Response:
         )
     )
     ssSource_schema = r_ssSource.json()["fields"]
+
+    r_mpc_orbits = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.mpc_orbits.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
+    )
+    mpc_orbits_schema = r_mpc_orbits.json()["fields"]
 
     # Fink Science modules
     # Store this on disk as avsc - versioned.
@@ -225,6 +260,13 @@ def extract_schema(payload: dict) -> Response:
             "name": "clf_snnSnVsOthers_score",
             "type": "float",
             "doc": "Score (0...1) for the SN classifier (binary classifier) using SuperNNova. See https://arxiv.org/abs/2404.08798",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "misc.firstDiaSourceMjdTaiFink",
+            "type": "string",
+            "doc": "MJD for the first detection by Rubin. Temporary replacement for diaObject.firstDiaSourceMjdTai which is not yet populated by the project",
             "fink_broker_version": "4.0",
             "fink_science_version": "8.26.0",
         },
@@ -532,6 +574,42 @@ def extract_schema(payload: dict) -> Response:
                         "fink_science_version": i["fink_science_version"],
                     }
                     for i in fink_statistics
+                }
+            ),
+        }
+    elif payload["endpoint"] == "/datatransfer/fink":
+        fink_source_science_reconstructed, fink_object_science_reconstructed = (
+            reconstruct_fink_schema(fink_source_science, fink_object_science)
+        )
+        types = {
+            "Fink": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science_reconstructed
+                    + fink_object_science_reconstructed
+                }
+            ),
+        }
+    elif payload["endpoint"] == "/datatransfer/lsst":
+        all_fields = (
+            reconstruct_lsst_schema(diaObject_schema, "diaObject")
+            + reconstruct_lsst_schema(diaSource_schema, "diaSource")
+            + reconstruct_lsst_schema(ssSource_schema, "ssSource")
+            + reconstruct_lsst_schema(mpc_orbits_schema, "mpc_orbits")
+        )
+        types = {
+            "LSST": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                    }
+                    for i in all_fields
                 }
             ),
         }
