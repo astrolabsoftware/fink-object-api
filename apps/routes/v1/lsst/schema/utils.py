@@ -51,7 +51,7 @@ def reconstruct_fink_schema(fink_source, fink_object):
 
 def reconstruct_lsst_schema(section, name):
     """ """
-    section_reconstructed = [add_prefix_section(dic, "pred.") for dic in section]
+    section_reconstructed = [add_prefix_section(dic, name) for dic in section]
     return section_reconstructed
 
 
@@ -518,6 +518,7 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/sso":
+        # FIXME: where mpc_orbots goes???
         types = {
             "LSST original fields (r:)": sort_dict(
                 {
@@ -597,10 +598,10 @@ def extract_schema(payload: dict) -> Response:
         }
     elif payload["endpoint"] == "/datatransfer/lsst":
         all_fields = (
-            reconstruct_lsst_schema(diaObject_schema, "diaObject")
-            + reconstruct_lsst_schema(diaSource_schema, "diaSource")
-            + reconstruct_lsst_schema(ssSource_schema, "ssSource")
-            + reconstruct_lsst_schema(mpc_orbits_schema, "mpc_orbits")
+            reconstruct_lsst_schema(diaObject_schema, "diaObject.")
+            + reconstruct_lsst_schema(diaSource_schema, "diaSource.")
+            + reconstruct_lsst_schema(ssSource_schema, "ssSource.")
+            + reconstruct_lsst_schema(mpc_orbits_schema, "mpc_orbits.")
         )
         types = {
             "LSST": sort_dict(
@@ -614,7 +615,6 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     else:
-        # FIXME: /stats is missing...
         # FIXME: /gw is missing...
         msg = "{} is not a valid endpoint".format(payload["endpoint"])
         _LOG.warning(msg)
