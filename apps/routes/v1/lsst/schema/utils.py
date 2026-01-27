@@ -598,7 +598,8 @@ def extract_schema(payload: dict) -> Response:
         }
     elif payload["endpoint"] == "/datatransfer/lsst":
         all_fields = (
-            reconstruct_lsst_schema(diaObject_schema, "diaObject.")
+            root_list
+            + reconstruct_lsst_schema(diaObject_schema, "diaObject.")
             + reconstruct_lsst_schema(diaSource_schema, "diaSource.")
             + reconstruct_lsst_schema(ssSource_schema, "ssSource.")
             + reconstruct_lsst_schema(mpc_orbits_schema, "mpc_orbits.")
