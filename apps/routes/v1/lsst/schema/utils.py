@@ -480,7 +480,7 @@ def extract_schema(payload: dict) -> Response:
             "LSST original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in ssSource_schema + root_list
+                    for i in ssSource_schema + diaSource_schema + root_list
                 }
             ),
             "Fink science module outputs (f:)": sort_dict(
@@ -488,8 +488,8 @@ def extract_schema(payload: dict) -> Response:
                     i["name"]: {
                         "type": i["type"],
                         "doc": i.get("doc", "TBD"),
-                        "fink_broker_version": "--",
-                        "fink_science_version": "--",
+                        "fink_broker_version": "4.0",
+                        "fink_science_version": "8.26.0",
                     }
                     for i in [
                         {
