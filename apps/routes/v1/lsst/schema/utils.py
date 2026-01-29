@@ -410,6 +410,13 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
+            "name": "in_tns",
+            "type": "int",
+            "doc": "Number of alerts with a counterpart in TNS",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
+        },
+        {
             "name": "is_cataloged",
             "type": "int",
             "doc": "Number of alerts with a counterpart in SIMBAD or Gaia DR3.",
@@ -518,7 +525,7 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/sso":
-        # FIXME: where mpc_orbots goes???
+        # FIXME: where mpc_orbits goes???
         types = {
             "LSST original fields (r:)": sort_dict(
                 {
