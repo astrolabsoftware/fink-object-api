@@ -35,7 +35,11 @@ def replace_hyphen_for_name(dic):
 
 def add_prefix_section(dic, prefix=""):
     elem = dic.copy()
-    elem["name"] = prefix + elem["name"]
+    # FIXME: to be removed whn project will fill it
+    if elem["name"] == "firstDiaSourceMjdTaiFink":
+        elem["name"] = "misc." + elem["name"]
+    else:
+        elem["name"] = prefix + elem["name"]
     return elem
 
 
@@ -236,6 +240,34 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
+            "name": "xm_zphot",
+            "type": "float",
+            "doc": "Photo-z estimate from Legacy Surveys DR8 South Photometric Redshifts catalog - mean of the normally distributed photo-z posterior",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
+        },
+        {
+            "name": "xm_e_zphot",
+            "type": "float",
+            "doc": "Uncertainty on zphot from Legacy Surveys DR8 South Photometric Redshifts catalog - standard deviation of the normally distributed photo-z posterior.",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
+        },
+        {
+            "name": "xm_pstar",
+            "type": "float",
+            "doc": "Star likelihood based on colours from GMM star-QSO classification (Legacy Surveys DR8 South Photometric Redshifts catalog)",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
+        },
+        {
+            "name": "xm_fqual",
+            "type": "int",
+            "doc": "Photo-z reliability flag from Legacy Surveys DR8 South Photometric Redshifts catalog. =1 for sources expected to have well-constrained estimates",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
             "name": "clf_cats_class",
             "type": "int",
             "doc": "CATS classifier broad class prediction with the highest probability. 11=SN-like, 12=Fast (e.g. KN, ulens, Novae, ...), 13=Long (e.g. SLSN, TDE, ...), 21=Periodic (e.g. RRLyrae, EB, ...), 22=Non-periodic (e.g. AGN). See https://arxiv.org/abs/2404.08798",
@@ -264,11 +296,18 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
-            "name": "misc.firstDiaSourceMjdTaiFink",
-            "type": "string",
-            "doc": "MJD for the first detection by Rubin. Temporary replacement for diaObject.firstDiaSourceMjdTai which is not yet populated by the project",
-            "fink_broker_version": "4.0",
-            "fink_science_version": "8.26.0",
+            "name": "clf_elephant_kstest_science",
+            "type": "float",
+            "doc": "hostless indicator in the science image from the ELEPHANT pipeline. See https://arxiv.org/abs/2404.18165",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
+        },
+        {
+            "name": "clf_elephant_kstest_template",
+            "type": "float",
+            "doc": "hostless indicator in the template image from the ELEPHANT pipeline. See https://arxiv.org/abs/2404.18165",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.34.0",
         },
         {
             "name": "fink_broker_version",
@@ -326,6 +365,13 @@ def extract_schema(payload: dict) -> Response:
             "name": "main_label_crossmatch",
             "type": "string",
             "doc": "Main association from various crossmatches for the last received alert of this object. This is currently set to the SIMBAD label only (f:xm_simbad_otype). Subject to change.",
+            "fink_broker_version": "4.0",
+            "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "firstDiaSourceMjdTaiFink",
+            "type": "string",
+            "doc": "MJD for the first detection by Rubin. Temporary replacement for diaObject.firstDiaSourceMjdTai which is not yet populated by the project",
             "fink_broker_version": "4.0",
             "fink_science_version": "8.26.0",
         },
