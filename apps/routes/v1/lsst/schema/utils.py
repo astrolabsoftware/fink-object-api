@@ -233,6 +233,20 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
+            "name": "xm_tns_fullname",
+            "type": "string",
+            "doc": "TNS name, if it exists.",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.36.0",
+        },
+        {
+            "name": "xm_tns_redshift",
+            "type": "float",
+            "doc": "Redshift from TNS, if it exists.",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.36.0",
+        },
+        {
             "name": "xm_gaiadr3_VarFlag",
             "type": "int",
             "doc": "Photometric variability flag from Gaia DR3. 1 if the source is variable, 0 otherwise.",
@@ -270,9 +284,16 @@ def extract_schema(payload: dict) -> Response:
         {
             "name": "clf_cats_class",
             "type": "int",
-            "doc": "CATS classifier broad class prediction with the highest probability. 11=SN-like, 12=Fast (e.g. KN, ulens, Novae, ...), 13=Long (e.g. SLSN, TDE, ...), 21=Periodic (e.g. RRLyrae, EB, ...), 22=Non-periodic (e.g. AGN). See https://arxiv.org/abs/2404.08798",
+            "doc": "CATS classifier broad class prediction with the highest probability. -1= not processed, 11=SN-like, 12=Fast (e.g. KN, ulens, Novae, ...), 13=Long (e.g. SLSN, TDE, ...), 21=Periodic (e.g. RRLyrae, EB, ...), 22=Non-periodic (e.g. AGN). See https://arxiv.org/abs/2404.08798",
             "fink_broker_version": "4.0",
             "fink_science_version": "8.26.0",
+        },
+        {
+            "name": "clf_cats_score",
+            "type": "float",
+            "doc": "CATS classifier highest probability (0...1). See https://arxiv.org/abs/2404.08798",
+            "fink_broker_version": "4.1",
+            "fink_science_version": "8.35.0",
         },
         {
             "name": "clf_earlySNIa_score",
