@@ -254,7 +254,7 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
-            "name": "f:xm_legacydr8_zphot",
+            "name": "xm_legacydr8_zphot",
             "type": "float",
             "doc": "Photo-z estimate from Legacy Surveys DR8 South Photometric Redshifts catalog - mean of the normally distributed photo-z posterior",
             "fink_broker_version": "4.1",
