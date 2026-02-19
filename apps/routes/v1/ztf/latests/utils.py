@@ -115,7 +115,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
             True,
         )
         schema_client = client.schema()
-        group_alerts = True
+        group_alerts = False
     elif is_cta_blazar:
         # CTAO Blazars with low states
         # To be changed when more trend will appear, like flares
