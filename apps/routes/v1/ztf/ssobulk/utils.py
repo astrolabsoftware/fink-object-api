@@ -41,7 +41,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
     # Need to profile compared to pyarrow
     input_args = yaml.load(open("config.yml"), yaml.Loader)
     r = requests.get(
-        "{}/sso_ztf_lc_aggregated_with_ssoft_202601_with_residuals.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+        "{}/sso_ztf_lc_aggregated_with_ssoft_202601_with_residuals_singlefile.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],
             input_args["USER"],
             input_args["NAMENODE"],
