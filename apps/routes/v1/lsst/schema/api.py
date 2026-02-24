@@ -32,12 +32,12 @@ ARGS = ns.model(
             required=True,
         ),
         "major_version": fields.Integer(
-            description="Major version. Default is latest.",
-            example=9,
+            description="LSST major version. Default is latest.",
+            example=10,
             required=False,
         ),
         "minor_version": fields.Integer(
-            description="Minor version. Default is latest.",
+            description="LSST minor version. Default is latest.",
             example=0,
             required=False,
         ),
@@ -55,6 +55,7 @@ class Schema(Resource):
             # POST from query URL
             return self.post()
         else:
+            # FIXME: return the list of endpoints?
             return Response(ns.description, 200)
 
     @ns.expect(ARGS, location="json", as_dict=True)

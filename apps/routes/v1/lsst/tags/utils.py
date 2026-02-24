@@ -114,7 +114,7 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     else:
         truncated = True
 
-    client = connect_to_hbase_table("rubin.{}".format(tag))
+    client = connect_to_hbase_table("rubin.tag_{}".format(tag))
 
     client.setLimit(nalerts)
     client.setRangeScan(True)
