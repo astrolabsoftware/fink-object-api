@@ -80,7 +80,9 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             # drop duplicates
             tmp = tmp.drop_duplicates()
             # remove xmatch artifacts on high cadence
-            pdf = tmp[tmp["f:xm_tns_fullname"].apply(lambda x: x != "nan" and not pd.isna(x))]
+            pdf = tmp[
+                tmp["f:xm_tns_fullname"].apply(lambda x: x != "nan" and not pd.isna(x))
+            ]
         else:
             # indices are case-insensitive
             # salt is last letter of the name
