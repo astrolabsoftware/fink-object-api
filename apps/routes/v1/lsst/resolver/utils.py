@@ -94,12 +94,12 @@ def resolve_name(payload: dict) -> pd.DataFrame:
     elif resolver == "simbad":
         client = connect_to_hbase_table("rubin.diaObject")
         if reverse:
-            to_evaluate = f"key:key:{name}"
+            to_evaluate = "key:key:{}_{}".format(name[-3:], name)
             client.setLimit(nmax)
             results = client.scan(
                 "",
                 to_evaluate,
-                "r:diaObjectId,f:main_label_classifier,r:ra,r:dec",
+                "r:diaObjectId,f:main_label_crossmatch,r:ra,r:dec",
                 0,
                 False,
                 False,
