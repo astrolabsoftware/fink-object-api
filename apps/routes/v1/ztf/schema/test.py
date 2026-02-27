@@ -76,7 +76,9 @@ def check_recent_columns(columns, objectId):
         # `spicy_name` was introduced by mistake instead of `spicy_class` for 2024/02/01
         # Anomaly can be null...
         outside_definition = [
-            i for i in obtained if (i not in definition) and (i != "spicy_name") and (i != "anomaly")
+            i
+            for i in obtained
+            if (i not in definition) and (i != "spicy_name") and (i != "anomaly")
         ]
         assert len(outside_definition) == 0, (
             "Not in defined fields",
