@@ -63,6 +63,7 @@ def check_recent_columns(columns, objectId):
                 "cutoutDifference_stampData",
                 "cutoutScience_stampData",
                 "cutoutTemplate_stampData",
+                "anomaly_score",
             ]
         ]
 
@@ -74,8 +75,11 @@ def check_recent_columns(columns, objectId):
         )
 
         # `spicy_name` was introduced by mistake instead of `spicy_class` for 2024/02/01
+        # Anomaly can be null...
         outside_definition = [
-            i for i in obtained if (i not in definition) and (i != "spicy_name")
+            i
+            for i in obtained
+            if (i not in definition) and (i != "spicy_name") and (i != "anomaly_score")
         ]
         assert len(outside_definition) == 0, (
             "Not in defined fields",

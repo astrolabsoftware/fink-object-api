@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,24 +18,20 @@ from flask_restx import Namespace, Resource, fields
 from apps.utils.utils import check_args
 from apps.utils.utils import send_tabular_data
 
-from apps.routes.v1.lsst.sources.utils import extract_object_data
+from apps.routes.v1.lsst.fp.utils import extract_fp_data
 
-ns = Namespace("api/v1/sources", "Get diaSource data based on Rubin diaObjectId")
+ns = Namespace("api/v1/fp", "Get forced photometry data based on Rubin diaObjectId")
 
 ARGS = ns.model(
-    "sources",
+    "fp",
     {
         "diaObjectId": fields.String(
             description='single Rubin Object ID as STRING, or a comma-separated list of object ID, e.g. "169298433216610349"',
             example="169298433216610349",
             required=True,
         ),
-        "midpointMjdTai": fields.Float(
-            description="If set, only transfer data for the corresponding observation at time midpointMjdTai (float). This is particularly useful for performance if you are only interested in the data for one source. Note that it does not work if diaObjectId is a comma-separated list. If not specified, transfer data for all sources.",
-            required=False,
-        ),
         "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'r:midpointMjdTai,r:psfFlux,r:band'. If not specified, transfer all columns (slow).",
+            description="Comma-separated data columns to transfer, e.g. 'i:midpointMjdTai,i:psfFlux,i:band'. If not specified, transfer all columns (slow).",
             example="r:midpointMjdTai,r:psfFlux,r:band",
             required=False,
         ),
@@ -50,9 +46,9 @@ ARGS = ns.model(
 
 @ns.route("")
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
-class Objects(Resource):
+class Fp(Resource):
     def get(self):
-        """Retrieve lightcurve data from the Fink/LSST database based on their name"""
+        """Retrieve forced photometry data from the Fink/LSST database based on their name"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -62,7 +58,7 @@ class Objects(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Retrieve lightcurve data from the Fink/LSST database based on their name"""
+        """Retrieve forced photometry data from the Fink/LSST database based on their name"""
         # get payload from the query URL
         payload = request.args
 
@@ -74,7 +70,7 @@ class Objects(Resource):
         if rep["status"] != "ok":
             return Response(str(rep), 400)
 
-        out = extract_object_data(payload)
+        out = extract_fp_data(payload)
 
         # Error propagation
         if isinstance(out, Response):
