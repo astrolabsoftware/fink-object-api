@@ -63,7 +63,7 @@ def check_recent_columns(columns, objectId):
                 "cutoutDifference_stampData",
                 "cutoutScience_stampData",
                 "cutoutTemplate_stampData",
-                "anomaly_score"
+                "anomaly_score",
             ]
         ]
 
