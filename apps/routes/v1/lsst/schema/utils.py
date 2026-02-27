@@ -583,7 +583,7 @@ def extract_schema(payload: dict) -> Response:
                 }
             ),
         }
-    if payload["endpoint"] == "/api/v1/fp":
+    elif payload["endpoint"] == "/api/v1/fp":
         # root, diaSOurce, fink
         types = {
             "LSST original fields (r:)": sort_dict(
