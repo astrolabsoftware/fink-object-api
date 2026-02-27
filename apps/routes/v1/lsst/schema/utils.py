@@ -103,6 +103,13 @@ def extract_schema(payload: dict) -> Response:
     )
     diaSource_schema = r_diaSource.json()["fields"]
 
+    r_diaForcedSource = requests.get(
+        "{}/{}/{}/lsst.v{}_{}.diaSource.avsc".format(
+            base_url, major_version, minor_version, major_version, minor_version
+        )
+    )
+    forcedDiaSource_schema = r_diaForcedSource.json()["fields"]
+
     r_diaObject = requests.get(
         "{}/{}/{}/lsst.v{}_{}.diaObject.avsc".format(
             base_url, major_version, minor_version, major_version, minor_version
@@ -576,6 +583,16 @@ def extract_schema(payload: dict) -> Response:
                 }
             ),
         }
+    if payload["endpoint"] == "/api/v1/fp":
+        # root, diaSOurce, fink
+        types = {
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in forcedDiaSource_schema
+                }
+            ),
+        }
     elif payload["endpoint"] == "/api/v1/objects":
         # root, diaObject, fink
         types = {
@@ -710,8 +727,11 @@ def extract_schema(payload: dict) -> Response:
             root_list
             + reconstruct_lsst_schema(diaObject_schema, "diaObject.")
             + reconstruct_lsst_schema(diaSource_schema, "diaSource.")
+            + reconstruct_lsst_schema(diaSource_schema, "prvDiaSources.")
+            + reconstruct_lsst_schema(forcedDiaSource_schema, "prvDiaForcedSources.")
             + reconstruct_lsst_schema(ssSource_schema, "ssSource.")
             + reconstruct_lsst_schema(mpc_orbits_schema, "mpc_orbits.")
+            + cutout_list
         )
         types = {
             "LSST": sort_dict(
