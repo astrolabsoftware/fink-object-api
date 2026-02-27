@@ -82,7 +82,9 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             if "f:xm_tns_fullname" in tmp.columns:
                 # remove xmatch artifacts on high cadence
                 pdf = tmp[
-                    tmp["f:xm_tns_fullname"].apply(lambda x: x != "nan" and not pd.isna(x))
+                    tmp["f:xm_tns_fullname"].apply(
+                        lambda x: x != "nan" and not pd.isna(x)
+                    )
                 ]
             else:
                 pdf = tmp
