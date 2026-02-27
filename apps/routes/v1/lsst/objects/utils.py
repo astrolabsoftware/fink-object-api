@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2025-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
     if "," in payload["diaObjectId"]:
         # multi-objects search
         splitids = payload["diaObjectId"].split(",")
-        splitids = [i.split() for i in splitids]
+        splitids = [i.strip() for i in splitids]
         # add salt
         objectids = [f"key:key:{i[-3:]}_{i}" for i in splitids]
     else:
