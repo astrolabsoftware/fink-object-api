@@ -104,7 +104,7 @@ def extract_schema(payload: dict) -> Response:
     diaSource_schema = r_diaSource.json()["fields"]
 
     r_diaForcedSource = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.diaSource.avsc".format(
+        "{}/{}/{}/lsst.v{}_{}.diaForcedSource.avsc".format(
             base_url, major_version, minor_version, major_version, minor_version
         )
     )
