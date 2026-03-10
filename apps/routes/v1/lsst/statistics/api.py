@@ -32,11 +32,6 @@ ARGS = ns.model(
             example="20241104",
             required=True,
         ),
-        "schema": fields.Boolean(
-            description="If True, return just the schema of statistics table instead of actual data",
-            required=False,
-            example=False,
-        ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'f:alerts,f:night'. If not specified, transfer all columns.",
             example="f:alerts,f:night",

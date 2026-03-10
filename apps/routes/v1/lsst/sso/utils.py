@@ -29,29 +29,24 @@ from line_profiler import profile
 def resolve_packed(n_or_d):
     """Resolve all packed names corresponding to input n_or_d"""
     n_or_d = str(n_or_d)
-    # check if the object is an asteroid or a comet
-    if n_or_d.startswith("C/") or n_or_d.endswith("P"):
-        obj_type = "Comet"
-    else:
-        obj_type = "Asteroid"
 
     # Pure quaero implementation
     r = requests.get(
-        "https://api.ssodnet.imcce.fr/quaero/1/sso?q={}&type={}".format(
-            n_or_d.replace(" ", "_"), obj_type
+        "https://ssp.imcce.fr/webservices/ssodnet/api/resolver.php?-name=a:EQUAL:{}&-mime=json&-from=FINK".format(
+            n_or_d
         )
     )
     if r.status_code == 200 and r.json() != []:
-        if r.json()["total"] > 0:
-            sso_name = r.json()["data"][0]["name"]
+        sso_name = r.json()["data"][0]["name"]
 
-            aliases = r.json()["data"][0]["aliases"]
+        aliases = r.json()["data"][0]["aliases"]
+        aliases = [i.strip() for i in aliases.split(",")]
 
-            # The provisional designation stored on the orbit and
-            # observations is stored in a 7-character packed format
-            aliases = [al for al in aliases if len(al) == 7]
+        # The provisional designation stored on the orbit and
+        # observations is stored in a 7-character packed format
+        aliases = [al for al in aliases if len(al) == 7]
 
-            return sso_name, aliases
+        return sso_name, aliases
     return "", []
 
 

@@ -57,7 +57,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     n = int(payload.get("n", 1000))
 
     # Conesearch with optional date range
-    client = connect_to_hbase_table("rubin.pixel128")
+    client = connect_to_hbase_table("rubin.pixel1024")
     client.setLimit(n)
 
     # Interpret user input
@@ -93,7 +93,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     vec = ang2vec(nppi / 2.0 - nppi / 180.0 * dec, nppi / 180.0 * ra)
 
     # Send request
-    nside = 128
+    nside = 1024
 
     pixs = query_disc(
         nside,
@@ -132,18 +132,18 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     if "startdate" in payload:
         # Filter out alerts that vary in the past
         mjd_start = Time(isoify_time(payload["startdate"]), scale="tai").mjd
-        pdf = pdf[pdf["r:firstDiaSourceMjdTai"] >= mjd_start]
+        pdf = pdf[pdf["f:firstDiaSourceMjdTaiFink"] >= mjd_start]
 
         if "window" in payload:
             # Also filter out alerts that vary in the future
             window = float(payload["window"])
             mjd_stop = mjd_start + window
-            pdf = pdf[pdf["r:lastDiaSourceMjdTai"] <= mjd_stop]
+            pdf = pdf[pdf["r:midpointMjdTai"] <= mjd_stop]
 
     if "stopdate" in payload:
         # Filter out alerts that vary in the future
         mjd_stop = Time(isoify_time(payload["stopdate"]), scale="tai").mjd
-        pdf = pdf[pdf["r:lastDiaSourceMjdTai"] <= mjd_stop]
+        pdf = pdf[pdf["r:midpointMjdTai"] <= mjd_stop]
 
     # For conesearch, sort by distance
     if len(pdf) > 0:

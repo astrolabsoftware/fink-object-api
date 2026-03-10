@@ -17,7 +17,8 @@ _From 2019 to 2024, the development of this API was done in [fink-science-portal
 There are several forms of documentation, depending on what you are looking for: 
 
 - Tutorials/How-to guides: [Fink user manual](https://fink-broker.readthedocs.io/en/latest/services/search/getting_started/#quick-start-api)
-- API Reference guide: [https://api.fink-portal.org](https://api.fink-portal.org)
+- ZTF API Reference guide: [https://api.ztf.fink-portal.org](https://api.ztf.fink-portal.org)
+- LSST API Reference guide: [https://api.lsst.fink-portal.org](https://api.lsst.fink-portal.org)
 - Notes for developpers and maintainers (auth required): [GitLab](https://gitlab.in2p3.fr/fink/rubin-performance-check/-/blob/main/portal/README.md?ref_type=heads)
 
 ## Requirements and installation

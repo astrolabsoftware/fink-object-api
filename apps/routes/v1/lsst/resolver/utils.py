@@ -51,9 +51,9 @@ def resolve_name(payload: dict) -> pd.DataFrame:
             reverse = True
 
     if resolver == "tns":
-        client = connect_to_hbase_table("rubin.tns_resolver")
-        client.setLimit(nmax)
         if name == "":
+            client = connect_to_hbase_table("rubin.tns_resolver")
+            client.setLimit(nmax)
             # return the full table
             results = client.scan(
                 "",
@@ -63,17 +63,31 @@ def resolve_name(payload: dict) -> pd.DataFrame:
                 False,
                 False,
             )
+            pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
         elif reverse:
-            # Prefix search on second part of the key which is `fullname_internalname`
-            to_evaluate = f"key:key:_{name}:substring"
+            # Search main table
+            client = connect_to_hbase_table("rubin.diaSource_static")
+            to_evaluate = f"key:key:{name[-3:]}_{name}_"
             results = client.scan(
                 "",
                 to_evaluate,
-                "*",
+                "r:diaObjectId,f:xm_tns_fullname,f:xm_tns_type,f:xm_tns_redshift",
                 0,
                 False,
                 False,
             )
+            tmp = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
+            # drop duplicates
+            tmp = tmp.drop_duplicates()
+            if "f:xm_tns_fullname" in tmp.columns:
+                # remove xmatch artifacts on high cadence
+                pdf = tmp[
+                    tmp["f:xm_tns_fullname"].apply(
+                        lambda x: x != "nan" and not pd.isna(x)
+                    )
+                ]
+            else:
+                pdf = tmp
         else:
             # indices are case-insensitive
             # salt is last letter of the name
@@ -86,20 +100,20 @@ def resolve_name(payload: dict) -> pd.DataFrame:
                 False,
                 False,
             )
+            pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
 
         # Restore default limits
         client.close()
 
-        pdf = pd.DataFrame.from_dict(hbase_to_dict(results), orient="index")
     elif resolver == "simbad":
         client = connect_to_hbase_table("rubin.diaObject")
         if reverse:
-            to_evaluate = f"key:key:{name}"
+            to_evaluate = "key:key:{}_{}".format(name[-3:], name)
             client.setLimit(nmax)
             results = client.scan(
                 "",
                 to_evaluate,
-                "r:diaObjectId,f:main_label_classifier,r:ra,r:dec",
+                "r:diaObjectId,f:main_label_crossmatch,r:ra,r:dec",
                 0,
                 False,
                 False,

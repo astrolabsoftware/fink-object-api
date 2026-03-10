@@ -1,4 +1,4 @@
-# Copyright 2025-2026 AstroLab Software
+# Copyright 2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,10 @@ from line_profiler import profile
 
 
 @profile
-def extract_object_data(payload: dict) -> pd.DataFrame:
+def extract_fp_data(payload: dict) -> pd.DataFrame:
     """Extract data returned by HBase and format it in a Pandas dataframe
 
-    Data is from /api/v1/objects
+    Data is from /api/v1/fp
 
     Parameters
     ----------
@@ -48,16 +48,16 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
         objectids = [f"key:key:{i[-3:]}_{i}" for i in splitids]
     else:
         # single object search
-        objectids = [
-            "key:key:{}_{}".format(payload["diaObjectId"][-3:], payload["diaObjectId"])
-        ]
+        salt = payload["diaObjectId"][-3:]
+        key = payload["diaObjectId"]
+        objectids = ["key:key:{}_{}".format(salt, key)]
 
     if cols == "*":
         truncated = False
     else:
         truncated = True
 
-    client = connect_to_hbase_table("rubin.diaObject")
+    client = connect_to_hbase_table("rubin.fp")
 
     # Get data from the main table
     results = {}
