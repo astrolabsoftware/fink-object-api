@@ -76,7 +76,7 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     ----------
     out: pandas dataframe
     """
-    # Get the class
+    # Get the tag
     tag = payload["tag"]
 
     # Check the tag exists
