@@ -23,10 +23,10 @@ from apps.routes.v1.lsst.tags.utils import extract_object_data, extract_tags
 ns = Namespace("api/v1/tags", "Get latest Rubin alerts by tags")
 
 ARGS = ns.model(
-    "class",
+    "tags",
     {
         "tag": fields.String(
-            description="Fink tags based on user-defined filters. See https://api.lsst.fink-portal.org/api/v1/classes for available tags.",
+            description="Fink tags based on user-defined filters. See https://api.lsst.fink-portal.org/api/v1/tags for available tags.",
             example="cataloged",
             required=True,
         ),
