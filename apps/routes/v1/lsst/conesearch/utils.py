@@ -90,7 +90,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     ):
         rep = {
             "status": "error",
-            "text": "You need to specify f:firstDiaSourceMjdTaiFink in the columns to filter on dates.",
+            "text": "You need to specify f:firstDiaSourceMjdTaiFink in the columns to filter on dates.\n",
         }
         return Response(str(rep), 400)
 
