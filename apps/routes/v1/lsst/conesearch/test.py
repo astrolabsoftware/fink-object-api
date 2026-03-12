@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2025-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +24,16 @@ import sys
 
 APIURL = sys.argv[1]
 
+RA0 = 53.2514
+DEC0 = -27.861
+
 
 def conesearch(
-    ra=7.893627,
-    dec=-44.771556,
+    ra=RA0,
+    dec=DEC0,
     radius=5.0,
     startdate=None,
+    stopdate=None,
     window=None,
     columns=None,
     output_format="json",
@@ -38,7 +42,11 @@ def conesearch(
     payload = {"ra": ra, "dec": dec, "radius": radius, "output-format": output_format}
 
     if startdate is not None:
-        payload.update({"startdate": startdate, "window": window})
+        payload.update({"startdate": startdate})
+    if window is not None:
+        payload.update({"window": window})
+    if stopdate is not None:
+        payload.update({"stopdate": stopdate})
     if columns is not None:
         payload.update({"columns": columns})
 
@@ -66,10 +74,8 @@ def test_simple_conesearch() -> None:
     --------
     >>> test_simple_conesearch()
     """
-    ra0 = 7.893627
-    dec0 = -44.771556
-    radius = 2.0
-    pdf = conesearch(ra=ra0, dec=dec0, radius=radius)
+    radius = 5
+    pdf = conesearch(ra=RA0, dec=DEC0, radius=radius)
 
     # Not empty
     assert not pdf.empty
@@ -78,53 +84,52 @@ def test_simple_conesearch() -> None:
     assert len(pdf) == 1
 
     # Check the candidate is found no further away than the radius
-    coord0 = SkyCoord(ra0, dec0, unit="deg")
-    coord1 = SkyCoord(pdf["i:ra"].to_numpy()[0], pdf["i:dec"].to_numpy()[0], unit="deg")
+    coord0 = SkyCoord(RA0, DEC0, unit="deg")
+    coord1 = SkyCoord(pdf["r:ra"].to_numpy()[0], pdf["r:dec"].to_numpy()[0], unit="deg")
 
     sep = coord0.separation(coord1).degree * 3600
 
     assert sep <= radius, sep
 
 
-# def test_conesearch_with_dates() -> None:
-#     """
-#     Examples
-#     --------
-#     >>> test_conesearch_with_dates()
-#     """
-#     # at this date, one object
-#     pdf1 = conesearch(
-#         startdate="2021-11-03 10:00:00",
-#         window="1",
-#     )
-
-#     # at this date, a new object appeared
-#     pdf2 = conesearch(
-#         startdate="2021-11-05 10:00:00",
-#         window="1",
-#     )
-
-#     assert pdf1.empty
-#     assert not pdf2.empty
-
-#     # One object found
-#     assert len(pdf2) == 1
-
-
-def test_conesearch_with_cols() -> None:
+def test_conesearch_with_dates() -> None:
     """
     Examples
     --------
-    >>> test_conesearch_with_cols()
+    >>> test_conesearch_with_dates()
     """
-    pdf = conesearch(
-        columns="d:finkclass,i:nDiaSources,i:diaObjectId",
+    # within 10'', two objects
+    pdf1 = conesearch(
+        radius=10.0,
     )
 
-    assert not pdf.empty
+    # Filtering the date leaves one object
+    pdf2 = conesearch(
+        startdate="2026-01-10 10:00:00",
+        radius=10.0,
+    )
 
-    # specified fields, plus mandatory i:ra,i:dec, plus computed v:separation
-    assert len(pdf.columns) == 6, "I count {} columns".format(len(pdf.columns))
+    # Filtering both ends
+    pdf3 = conesearch(
+        startdate="2026-01-07 10:00:00",
+        window="2",
+        radius=10.0,
+    )
+
+    # same with window
+    pdf4 = conesearch(
+        startdate="2026-01-07 10:00:00",
+        stopdate="2026-01-09 10:00:00",
+        radius=10.0,
+    )
+
+    # object(s) found
+    assert len(pdf1) == 2, len(pdf1)
+    assert len(pdf2) == 1, len(pdf2)
+    assert len(pdf3) == 1, len(pdf3)
+    assert len(pdf4) == 1, len(pdf4)
+    assert not pdf2.equals(pdf3)
+    assert pdf3.equals(pdf4)
 
 
 def test_bad_radius_conesearch() -> None:
@@ -134,8 +139,8 @@ def test_bad_radius_conesearch() -> None:
     >>> test_bad_radius_conesearch()
     """
     payload = {
-        "ra": 175.3242473,
-        "dec": 36.5429392,
+        "ra": RA0,
+        "dec": DEC0,
         "radius": 36000,
         "output_format": "json",
     }
@@ -146,7 +151,47 @@ def test_bad_radius_conesearch() -> None:
         "status": "error",
         "text": "`radius` cannot be bigger than 18,000 arcseconds (5 degrees).\n",
     }
-    assert r.text == str(msg)
+    assert r.text == str(msg), r.text
+
+
+def test_conesearch_with_cols() -> None:
+    """
+    Examples
+    --------
+    >>> test_conesearch_with_cols()
+    """
+    pdf = conesearch(
+        columns="r:diaObjectId",
+    )
+
+    assert not pdf.empty, pdf
+
+    # specified fields, plus mandatory i:ra,i:dec, plus computed v:separation
+    assert len(pdf.columns) == 4, "I count {} columns".format(len(pdf.columns))
+
+
+def test_bad_dates() -> None:
+    """
+    Examples
+    --------
+    >>> test_bad_dates()
+    """
+    payload = {
+        "ra": RA0,
+        "dec": DEC0,
+        "radius": 10,
+        "startdate": "2026-01-10 10:00:00",
+        "columns": "r:diaObjectId",
+        "output_format": "json",
+    }
+
+    r = requests.post("{}/api/v1/conesearch".format(APIURL), json=payload)
+
+    msg = {
+        "status": "error",
+        "text": "You need to specify f:firstDiaSourceMjdTaiFink in the columns to filter on dates.\n",
+    }
+    assert r.text == str(msg), r.text
 
 
 def test_empty_conesearch() -> None:
@@ -166,15 +211,15 @@ def test_coordinates() -> None:
     --------
     >>> test_coordinates()
     """
-    pdf1 = conesearch(ra=7.893627, dec=-44.771556)
-    pdf2 = conesearch(ra="7d53m37.057s", dec="-44d-46m-17.60s")
-    pdf3 = conesearch(ra="0h31m34.47s", dec="-44d-46m-17.60s")
-    pdf4 = conesearch(ra="0 31 34.47", dec="-44 -46 -17.60")
-    pdf5 = conesearch(ra="0:31:34.47", dec="-44:-46:-17.60")
-
-    magpsf = pdf1["i:magpsf"].to_numpy()
-    for pdf in [pdf2, pdf3, pdf4, pdf5]:
-        assert np.all(pdf["i:magpsf"].to_numpy() == magpsf)
+    coords = [
+        ["03h33m00.33s", "-27d51m39.74s"],
+        ["03 33 00.33", "-27 51 39.74"],
+        ["03:33:00.33", "-27:51:39.74"],
+    ]
+    pdf0 = conesearch(ra=RA0, dec=DEC0, columns="r:diaObjectId")
+    for ra, dec in coords:
+        pdf = conesearch(ra=RA0, dec=DEC0, columns="r:diaObjectId")
+        assert pdf.equals(pdf0)
 
 
 def test_bad_request() -> None:
@@ -206,10 +251,10 @@ def test_various_outputs() -> None:
         pdf2 = conesearch(output_format=fmt)
 
         # subset of cols to avoid type issues
-        cols1 = ["i:ra", "i:dec"]
+        cols1 = ["r:ra", "r:dec"]
 
         # https://docs.astropy.org/en/stable/io/votable/api_exceptions.html#w02-x-attribute-y-is-invalid-must-be-a-standard-xml-id
-        cols2 = cols1 if fmt != "votable" else ["i_ra", "i_dec"]
+        cols2 = cols1 if fmt != "votable" else ["r_ra", "r_dec"]
 
         isclose = np.isclose(pdf1[cols1], pdf2[cols2])
         assert np.all(isclose), fmt
