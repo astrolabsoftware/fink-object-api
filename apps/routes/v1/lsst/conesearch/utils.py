@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2025-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,6 +85,15 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
         }
         return Response(str(rep), 400)
 
+    if ("startdate" in payload or "stopdate" in payload) and (
+        cols != "*" and "f:firstDiaSourceMjdTaiFink" not in cols
+    ):
+        rep = {
+            "status": "error",
+            "text": "You need to specify f:firstDiaSourceMjdTaiFink in the columns to filter on dates.",
+        }
+        return Response(str(rep), 400)
+
     ra = coord.ra.deg
     dec = coord.dec.deg
     radius_deg = float(radius) / 3600.0
@@ -126,6 +135,9 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
         group_alerts=True,
         extract_color=False,
     )
+
+    if pdf.empty:
+        return pdf
 
     # Filter by time
     # FIXME: does not work yet as firstDiaSourceMjdTai is not populated
