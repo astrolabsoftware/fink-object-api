@@ -42,7 +42,7 @@ def conesearch(
     payload = {"ra": ra, "dec": dec, "radius": radius, "output-format": output_format}
 
     if startdate is not None:
-        payload.update({"startdate": startdate, "window": window})
+        payload.update({"startdate": startdate})
     if window is not None:
         payload.update({"window": window})
     if stopdate is not None:
@@ -106,21 +106,30 @@ def test_conesearch_with_dates() -> None:
     # Filtering the date leaves one object
     pdf2 = conesearch(
         startdate="2026-01-10 10:00:00",
-        window="1",
         radius=10.0,
     )
 
-    # Filtering the date leaves one object
+    # Filtering both ends
     pdf3 = conesearch(
-        startdate="2026-01-10 10:00:00",
-        stopdate="2030-01-12 10:00:00",
+        startdate="2026-01-07 10:00:00",
+        window="2",
+        radius=10.0,
+    )
+
+    # same with window
+    pdf4 = conesearch(
+        startdate="2026-01-07 10:00:00",
+        stopdate="2026-01-09 10:00:00",
         radius=10.0,
     )
 
     # object(s) found
-    assert len(pdf1) == 2
-    assert len(pdf2) == 1
-    assert len(pdf3) == 1
+    assert len(pdf1) == 2, len(pdf1)
+    assert len(pdf2) == 1, len(pdf2)
+    assert len(pdf3) == 1, len(pdf3)
+    assert len(pdf4) == 1, len(pdf4)
+    assert not pdf2.equals(pdf3)
+    assert pdf3.equals(pdf4)
 
 
 def test_bad_radius_conesearch() -> None:
