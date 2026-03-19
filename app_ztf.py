@@ -39,6 +39,7 @@ from apps.routes.v1.ztf.ssocand.api import ns as ns_ssocand
 from apps.routes.v1.ztf.anomaly.api import ns as ns_anomaly
 from apps.routes.v1.ztf.ssoft.api import ns as ns_ssoft
 from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
+from apps.routes.v1.ztf.ssobulk.api import ns as ns_ssobulk
 
 config = extract_configuration("config.yml")
 
@@ -99,6 +100,7 @@ api.add_namespace(ns_statistics)
 api.add_namespace(ns_anomaly)
 api.add_namespace(ns_ssoft)
 api.add_namespace(ns_metadata)
+api.add_namespace(ns_ssobulk)
 
 # Register blueprint
 app.register_blueprint(blueprint)
