@@ -112,11 +112,13 @@ def format_and_send_cutout(payload: dict):
         pdf = pdf.iloc[0:1]
         pos_target = 0
 
-    json_payload.update({
-        "hdfsPath": pdf["d:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
-        "kind": payload["kind"],
-        "objectId": pdf["i:objectId"].to_numpy()[pos_target],
-    })
+    json_payload.update(
+        {
+            "hdfsPath": pdf["d:hdfs_path"].to_numpy()[pos_target].split(":8020")[1],
+            "kind": payload["kind"],
+            "objectId": pdf["i:objectId"].to_numpy()[pos_target],
+        }
+    )
 
     if pdf.empty:
         return send_file(

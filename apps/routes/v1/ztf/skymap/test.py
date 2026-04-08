@@ -64,8 +64,7 @@ def test_bayestar() -> None:
     assert len(pdf) == 14, len(pdf)
 
     a = (
-        pdf
-        .groupby("d:classification")
+        pdf.groupby("d:classification")
         .count()
         .sort_values("i:objectId", ascending=False)["i:objectId"]
         .to_dict()

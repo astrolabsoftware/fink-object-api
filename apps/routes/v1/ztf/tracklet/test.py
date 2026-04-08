@@ -66,9 +66,9 @@ def test_fulldate() -> None:
     pdf = trackletsearch(date="2021-10-22 09:19:49")
     jd0 = Time("2021-10-22 09:19:49").jd
 
-    assert np.all([
-        np.round(i, 3) == np.round(jd0, 3) for i in pdf["i:jd"].to_numpy()
-    ]), (jd0, pdf["i:jd"].to_numpy())
+    assert np.all(
+        [np.round(i, 3) == np.round(jd0, 3) for i in pdf["i:jd"].to_numpy()]
+    ), (jd0, pdf["i:jd"].to_numpy())
 
 
 def test_single_tracklet() -> None:

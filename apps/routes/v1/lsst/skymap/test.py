@@ -64,8 +64,7 @@ def test_bayestar() -> None:
     assert len(pdf) == 14, len(pdf)
 
     a = (
-        pdf
-        .groupby("f:xm_simbad_otype")
+        pdf.groupby("f:xm_simbad_otype")
         .count()
         .sort_values("r:diaObjectId", ascending=False)["r:diaObjectId"]
         .to_dict()

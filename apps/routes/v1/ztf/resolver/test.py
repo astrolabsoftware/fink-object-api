@@ -27,14 +27,18 @@ def resolver(resolver="", name="", nmax=None, reverse=None, output_format="json"
     payload = {"resolver": resolver, "name": name, "output-format": output_format}
 
     if reverse is not None:
-        payload.update({
-            "reverse": True,
-        })
+        payload.update(
+            {
+                "reverse": True,
+            }
+        )
 
     if nmax is not None:
-        payload.update({
-            "nmax": nmax,
-        })
+        payload.update(
+            {
+                "nmax": nmax,
+            }
+        )
 
     r = requests.post(f"{APIURL}/api/v1/resolver", json=payload)
 

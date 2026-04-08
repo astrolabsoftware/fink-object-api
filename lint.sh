@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#pip install ruff --upgrade
+pip install ruff --upgrade
 
-ruff check --fix --preview .
-ruff format --preview .
+ruff check --fix .
+ruff format .

@@ -34,29 +34,39 @@ def ssoftsearch(
     payload = {"output-format": output_format}
 
     if version is not None:
-        payload.update({
-            "version": version,
-        })
+        payload.update(
+            {
+                "version": version,
+            }
+        )
 
     if flavor is not None:
-        payload.update({
-            "flavor": flavor,
-        })
+        payload.update(
+            {
+                "flavor": flavor,
+            }
+        )
 
     if sso_number is not None:
-        payload.update({
-            "sso_number": sso_number,
-        })
+        payload.update(
+            {
+                "sso_number": sso_number,
+            }
+        )
 
     if sso_name is not None:
-        payload.update({
-            "sso_name": sso_name,
-        })
+        payload.update(
+            {
+                "sso_name": sso_name,
+            }
+        )
 
     if schema is not None:
-        payload.update({
-            "schema": True,
-        })
+        payload.update(
+            {
+                "schema": True,
+            }
+        )
 
     r = requests.post(f"{APIURL}/api/v1/ssoft", json=payload)
 

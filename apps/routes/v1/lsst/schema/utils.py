@@ -553,134 +553,162 @@ def extract_schema(payload: dict) -> Response:
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in diaSource_schema + root_list
-            }),
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in diaSource_schema + root_list
                 }
-                for i in fink_source_science
-            }),
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/fp":
         # root, diaSOurce, fink
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in forcedDiaSource_schema
-            }),
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in forcedDiaSource_schema
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/objects":
         # root, diaObject, fink
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in diaObject_schema + root_list
-            }),
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in diaObject_schema + root_list
                 }
-                for i in fink_object_science
-            }),
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_object_science
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/conesearch":
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in diaSource_schema + diaObject_schema + root_list
-            }),
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in diaSource_schema + diaObject_schema + root_list
                 }
-                for i in fink_source_science + fink_object_science
-            }),
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science + fink_object_science
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/cutouts":
         types = {
-            "LSST original cutouts (b:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in cutout_list
-            }),
+            "LSST original cutouts (b:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in cutout_list
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/sso":
         # FIXME: where mpc_orbits goes???
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in ssSource_schema + diaSource_schema + root_list
-            }),
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": "4.0",
-                    "fink_science_version": "8.26.0",
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in ssSource_schema + diaSource_schema + root_list
                 }
-                for i in [
-                    {
-                        "name": "sso_name",
-                        "type": "str",
-                        "doc": "Resolved name from quaero",
-                    }  # Manual entry from the /api/v1/sso route
-                ]
-            }),
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": "4.0",
+                        "fink_science_version": "8.26.0",
+                    }
+                    for i in [
+                        {
+                            "name": "sso_name",
+                            "type": "str",
+                            "doc": "Resolved name from quaero",
+                        }  # Manual entry from the /api/v1/sso route
+                    ]
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/tags":
         types = {
-            "LSST original fields (r:)": sort_dict({
-                i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                for i in diaSource_schema + root_list
-            }),
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "LSST original fields (r:)": sort_dict(
+                {
+                    i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
+                    for i in diaSource_schema + root_list
                 }
-                for i in fink_source_science
-            }),
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/statistics":
         types = {
-            "Fink science module outputs (f:)": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_statistics
                 }
-                for i in fink_statistics
-            }),
+            ),
         }
     elif payload["endpoint"] == "/datatransfer/fink":
         fink_source_science_reconstructed, fink_object_science_reconstructed = (
             reconstruct_fink_schema(fink_source_science, fink_object_science)
         )
         types = {
-            "Fink": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
-                    "fink_broker_version": i["fink_broker_version"],
-                    "fink_science_version": i["fink_science_version"],
+            "Fink": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science_reconstructed
+                    + fink_object_science_reconstructed
                 }
-                for i in fink_source_science_reconstructed
-                + fink_object_science_reconstructed
-            }),
+            ),
         }
     elif payload["endpoint"] == "/datatransfer/lsst":
         all_fields = (
@@ -694,13 +722,15 @@ def extract_schema(payload: dict) -> Response:
             + cutout_list
         )
         types = {
-            "LSST": sort_dict({
-                i["name"]: {
-                    "type": i["type"],
-                    "doc": i.get("doc", "TBD"),
+            "LSST": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                    }
+                    for i in all_fields
                 }
-                for i in all_fields
-            }),
+            ),
         }
     else:
         # FIXME: /gw is missing...
