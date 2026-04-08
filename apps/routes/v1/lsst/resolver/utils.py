@@ -1,4 +1,4 @@
-# Copyright 2025 AstroLab Software
+# Copyright 2025-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import io
-import requests
+
 import pandas as pd
+import requests
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import hbase_to_dict
 from apps.utils.utils import extract_configuration
-
-from line_profiler import profile
 
 
 @profile
@@ -67,6 +67,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
         elif reverse:
             # Search main table
             client = connect_to_hbase_table("rubin.diaSource_static")
+            client.setLimit(nmax)
             to_evaluate = f"key:key:{name[-3:]}_{name}_"
             results = client.scan(
                 "",
@@ -91,6 +92,8 @@ def resolve_name(payload: dict) -> pd.DataFrame:
         else:
             # indices are case-insensitive
             # salt is last letter of the name
+            client = connect_to_hbase_table("rubin.tns_resolver")
+            client.setLimit(nmax)
             to_evaluate = f"key:key:{name.lower()[-1]}_{name.lower()}"
             results = client.scan(
                 "",
@@ -108,7 +111,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
     elif resolver == "simbad":
         client = connect_to_hbase_table("rubin.diaObject")
         if reverse:
-            to_evaluate = "key:key:{}_{}".format(name[-3:], name)
+            to_evaluate = f"key:key:{name[-3:]}_{name}"
             client.setLimit(nmax)
             results = client.scan(
                 "",
@@ -151,6 +154,7 @@ def resolve_name(payload: dict) -> pd.DataFrame:
         else:
             # SSO name or number -> ssObjectId
             client = connect_to_hbase_table("rubin.mpc_orbits")
+            client.setLimit(nmax)
 
             config = extract_configuration("config.yml")
 
