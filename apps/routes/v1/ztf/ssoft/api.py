@@ -14,13 +14,10 @@
 # limitations under the License.
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
-
 from pandas import DataFrame
 
-from apps.utils.utils import check_args
-from apps.utils.utils import send_tabular_data
-
 from apps.routes.v1.ztf.ssoft.utils import get_ssoft
+from apps.utils.utils import check_args, send_tabular_data
 
 ns = Namespace("api/v1/ssoft", "Get the Solar System Object Fink Table (SSoFT)")
 

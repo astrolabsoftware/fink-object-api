@@ -12,13 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
 import datetime
-
-import pandas as pd
-
 import io
 import sys
+
+import pandas as pd
+import requests
 
 APIURL = sys.argv[1]
 
@@ -35,41 +34,31 @@ def ssoftsearch(
     payload = {"output-format": output_format}
 
     if version is not None:
-        payload.update(
-            {
-                "version": version,
-            }
-        )
+        payload.update({
+            "version": version,
+        })
 
     if flavor is not None:
-        payload.update(
-            {
-                "flavor": flavor,
-            }
-        )
+        payload.update({
+            "flavor": flavor,
+        })
 
     if sso_number is not None:
-        payload.update(
-            {
-                "sso_number": sso_number,
-            }
-        )
+        payload.update({
+            "sso_number": sso_number,
+        })
 
     if sso_name is not None:
-        payload.update(
-            {
-                "sso_name": sso_name,
-            }
-        )
+        payload.update({
+            "sso_name": sso_name,
+        })
 
     if schema is not None:
-        payload.update(
-            {
-                "schema": True,
-            }
-        )
+        payload.update({
+            "schema": True,
+        })
 
-    r = requests.post("{}/api/v1/ssoft".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/ssoft", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -94,8 +83,8 @@ def default_ssoft() -> None:
 
     assert not pdf.empty
 
-    now = datetime.datetime.now()
-    current_date = "{}.{:02d}".format(now.year, now.month)
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    current_date = f"{now.year}.{now.month:02d}"
 
     assert pdf["version"].to_numpy()[0] == current_date
 
@@ -145,9 +134,7 @@ def test_schema() -> None:
     assert not_in_pdf == [], not_in_pdf
     assert not_in_schema == [], not_in_schema
 
-    msg = "Found {} entries in the DataFrame and {} entries in the schema.".format(
-        len(pdf.columns), len(schema)
-    )
+    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema)} entries in the schema."
     assert set(schema.keys()) == set(pdf.columns), msg
 
 
@@ -160,7 +147,7 @@ def compare_schema() -> None:
     schema1 = ssoftsearch(schema=True, flavor="SSHG1G2", output_format="json")
 
     # get the schema
-    r = requests.get("{}/api/v1/ssoft?schema=True&flavor=SSHG1G2".format(APIURL))
+    r = requests.get(f"{APIURL}/api/v1/ssoft?schema=True&flavor=SSHG1G2")
     schema2 = r.json()
 
     keys1 = set(schema1.keys())
@@ -182,7 +169,7 @@ def check_sshg1g2() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

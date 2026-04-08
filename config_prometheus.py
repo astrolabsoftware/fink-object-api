@@ -12,9 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import glob
 import os
 import uuid
-import glob
+
 from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
 
@@ -24,7 +25,7 @@ def when_ready(server):
     if path:
         for f in glob.glob(os.path.join(path, "*.db")):
             os.remove(f)
-    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", 9090))
+    PORT = int(os.getenv("PROMETHEUS_METRIC_PORT", "9090"))
     GunicornPrometheusMetrics.start_http_server_when_ready(PORT)
 
 
@@ -69,7 +70,7 @@ gunicorn_worker_ids_pool = GunicornWorkerIDsPool()
 
 def child_exit(server, worker):
     """
-    called when a worker exits.
+    Called when a worker exits.
     Returns the worker_id to the pool so it can be reused,
     and marks the worker process ad dead for prometheus monitoring .
 
@@ -84,18 +85,18 @@ def child_exit(server, worker):
 
 def pre_fork(server, worker):
     """
-    called by gunicorn master before a worker is forked. Assigns
+    Called by gunicorn master before a worker is forked. Assigns
     a unique worker_id from the pool to the worker .
 
     :param server: Gunicorn master server instance
     :param worker: Gunicorn worker instance about to be forked
     """
-    setattr(worker, "worker_id", gunicorn_worker_ids_pool.get_id())
+    worker.worker_id = gunicorn_worker_ids_pool.get_id()
 
 
 def post_fork(server, worker):
     """
-    called by gunicorn master after a worker is forked. Expose
+    Called by gunicorn master after a worker is forked. Expose
     the worker_id in the env for the worker process .
 
     :param server: Gunicorn master server instance

@@ -12,14 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response
-
 import io
-import yaml
-import requests
 
 import pandas as pd
-
+import requests
+import yaml
+from flask import Response
 from line_profiler import profile
 
 
@@ -39,7 +37,8 @@ def get_lc(payload: dict) -> pd.DataFrame:
     out: pandas dataframe
     """
     # Need to profile compared to pyarrow
-    input_args = yaml.load(open("config.yml"), yaml.Loader)
+    with open("config.yml") as f:
+        input_args = yaml.load(f, yaml.Loader)
     r = requests.get(
         "{}/sso_ztf_lc_aggregated_with_ssoft_202601_with_residuals_singlefile.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],

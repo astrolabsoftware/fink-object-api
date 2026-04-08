@@ -15,10 +15,8 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from apps.utils.utils import check_args
-from apps.utils.utils import send_tabular_data
-
 from apps.routes.v1.lsst.fp.utils import extract_fp_data
+from apps.utils.utils import check_args, send_tabular_data
 
 ns = Namespace("api/v1/fp", "Get forced photometry data based on Rubin diaObjectId")
 

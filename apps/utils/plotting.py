@@ -13,11 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import numpy as np
-
 from astropy.convolution import Box2DKernel, Gaussian2DKernel
 from astropy.convolution import convolve as astropy_convolve
 from astropy.visualization import AsymmetricPercentileInterval, simple_norm
-
 from line_profiler import profile
 
 

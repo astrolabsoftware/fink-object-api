@@ -14,18 +14,18 @@
 # limitations under the License.
 """Utilities to decode data from the HBase client"""
 
-from py4j.java_gateway import JavaGateway
 import json
-import pandas as pd
-import numpy as np
 import logging
 
-from astropy.time import Time
+import numpy as np
+import pandas as pd
 from astropy.coordinates import SkyCoord, get_constellation
-
+from astropy.time import Time
 from fink_filters.ztf.classification import extract_fink_classification_
-
 from line_profiler import profile
+from py4j.java_gateway import JavaGateway
+
+_LOG = logging.getLogger(__name__)
 
 pd.set_option("future.no_silent_downcasting", True)
 
@@ -104,7 +104,7 @@ def format_hbase_output(
                 hbase_type_converter[schema_client.type(col)],
             )
         except KeyError:
-            logging.warning("Cannot cast columns {} -- not found in schema".format(col))
+            _LOG.warning(f"Cannot cast columns {col} -- not found in schema")
 
     # Booleans
     pdfs = pdfs.replace(to_replace={"true": True, "false": False})

@@ -12,18 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-
 import io
 import sys
+
+import pandas as pd
+import requests
 
 APIURL = sys.argv[1]
 
 
 def get_fields_per_family():
     """Get fields exposed in /api/v1/schema"""
-    r = requests.get("{}/api/v1/schema".format(APIURL))
+    r = requests.get(f"{APIURL}/api/v1/schema")
 
     assert r.status_code == 200, r.content
 
@@ -187,7 +187,7 @@ def test_recent_object() -> None:
     """
     # Need a class that bring objects frequently (to have new cols)
     r = requests.post(
-        "{}/api/v1/latests".format(APIURL),
+        f"{APIURL}/api/v1/latests",
         json={"class": "SN candidate", "n": 1, "columns": "i:objectId"},
     )
 
@@ -196,7 +196,7 @@ def test_recent_object() -> None:
     objectId = r.json()[0]["i:objectId"]
     # Not that we discard images on purpose for speed
     r2 = requests.post(
-        "{}/api/v1/objects".format(APIURL),
+        f"{APIURL}/api/v1/objects",
         json={
             "objectId": objectId,
             "columns": "*",
@@ -221,7 +221,7 @@ def test_old_object() -> None:
     """
     objectId = "ZTF21abfmbix"
     r = requests.post(
-        "{}/api/v1/objects".format(APIURL),
+        f"{APIURL}/api/v1/objects",
         json={
             "objectId": objectId,
             "columns": "*",
@@ -240,7 +240,7 @@ def test_old_object() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

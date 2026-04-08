@@ -12,22 +12,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import send_file, jsonify, Response
-
 import io
 import json
-import requests
 
 import numpy as np
+import requests
+from flask import Response, jsonify, send_file
+from line_profiler import profile
 from matplotlib import cm
 from PIL import Image
 
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.plotting import sigmoid_normalizer, legacy_normalizer, convolve
 from apps.utils.decoding import format_hbase_output
+from apps.utils.plotting import convolve, legacy_normalizer, sigmoid_normalizer
 from apps.utils.utils import extract_configuration
-
-from line_profiler import profile
 
 
 @profile
@@ -165,7 +163,7 @@ def format_and_send_cutout(payload: dict):
     if "colormap" in payload:
         colormap = getattr(cm, payload["colormap"])
     else:
-        colormap = lambda x: x  # noqa: E731
+        colormap = lambda x: x
     array = np.uint8(colormap(array) * 255)
 
     # Convert to PNG
@@ -198,16 +196,12 @@ def request_cutout(json_payload, output_format, cutout_api_url):
     """
     if output_format == "FITS":
         json_payload.update({"return_type": "FITS"})
-        r0 = requests.post(
-            "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
-        )
+        r0 = requests.post(f"{cutout_api_url}/api/v1/cutouts", json=json_payload)
         # FIXME: raise of error
         cutout = io.BytesIO(r0.content)
     elif output_format in ["PNG", "array"]:
         json_payload.update({"return_type": "array"})
-        r0 = requests.post(
-            "{}/api/v1/cutouts".format(cutout_api_url), json=json_payload
-        )
+        r0 = requests.post(f"{cutout_api_url}/api/v1/cutouts", json=json_payload)
         cutout = json.loads(r0.content)
         # FIXME: raise for error
     return cutout

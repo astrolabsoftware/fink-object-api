@@ -15,10 +15,8 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from apps.utils.utils import check_args
-from apps.utils.utils import send_tabular_data
-
 from apps.routes.v1.lsst.objects.utils import extract_object_data
+from apps.utils.utils import check_args, send_tabular_data
 
 ns = Namespace(
     "api/v1/objects", "Get diaObject & aggregated data based on Rubin diaObjectId"

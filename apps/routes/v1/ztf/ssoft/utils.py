@@ -12,16 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response
-
+import datetime
 import io
 import json
-import yaml
-import requests
-import datetime
 
 import pandas as pd
-
+import requests
+import yaml
 from fink_utils.sso.ssoft import (
     COLUMNS,
     COLUMNS_HG,
@@ -29,7 +26,7 @@ from fink_utils.sso.ssoft import (
     COLUMNS_SHG1G2,
     COLUMNS_SOCCA,
 )
-
+from flask import Response
 from line_profiler import profile
 
 
@@ -94,7 +91,7 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
             }
             return Response(str(rep), 400)
     else:
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
         version = f"{now.year}.{now.month:02d}"
 
     if "flavor" in payload:
@@ -109,7 +106,8 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         flavor = "SHG1G2"
 
     # Need to profile compared to pyarrow
-    input_args = yaml.load(open("config.yml"), yaml.Loader)
+    with open("config.yml") as f:
+        input_args = yaml.load(f, yaml.Loader)
     r = requests.get(
         "{}/SSOFT/ssoft_{}_{}.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],

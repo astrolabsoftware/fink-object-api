@@ -13,11 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
-
+from fink_utils.xmatch.simbad import get_simbad_labels
 from flask import Response, json
 from flask_restx import Namespace, Resource
-
-from fink_utils.xmatch.simbad import get_simbad_labels
 
 ns = Namespace("api/v1/classes", "Get Fink derived class names, and their origin")
 

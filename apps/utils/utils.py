@@ -16,21 +16,19 @@
 
 import io
 import json
-import yaml
-import requests
 import logging
 
-from flask import Response
-
-from astropy.table import Table
-from astropy.io import votable
-from astropy.time import Time
-
 import numpy as np
-
+import requests
 import rocks
-
+import yaml
+from astropy.io import votable
+from astropy.table import Table
+from astropy.time import Time
+from flask import Response
 from line_profiler import profile
+
+_LOG = logging.getLogger(__name__)
 
 
 def extract_configuration(filename):
@@ -46,7 +44,8 @@ def extract_configuration(filename):
     out: dict
         Dictionary with user defined values.
     """
-    config = yaml.load(open("config.yml"), yaml.Loader)
+    with open("config.yml") as f:
+        config = yaml.load(f, yaml.Loader)
     if config["HOST"].endswith(".org"):
         config["APIURL"] = "https://" + config["HOST"]
     else:
@@ -56,7 +55,7 @@ def extract_configuration(filename):
 
 @profile
 def download_cutout(objectId, candid, kind):
-    """ """
+    """Wrapper around /api/v1/cutouts"""
     config = extract_configuration("config.yml")
 
     r = requests.post(
@@ -72,26 +71,20 @@ def download_cutout(objectId, candid, kind):
         data = json.loads(r.content)
     else:
         # TODO: different return based on `kind`?
-        logging.warning(
-            "Cutout retrieval failed with status {}: {}".format(r.status_code, r.text)
-        )
+        _LOG.warning(f"Cutout retrieval failed with status {r.status_code}: {r.text}")
         return []
 
     if kind != "All":
-        return data["b:cutout{}_stampData".format(kind)]
+        return data[f"b:cutout{kind}_stampData"]
     else:
         return [
-            data["b:cutout{}_stampData".format(k)]
+            data[f"b:cutout{k}_stampData"]
             for k in ["Science", "Template", "Difference"]
         ]
 
 
 def check_args(args: list, payload: dict) -> dict:
-    """Check all required arguments have been supplied
-
-    Parameters
-    ----------
-    """
+    """Check all required arguments have been supplied"""
     required_args = [k for k in args if args[k].required is True]
     for required_arg in required_args:
         if required_arg not in payload:

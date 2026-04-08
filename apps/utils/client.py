@@ -14,13 +14,11 @@
 # limitations under the License.
 """Utilities to work with the Fink HBase client"""
 
+import numpy as np
+from line_profiler import profile
 from py4j.java_gateway import JavaGateway
 
-import numpy as np
-
 from apps.utils.utils import extract_configuration
-
-from line_profiler import profile
 
 
 @profile

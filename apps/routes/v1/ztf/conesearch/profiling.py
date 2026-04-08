@@ -22,4 +22,4 @@ payload_galactic = {"ra": 347.661215, "dec": 61.588129, "radius": 3600}
 payload_extragal = {"ra": 193.821739, "dec": 2.897311, "radius": 10.0}
 
 pdf = run_conesearch(payload_extragal)
-print("{} objects".format(len(pdf)))
+print(f"{len(pdf)} objects")

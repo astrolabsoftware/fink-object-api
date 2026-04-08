@@ -12,14 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
-from astropy.io import votable
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
+from astropy.io import votable
 
 APIURL = sys.argv[1]
 
@@ -45,7 +44,7 @@ def classsearch(
     if trend is not None:
         payload.update({"trend": trend})
 
-    r = requests.post("{}/api/v1/latests".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/latests", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -100,7 +99,7 @@ def test_simbad_classsearch() -> None:
 def test_tns_classsearch() -> None:
     """
     Examples
-    ---------
+    --------
     >>> test_tns_classsearch()
     """
     pdf = classsearch(myclass="(TNS) SN Ia")
@@ -224,11 +223,7 @@ def test_query_url() -> None:
     """
     pdf1 = classsearch()
 
-    url = (
-        "{}/api/v1/latests?class=Early SN Ia candidate&n=10&output-format=json".format(
-            APIURL
-        )
-    )
+    url = f"{APIURL}/api/v1/latests?class=Early SN Ia candidate&n=10&output-format=json"
     r = requests.get(url)
     pdf2 = pd.read_json(io.BytesIO(r.content))
 
@@ -262,7 +257,7 @@ def test_various_outputs() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

@@ -15,9 +15,8 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from apps.utils.utils import check_args
-
 from apps.routes.v1.lsst.schema.utils import extract_schema
+from apps.utils.utils import check_args
 
 ns = Namespace(
     "api/v1/schema", "Retrieve the data schema for a given endpoint for Fink/Rubin API"

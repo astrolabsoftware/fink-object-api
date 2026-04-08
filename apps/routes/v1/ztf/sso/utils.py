@@ -12,24 +12,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-from flask import Response
-
-import pandas as pd
 import numpy as np
+import pandas as pd
+import requests
+from fink_utils.sso.miriade import get_miriade_data
+from fink_utils.sso.spins import estimate_sso_params, func_shg1g2
+from flask import Response
+from line_profiler import profile
 
-from apps.utils.utils import (
-    download_cutout,
-    resolve_sso_name_to_ssnamenr,
-    resolve_sso_name,
-)
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
-
-from fink_utils.sso.miriade import get_miriade_data
-from fink_utils.sso.spins import func_shg1g2, estimate_sso_params
-
-from line_profiler import profile
+from apps.utils.utils import (
+    download_cutout,
+    resolve_sso_name,
+    resolve_sso_name_to_ssnamenr,
+)
 
 
 @profile
@@ -72,14 +69,16 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     ):
         with_cutouts = True
 
-    if with_cutouts and truncated:
-        # Check mandatory fields
-        if "i:objectId" not in cols or "i:candid" not in cols:
-            rep = {
-                "status": "error",
-                "text": "You need to add 'i:objectId,i:candid' to the columns.\n",
-            }
-            return Response(str(rep), 400)
+    if (
+        with_cutouts
+        and truncated
+        and (("i:objectId" not in cols) or ("i:candid" not in cols))
+    ):
+        rep = {
+            "status": "error",
+            "text": "You need to add 'i:objectId,i:candid' to the columns.\n",
+        }
+        return Response(str(rep), 400)
 
     if truncated and "i:ssnamenr" not in cols:
         # For name resolving, i:ssnamenr must be here
@@ -112,9 +111,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             start = id_[0:6]
             stop = id_[6:]
             r = requests.get(
-                "https://api.ssodnet.imcce.fr/quaero/1/sso?q={} {}&type=Comet".format(
-                    start, stop
-                )
+                f"https://api.ssodnet.imcce.fr/quaero/1/sso?q={start} {stop}&type=Comet"
             )
             if r.status_code == 200 and r.json() != []:
                 sso_name = r.json()["data"][0]["name"]
@@ -131,9 +128,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         if not isinstance(sso_number, int) and not isinstance(sso_name, str):
             rep = {
                 "status": "error",
-                "text": "{} is not a valid name or number according to quaero.\n".format(
-                    n_or_d
-                ),
+                "text": f"{n_or_d} is not a valid name or number according to quaero.\n",
             }
             return Response(str(rep), 400)
 
@@ -194,7 +189,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             return Response(str(rep), 400)
 
         # get cutouts
-        colname = "b:cutout{}_stampData".format(cutout_kind)
+        colname = f"b:cutout{cutout_kind}_stampData"
         cutouts = []
         for _, row in pdf.iterrows():
             cutouts.append(
@@ -250,9 +245,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
                 cond = pdf["i:fid"] == filt
                 model = func_shg1g2(
                     [phase[cond], ra[cond], dec[cond]],
-                    outdic["H_{}".format(filt)],
-                    outdic["G1_{}".format(filt)],
-                    outdic["G2_{}".format(filt)],
+                    outdic[f"H_{filt}"],
+                    outdic[f"G1_{filt}"],
+                    outdic[f"G2_{filt}"],
                     outdic["R"],
                     np.deg2rad(outdic["alpha0"]),
                     np.deg2rad(outdic["delta0"]),

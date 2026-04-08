@@ -12,15 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
-from astropy.coordinates import SkyCoord
-from astropy.io import votable
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
+from astropy.coordinates import SkyCoord
+from astropy.io import votable
 
 APIURL = sys.argv[1]
 
@@ -42,7 +41,7 @@ def conesearch(
     if columns is not None:
         payload.update({"columns": columns})
 
-    r = requests.post("{}/api/v1/conesearch".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/conesearch", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -133,7 +132,7 @@ def test_conesearch_with_cols() -> None:
     assert not pdf.empty
 
     # i:objectId, plus mandatory i:ra,i:dec, plus computed v:separation
-    assert len(pdf.columns) == 4, "I count {} columns".format(len(pdf.columns))
+    assert len(pdf.columns) == 4, f"I count {len(pdf.columns)} columns"
 
 
 def test_bad_radius_conesearch() -> None:
@@ -149,7 +148,7 @@ def test_bad_radius_conesearch() -> None:
         "output_format": "json",
     }
 
-    r = requests.post("{}/api/v1/conesearch".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/conesearch", json=payload)
 
     msg = {
         "status": "error",
@@ -194,7 +193,7 @@ def test_bad_request() -> None:
     """
     payload = {"ra": "kfdlkj", "dec": "lkfdjf", "radius": 5, "output_format": "json"}
 
-    r = requests.post("{}/api/v1/conesearch".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/conesearch", json=payload)
 
     msg = {
         "status": "error",
@@ -226,7 +225,7 @@ def test_various_outputs() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

@@ -19,4 +19,4 @@ from apps.routes.v1.ztf.skymap.utils import search_in_skymap
 payload = {"event_name": "S230709bi", "credible_level": 0.2}
 
 pdf = search_in_skymap(payload)
-print("{} objects".format(len(pdf)))
+print(f"{len(pdf)} objects")

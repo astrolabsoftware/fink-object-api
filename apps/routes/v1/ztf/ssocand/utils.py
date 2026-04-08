@@ -13,13 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
-
 from astropy.time import Time
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
-from apps.utils.decoding import hbase_to_dict, convert_datatype, hbase_type_converter
-
-from line_profiler import profile
+from apps.utils.decoding import convert_datatype, hbase_to_dict, hbase_type_converter
 
 
 @profile
@@ -42,10 +40,7 @@ def get_ssocand(payload: dict) -> pd.DataFrame:
     else:
         trajectory_id = None
 
-    if "maxnumber" in payload:
-        maxnumber = payload["maxnumber"]
-    else:
-        maxnumber = 10000
+    maxnumber = payload.get("maxnumber", 10000)
 
     payload_name = payload["kind"]
 

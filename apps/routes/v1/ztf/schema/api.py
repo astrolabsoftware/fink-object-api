@@ -12,9 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
 import pandas as pd
-
+import requests
 from flask import Response, json
 from flask_restx import Namespace, Resource
 
@@ -385,23 +384,28 @@ class Schema(Resource):
             "ZTF original fields (i:)": {
                 i: {"type": j, "doc": k}
                 for i, j, k in zip(
-                    ztf_candidate.name, ztf_candidate.type, ztf_candidate.doc
+                    ztf_candidate.name,
+                    ztf_candidate.type,
+                    ztf_candidate.doc,
+                    strict=True,
                 )
             },
             "ZTF original cutouts (b:)": {
                 i: {"type": j, "doc": k}
-                for i, j, k in zip(ztf_cutouts.name, ztf_cutouts.type, ztf_cutouts.doc)
+                for i, j, k in zip(
+                    ztf_cutouts.name, ztf_cutouts.type, ztf_cutouts.doc, strict=True
+                )
             },
             "Fink science module outputs (d:)": {
                 i: {"type": j, "doc": k}
                 for i, j, k in zip(
-                    fink_science.name, fink_science.type, fink_science.doc
+                    fink_science.name, fink_science.type, fink_science.doc, strict=True
                 )
             },
             "Fink on-the-fly added values (v:)": {
                 i: {"type": j, "doc": k}
                 for i, j, k in zip(
-                    fink_derived.name, fink_derived.type, fink_derived.doc
+                    fink_derived.name, fink_derived.type, fink_derived.doc, strict=True
                 )
             },
         }

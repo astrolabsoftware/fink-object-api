@@ -12,21 +12,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import io
 import gzip
-import requests
-
-from astropy.io import fits
-from astropy.time import Time
+import io
 
 import healpy as hp
-import pandas as pd
 import numpy as np
+import pandas as pd
+import requests
+from astropy.io import fits
+from astropy.time import Time
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
-
-from line_profiler import profile
 
 
 @profile

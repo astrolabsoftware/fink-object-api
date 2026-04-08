@@ -13,39 +13,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-from flask import Flask, Blueprint
+
+from flask import Blueprint, Flask
 from flask_restx import Api
-from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
-from config_prometheus import child_exit, pre_fork, post_fork
 from prometheus_client import values
 from prometheus_client.values import MultiProcessValue
+from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
 from apps import __version__
-
-from apps.utils.utils import extract_configuration
-
-from apps.routes.v1.ztf.objects.api import ns as ns_objects
-from apps.routes.v1.ztf.cutouts.api import ns as ns_cutouts
-from apps.routes.v1.ztf.latests.api import ns as ns_latests
+from apps.routes.v1.ztf.anomaly.api import ns as ns_anomaly
 from apps.routes.v1.ztf.classes.api import ns as ns_classes
 from apps.routes.v1.ztf.conesearch.api import ns as ns_conesearch
-from apps.routes.v1.ztf.sso.api import ns as ns_sso
+from apps.routes.v1.ztf.cutouts.api import ns as ns_cutouts
+from apps.routes.v1.ztf.latests.api import ns as ns_latests
+from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
+from apps.routes.v1.ztf.objects.api import ns as ns_objects
 from apps.routes.v1.ztf.resolver.api import ns as ns_resolver
-from apps.routes.v1.ztf.tracklet.api import ns as ns_tracklet
 from apps.routes.v1.ztf.schema.api import ns as ns_schema
 from apps.routes.v1.ztf.skymap.api import ns as ns_skymap
-from apps.routes.v1.ztf.statistics.api import ns as ns_statistics
-from apps.routes.v1.ztf.ssocand.api import ns as ns_ssocand
-from apps.routes.v1.ztf.anomaly.api import ns as ns_anomaly
-from apps.routes.v1.ztf.ssoft.api import ns as ns_ssoft
-from apps.routes.v1.ztf.metadata.api import ns as ns_metadata
+from apps.routes.v1.ztf.sso.api import ns as ns_sso
 from apps.routes.v1.ztf.ssobulk.api import ns as ns_ssobulk
+from apps.routes.v1.ztf.ssocand.api import ns as ns_ssocand
+from apps.routes.v1.ztf.ssoft.api import ns as ns_ssoft
+from apps.routes.v1.ztf.statistics.api import ns as ns_statistics
+from apps.routes.v1.ztf.tracklet.api import ns as ns_tracklet
+from apps.utils.utils import extract_configuration
+from config_prometheus import child_exit, post_fork, pre_fork
 
 config = extract_configuration("config.yml")
 
 
 def get_worker_id():
-    """return stable id for worker"""
+    """Return stable id for worker"""
     return os.environ.get("GUNICORN_WORKER_ID", str(os.getpid()))
 
 

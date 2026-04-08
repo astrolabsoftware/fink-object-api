@@ -13,11 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_lsst_hbase_output
-
-from line_profiler import profile
 
 
 @profile
@@ -50,7 +49,7 @@ def extract_fp_data(payload: dict) -> pd.DataFrame:
         # single object search
         salt = payload["diaObjectId"][-3:]
         key = payload["diaObjectId"]
-        objectids = ["key:key:{}_{}".format(salt, key)]
+        objectids = [f"key:key:{salt}_{key}"]
 
     if cols == "*":
         truncated = False
