@@ -29,8 +29,8 @@ ARGS = ns.model(
             required=True,
         ),
         "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'i:midpointMjdTai,i:psfFlux,i:band'. If not specified, transfer all columns (slow).",
-            example="r:midpointMjdTai,r:psfFlux,r:band",
+            description="Comma-separated data columns to transfer, e.g. 'r:midpointMjdTai,r:psfFlux,r:band,r:diaObjectId'. If not specified, transfer all columns (slow).",
+            example="r:midpointMjdTai,r:psfFlux,r:band,r:diaObjectId",
             required=False,
         ),
         "output-format": fields.String(

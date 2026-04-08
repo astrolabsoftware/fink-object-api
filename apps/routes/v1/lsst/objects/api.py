@@ -31,8 +31,8 @@ ARGS = ns.model(
             required=True,
         ),
         "columns": fields.String(
-            description="Comma-separated data columns to transfer, e.g. 'i:firstDiaSourceMjdTai,i:nDiaSources,i:g_psfFluxMax'. If not specified, transfer all columns.",
-            example="i:firstDiaSourceMjdTai,i:nDiaSources,i:g_psfFluxMax",
+            description="Comma-separated data columns to transfer, e.g. 'r:firstDiaSourceMjdTai,r:nDiaSources,r:g_psfFluxMax'. If not specified, transfer all columns.",
+            example="r:firstDiaSourceMjdTai,r:nDiaSources,r:g_psfFluxMax",
             required=False,
         ),
         "output-format": fields.String(
