@@ -25,5 +25,5 @@ class Blocks(Resource):
     def get(self):
         """Retrieve block definition"""
         tags, descriptions = extract_blocks(True)
-        out = {k: v for k, v in zip(tags, descriptions)}
+        out = {k: v for k, v in zip(tags, descriptions, strict=True)}
         return jsonify(out)

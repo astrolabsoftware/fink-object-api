@@ -12,14 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
-from astropy.time import Time
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
+from astropy.time import Time
 
 APIURL = sys.argv[1]
 
@@ -44,7 +43,7 @@ def ssocandsearch(
     if maxnumber is not None:
         payload.update({"maxnumber": maxnumber})
 
-    r = requests.post("{}/api/v1/ssocand".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/ssocand", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -113,7 +112,7 @@ def test_lightcurves_traj() -> None:
     assert "d:ssoCandId" in pdf.columns
 
     nobjects = len(np.unique(pdf["d:ssoCandId"]))
-    assert nobjects == 1, "Expecting 1 object, but found {}".format(nobjects)
+    assert nobjects == 1, f"Expecting 1 object, but found {nobjects}"
 
 
 def test_time_boundaries() -> None:
@@ -134,7 +133,7 @@ def test_time_boundaries() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

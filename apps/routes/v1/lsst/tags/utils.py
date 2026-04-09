@@ -12,19 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response
-
-import pandas as pd
 import importlib
 import pkgutil
 
+import fink_filters.rubin.livestream as ffrl
+import pandas as pd
+from astropy.time import Time
+from flask import Response
+from line_profiler import profile
+
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_lsst_hbase_output
-
-import fink_filters.rubin.livestream as ffrl
-
-from line_profiler import profile
-from astropy.time import Time
 
 
 def extract_tags(with_description=False):
@@ -81,11 +79,11 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
 
     # Check the tag exists
     if tag not in extract_tags():
-        msg = """
-        {} is not a valid tag. Here is the list of tags:
-        {}
+        msg = f"""
+        {tag} is not a valid tag. Here is the list of tags:
+        {extract_tags()}
         And you can always retrieve available tags at https://api.lsst.fink-portal.org/api/v1/tags
-        """.format(tag, extract_tags())
+        """
         return Response(msg, 400)
 
     if "n" not in payload:
@@ -114,7 +112,7 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     else:
         truncated = True
 
-    client = connect_to_hbase_table("rubin.tag_{}".format(tag))
+    client = connect_to_hbase_table(f"rubin.tag_{tag}")
 
     client.setLimit(nalerts)
     client.setRangeScan(True)

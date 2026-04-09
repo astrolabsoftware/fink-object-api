@@ -12,15 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import numpy as np
-
-from astropy.io import fits
-
-from PIL import Image
-
 import io
 import sys
+
+import numpy as np
+import requests
+from astropy.io import fits
+from PIL import Image
 
 APIURL = sys.argv[1]
 
@@ -54,7 +52,7 @@ def cutouttest(
     if convolution_kernel is not None:
         payload.update({"convolution_kernel": convolution_kernel})
 
-    r = requests.post("{}/api/v1/cutouts".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/cutouts", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -64,7 +62,7 @@ def cutouttest(
     elif output_format == "FITS":
         data = fits.open(io.BytesIO(r.content), ignore_missing_simple=True)
     elif output_format == "array":
-        data = r.json()["b:cutout{}".format(kind)]
+        data = r.json()[f"b:cutout{kind}"]
 
     return data
 
@@ -190,7 +188,7 @@ def test_convolution_kernel_cutout() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

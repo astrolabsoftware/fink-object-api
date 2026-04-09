@@ -12,13 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-
-from astropy.io import votable
-
 import io
 import sys
+
+import pandas as pd
+import requests
+from astropy.io import votable
 
 APIURL = sys.argv[1]
 
@@ -41,7 +40,7 @@ def resolver(resolver="", name="", nmax=None, reverse=None, output_format="json"
             }
         )
 
-    r = requests.post("{}/api/v1/resolver".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/resolver", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -248,7 +247,7 @@ def test_reverse_ssodnet_resolver() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

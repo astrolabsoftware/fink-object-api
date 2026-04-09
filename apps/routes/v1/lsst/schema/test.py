@@ -12,11 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import numpy as np
 import logging
-
 import sys
+
+import numpy as np
+import requests
 
 APIURL = sys.argv[1]
 _LOG = logging.getLogger(__name__)
@@ -24,9 +24,7 @@ _LOG = logging.getLogger(__name__)
 
 def get_fields_per_family():
     """Get fields exposed in /api/v1/schema"""
-    r = requests.post(
-        "{}/api/v1/schema".format(APIURL), json={"endpoint": "/api/v1/sources"}
-    )
+    r = requests.post(f"{APIURL}/api/v1/schema", json={"endpoint": "/api/v1/sources"})
 
     assert r.status_code == 200, r.content
 
@@ -83,10 +81,8 @@ def check_schema_endpoint():
 
     for endpoint, payload in endpoints.items():
         _LOG.warning(endpoint)
-        r_schema = requests.post(
-            "{}/api/v1/schema".format(APIURL), json={"endpoint": endpoint}
-        )
-        r_data = requests.post("{}{}".format(APIURL, endpoint), json=payload)
+        r_schema = requests.post(f"{APIURL}/api/v1/schema", json={"endpoint": endpoint})
+        r_data = requests.post(f"{APIURL}{endpoint}", json=payload)
 
         if r_data.status_code != 200:
             _LOG.error(r_data.content)
@@ -97,11 +93,7 @@ def check_schema_endpoint():
         schema_fields = get_fields_from_schema(r_schema.json())
 
         if len(r_data.json()) == 0:
-            _LOG.error(
-                "Data is empty for endpoint {} with payload {}".format(
-                    endpoint, payload
-                )
-            )
+            _LOG.error(f"Data is empty for endpoint {endpoint} with payload {payload}")
             raise ValueError
         data_fields = list(r_data.json()[0].keys())
 
@@ -119,7 +111,7 @@ def check_schema_endpoint():
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

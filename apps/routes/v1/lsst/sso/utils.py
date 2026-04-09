@@ -12,18 +12,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import pandas as pd
 import requests
 from flask import Response
 
-import pandas as pd
+# from fink_utils.sso.miriade import get_miriade_data
+# from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_lsst_hbase_output
-
-# from fink_utils.sso.miriade import get_miriade_data
-# from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
-
-from line_profiler import profile
 
 
 def resolve_packed(n_or_d):
@@ -32,9 +30,7 @@ def resolve_packed(n_or_d):
 
     # Pure quaero implementation
     r = requests.get(
-        "https://ssp.imcce.fr/webservices/ssodnet/api/resolver.php?-name=a:EQUAL:{}&-mime=json&-from=FINK".format(
-            n_or_d
-        )
+        f"https://ssp.imcce.fr/webservices/ssodnet/api/resolver.php?-name=a:EQUAL:{n_or_d}&-mime=json&-from=FINK"
     )
     if r.status_code == 200 and r.json() != []:
         sso_name = r.json()["data"][0]["name"]
@@ -117,18 +113,14 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         if sso_name == "":
             rep = {
                 "status": "error",
-                "text": "{} is not a valid name or number according to quaero.\n".format(
-                    id_
-                ),
+                "text": f"{id_} is not a valid name or number according to quaero.\n",
             }
             return Response(str(rep), 400)
 
         if len(aliases) == 0:
             rep = {
                 "status": "error",
-                "text": "We have found 0 packed designation in the aliases for the object {} according to quaero.\n".format(
-                    id_
-                ),
+                "text": f"We have found 0 packed designation in the aliases for the object {id_} according to quaero.\n",
             }
             return Response(str(rep), 400)
 

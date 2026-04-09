@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
 
 APIURL = sys.argv[1]
 
@@ -45,7 +45,7 @@ def ssosearch(
     if cutout_kind is not None:
         payload.update({"cutout-kind": cutout_kind})
 
-    r = requests.post("{}/api/v1/sso".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/sso", json=payload)
 
     assert r.status_code == expected_status, r.content
 
@@ -259,7 +259,7 @@ def test_with_ephem_multiple_ssosearch() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

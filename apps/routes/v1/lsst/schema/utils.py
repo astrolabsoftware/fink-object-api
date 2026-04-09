@@ -12,11 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Response
 import json
-import requests
 import logging
 
+import requests
+from flask import Response
 from line_profiler import profile
 
 _LOG = logging.getLogger(__name__)
@@ -73,7 +73,7 @@ def extract_schema(payload: dict) -> Response:
         r = requests.get(
             "https://raw.githubusercontent.com/lsst/alert_packet/refs/heads/main/python/lsst/alert/packet/schema/latest.txt"
         )
-        version = "{}".format(r.json())
+        version = f"{r.json()}"
         major_version, minor_version = [int(i) for i in version.split(".")]
     else:
         major_version = payload["major_version"]
@@ -82,9 +82,7 @@ def extract_schema(payload: dict) -> Response:
     base_url = "https://raw.githubusercontent.com/lsst/alert_packet/refs/heads/main/python/lsst/alert/packet/schema"
 
     r_root = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.alert.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.alert.avsc"
     )
     root_schema = r_root.json()
 
@@ -97,37 +95,27 @@ def extract_schema(payload: dict) -> Response:
 
     # Other fields
     r_diaSource = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.diaSource.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.diaSource.avsc"
     )
     diaSource_schema = r_diaSource.json()["fields"]
 
     r_diaForcedSource = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.diaForcedSource.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.diaForcedSource.avsc"
     )
     forcedDiaSource_schema = r_diaForcedSource.json()["fields"]
 
     r_diaObject = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.diaObject.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.diaObject.avsc"
     )
     diaObject_schema = r_diaObject.json()["fields"]
 
     r_ssSource = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.ssSource.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.ssSource.avsc"
     )
     ssSource_schema = r_ssSource.json()["fields"]
 
     r_mpc_orbits = requests.get(
-        "{}/{}/{}/lsst.v{}_{}.mpc_orbits.avsc".format(
-            base_url, major_version, minor_version, major_version, minor_version
-        )
+        f"{base_url}/{major_version}/{minor_version}/lsst.v{major_version}_{minor_version}.mpc_orbits.avsc"
     )
     mpc_orbits_schema = r_mpc_orbits.json()["fields"]
 

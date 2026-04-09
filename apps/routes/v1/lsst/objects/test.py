@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
 
 APIURL = sys.argv[1]
 
@@ -37,7 +37,7 @@ def get_an_object(
         "output-format": output_format,
     }
 
-    r = requests.post("{}/api/v1/objects".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/objects", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -95,7 +95,7 @@ def test_column_selection() -> None:
     """
     pdf = get_an_object(oid=OID, columns="r:nDiaSources,r:firstDiaSourceMjdTai")
 
-    assert len(pdf.columns) == 2, "I count {} columns".format(len(pdf.columns))
+    assert len(pdf.columns) == 2, f"I count {len(pdf.columns)} columns"
 
 
 def test_bad_request() -> None:
@@ -130,15 +130,13 @@ def test_multiple_objects() -> None:
         n_oids_single += n_oid
         len_object += len(pdf_)
 
-    assert n_oids == n_oids_single, "{} is not equal to {}".format(
-        n_oids, n_oids_single
-    )
-    assert len_object == len(pdf), "{} is not equal to {}".format(len_object, len(pdf))
+    assert n_oids == n_oids_single, f"{n_oids} is not equal to {n_oids_single}"
+    assert len_object == len(pdf), f"{len_object} is not equal to {len(pdf)}"
 
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

@@ -12,11 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-
 import io
 import sys
+
+import pandas as pd
+import requests
 
 APIURL = sys.argv[1]
 
@@ -29,7 +29,7 @@ def statstest(date="2021", columns="*", output_format="json"):
         "output-format": output_format,
     }
 
-    r = requests.post("{}/api/v1/statistics".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/statistics", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -89,7 +89,7 @@ def test_cols() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])

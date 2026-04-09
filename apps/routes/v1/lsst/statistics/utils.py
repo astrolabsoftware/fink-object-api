@@ -13,11 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import pandas as pd
+from line_profiler import profile
 
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import hbase_to_dict
-
-from line_profiler import profile
 
 
 @profile

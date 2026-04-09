@@ -12,14 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
-import pandas as pd
-import numpy as np
-
-from astropy.time import Time
-
 import io
 import sys
+
+import numpy as np
+import pandas as pd
+import requests
+from astropy.time import Time
 
 APIURL = sys.argv[1]
 
@@ -28,7 +27,7 @@ def trackletsearch(date="2021-08-10", columns="*", output_format="json"):
     """Perform a tracklet search in the Science Portal using the Fink REST API"""
     payload = {"date": date, "columns": columns, "output-format": output_format}
 
-    r = requests.post("{}/api/v1/tracklet".format(APIURL), json=payload)
+    r = requests.post(f"{APIURL}/api/v1/tracklet", json=payload)
 
     assert r.status_code == 200, r.content
 
@@ -85,7 +84,7 @@ def test_single_tracklet() -> None:
 
 if __name__ == "__main__":
     """ Execute the test suite """
-    import sys
     import doctest
+    import sys
 
     sys.exit(doctest.testmod()[0])
