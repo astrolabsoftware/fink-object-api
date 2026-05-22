@@ -80,9 +80,9 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     # nside = hp.npix2nside(npix)
     # skyfrac = np.sum(credible_levels <= 0.1) * hp.nside2pixarea(nside, degrees=True)
 
-    credible_levels_128 = hp.ud_grade(credible_levels, 128)
+    credible_levels_1024 = hp.ud_grade(credible_levels, 1024)
 
-    pixs = np.where(credible_levels_128 <= credible_level_threshold)[0]
+    pixs = np.where(credible_levels_1024 <= credible_level_threshold)[0]
 
     # make a condition as well on the number of pixels?
     # print(len(pixs), pixs)
@@ -99,7 +99,7 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     # r:firstDiaSourceMjdTai is not populated yet
     # Moreover, the rowkey for pixel128 is pixel128_diaObjectId
     # so it does not contain time information.
-    client = connect_to_hbase_table("rubin.pixel128")
+    client = connect_to_hbase_table("rubin.pixel1024")
     # client.setRangeScan(True)
     results = {}
     for pix in pixs:
