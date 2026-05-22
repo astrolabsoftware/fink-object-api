@@ -48,7 +48,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
         if "r:dec" not in cols:
             cols = ",".join([cols, "r:dec"])
         if "r:midpointMjdTai" not in cols:
-            # use for grouping of alerts 
+            # use for grouping of alerts
             cols = ",".join([cols, "r:midpointMjdTai"])
     else:
         cols = "*"
