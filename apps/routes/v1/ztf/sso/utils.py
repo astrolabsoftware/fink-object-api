@@ -202,7 +202,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         #       the mandatory fields have been requested
         # TODO: We should probably add a timeout and try/except
         #       in case of miriade shutdown
-        pdf = get_miriade_data(pdf, sso_colname="sso_name")
+        pdf = get_miriade_data(pdf, survey="ztf", observer="I41", shift=15.0)
         if "i:magpsf_red" not in pdf.columns:
             rep = {
                 "status": "error",

@@ -16,7 +16,8 @@ import pandas as pd
 import requests
 from flask import Response
 
-# from fink_utils.sso.miriade import get_miriade_data
+from fink_utils.sso.miriade import get_miriade_data
+
 # from fink_utils.sso.spins import func_hg1g2_with_spin, estimate_sso_params
 from line_profiler import profile
 
@@ -86,6 +87,10 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         # For name resolving, i:ssnamenr must be here
         # In case the user forgot, let's add it silently
         cols += ",r:packed_primary_provisional_designation"
+    if truncated and with_ephem and "r:midpointMjdTai" not in cols:
+        cols += ",r:midpointMjdTai"
+    if truncated and with_ephem and "r:psfFlux" not in cols:
+        cols += ",r:psfFlux"
 
     n_or_d = str(payload["n_or_d"])
 
@@ -164,18 +169,14 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
         lambda x: sso_names[x]
     )
 
-    # if with_ephem:
-    #     # TODO: In case truncated is True, check (before DB call)
-    #     #       the mandatory fields have been requested
-    #     # TODO: We should probably add a timeout and try/except
-    #     #       in case of miriade shutdown
-    #     pdf = get_miriade_data(pdf, sso_colname="sso_name")
-    #     if "i:magpsf_red" not in pdf.columns:
-    #         rep = {
-    #             "status": "error",
-    #             "text": "We could not obtain the ephemerides information. Check Miriade availabilities.",
-    #         }
-    #         return Response(str(rep), 400)
+    if with_ephem:
+        pdf = get_miriade_data(pdf, survey="lsst", observer="X05", shift=0.0)
+        if "i:magpsf_red" not in pdf.columns:
+            rep = {
+                "status": "error",
+                "text": "We could not obtain the ephemerides information. Check Miriade availabilities.",
+            }
+            return Response(str(rep), 400)
 
     # if with_residuals:
     #     # TODO: In case truncated is True, check (before DB call)
