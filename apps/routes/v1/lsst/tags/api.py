@@ -67,7 +67,9 @@ class Tags(Resource):
             # POST from query URL
             return self.post()
         else:
-            tags, descriptions = extract_tags(True)
+            tags, descriptions = extract_tags(
+                with_description=True, hbase_support_only=False
+            )
             out = {k: v for k, v in zip(tags, descriptions, strict=True)}
             return jsonify(out)
 
