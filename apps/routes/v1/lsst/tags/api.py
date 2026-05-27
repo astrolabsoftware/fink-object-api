@@ -67,6 +67,8 @@ class Tags(Resource):
             # POST from query URL
             return self.post()
         else:
+            # Retrieve all tags, even those without HBase support
+            # FIXME: How to warn the user about the ones without HBase support?
             tags, descriptions = extract_tags(
                 with_description=True, hbase_support_only=False
             )
