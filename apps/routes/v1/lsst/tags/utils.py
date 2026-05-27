@@ -101,10 +101,7 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
         """
         return Response(msg, 400)
 
-    if "n" not in payload:
-        nalerts = 10
-    else:
-        nalerts = int(payload["n"])
+    nalerts = int(payload.get("n", 10))
 
     if "startdate" not in payload:
         # start of the Fink operations
