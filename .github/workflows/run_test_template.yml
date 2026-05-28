@@ -34,4 +34,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run test suites
       run: |
-        ./run_tests.sh --url ${{ secrets.APIURLDEV }} -s ${{ inputs.survey }}
+        ./run_tests.sh --url https://api.${{ inputs.survey }}.fink-portal.org -s ${{ inputs.survey }}
