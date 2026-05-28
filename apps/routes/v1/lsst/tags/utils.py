@@ -25,24 +25,17 @@ from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_lsst_hbase_output
 
 
-def extract_tags(with_description=False, hbase_support_only=False):
+def extract_tags():
     """Extract user-defined tags
-
-    Parameters
-    ----------
-    with_description: bool
-        If True, extract descriptions, otherwise leave it empty.
-        Default is False.
-    hbase_support_only: bool
-        If True, returns only filters with the HBase support.
-        Default is False
 
     Returns
     -------
     tags: list of str
         List of tags
     descriptions: list of str
-        Long descriptions for tags. Empty if with_description is False.
+        Long descriptions for tags.
+    hbase_support: list of bool
+        Boolean for HBase support
     """
     # User-defined topics
     userfilters = [
@@ -51,23 +44,14 @@ def extract_tags(with_description=False, hbase_support_only=False):
     ]
 
     tags = [userfilter.split(".")[-1] for userfilter in userfilters]
+    modules = [
+        importlib.import_module(u.rsplit(".", maxsplit=1)[0]) for u in userfilters
+    ]
 
-    if hbase_support_only:
-        # Get only filters with HBase support
-        modules = [u.rsplit(".", maxsplit=1)[0] for u in userfilters]
-        hbase_supports = [importlib.import_module(m).HBASE_SUPPORT for m in modules]
-        userfilters = [
-            u for u, hs in zip(userfilters, hbase_supports, strict=True) if hs
-        ]
+    descriptions = [m.DESCRIPTION for m in modules]
+    hbase_supports = [m.HBASE_SUPPORT for m in modules]
 
-    if with_description:
-        # Recompute modules as userfilters is changed inplace if hbase_support_only
-        modules = [u.rsplit(".", maxsplit=1)[0] for u in userfilters]
-        descriptions = [importlib.import_module(m).DESCRIPTION for m in modules]
-    else:
-        descriptions = ["" for u in userfilters]
-
-    return tags, descriptions
+    return tags, descriptions, hbase_supports
 
 
 @profile
@@ -92,12 +76,20 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     tag = payload["tag"]
 
     # Check the tag exists
-    allowed_tags, _ = extract_tags(with_description=False, hbase_support_only=True)
+    allowed_tags, _, hbase_supports = extract_tags()
     if tag not in allowed_tags:
         msg = f"""
         {tag} is not a valid tag. Here is the list of tags:
         {allowed_tags}
         And you can always retrieve available tags at https://api.lsst.fink-portal.org/api/v1/tags
+        """
+        return Response(msg, 400)
+
+    has_hbase_support = hbase_supports[allowed_tags.index(tag)]
+    if not has_hbase_support:
+        msg = f"""
+        {tag} is only available from the Livestream service (no API support defined).
+        And you can always retrieve available tags and their API support at https://api.lsst.fink-portal.org/api/v1/tags
         """
         return Response(msg, 400)
 

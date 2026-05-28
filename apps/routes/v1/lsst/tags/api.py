@@ -67,12 +67,11 @@ class Tags(Resource):
             # POST from query URL
             return self.post()
         else:
-            # Retrieve all tags, even those without HBase support
-            # FIXME: How to warn the user about the ones without HBase support?
-            tags, descriptions = extract_tags(
-                with_description=True, hbase_support_only=False
-            )
-            out = {k: v for k, v in zip(tags, descriptions, strict=True)}
+            tags, descriptions, hbase_supports = extract_tags()
+            out = {
+                k: {"description": v, "API support": h}
+                for k, v, h in zip(tags, descriptions, hbase_supports, strict=True)
+            }
             return jsonify(out)
 
     @ns.expect(ARGS, location="json", as_dict=True)
