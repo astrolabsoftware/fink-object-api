@@ -25,12 +25,12 @@ ARGS = ns.model(
     {
         "ra": fields.Float(
             description="Right Ascension, in decimal degree.",
-            example=7.893627,
+            example=61.964820,
             required=True,
         ),
         "dec": fields.Float(
             description="Declination, in decimal degree.",
-            example=-44.771556,
+            example=-48.713443,
             required=True,
         ),
         "radius": fields.Float(
@@ -45,12 +45,10 @@ ARGS = ns.model(
         ),
         "startdate": fields.String(
             description="Starting date in UTC (iso, jd, or MJD). It restricts the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period. Default is 2025-09-06 00:00:00",
-            example="2025-09-05 12:30:00",
             required=False,
         ),
         "stopdate": fields.String(
             description="Stopping date in UTC (iso, jd, or MJD). It restricts the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period. Default is now.",
-            example="2025-09-15 12:30:00",
             required=False,
         ),
         "window": fields.Float(
