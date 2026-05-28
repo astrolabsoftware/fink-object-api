@@ -25,35 +25,33 @@ from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_lsst_hbase_output
 
 
-def extract_tags(with_description=False):
+def extract_tags():
     """Extract user-defined tags
-
-    Parameters
-    ----------
-    with_description: bool
-        If True, returns tags and descriptions.
-        Otherwise, returns only tags.
 
     Returns
     -------
     tags: list of str
         List of tags
-    descriptions: list of str, optional
-        Long descriptions for tags
+    descriptions: list of str
+        Long descriptions for tags.
+    hbase_support: list of bool
+        Boolean for HBase support
     """
     # User-defined topics
     userfilters = [
         "{}.{}.filter.{}".format(ffrl.__package__, mod, mod.split("filter_")[1])
         for _, mod, _ in pkgutil.iter_modules(ffrl.__path__)
     ]
+
     tags = [userfilter.split(".")[-1] for userfilter in userfilters]
+    modules = [
+        importlib.import_module(u.rsplit(".", maxsplit=1)[0]) for u in userfilters
+    ]
 
-    if with_description:
-        modules = [u.rsplit(".", maxsplit=1)[0] for u in userfilters]
-        descriptions = [importlib.import_module(u).DESCRIPTION for u in modules]
-        return tags, descriptions
+    descriptions = [m.DESCRIPTION for m in modules]
+    hbase_supports = [m.HBASE_SUPPORT for m in modules]
 
-    return tags
+    return tags, descriptions, hbase_supports
 
 
 @profile
@@ -78,18 +76,24 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     tag = payload["tag"]
 
     # Check the tag exists
-    if tag not in extract_tags():
+    allowed_tags, _, hbase_supports = extract_tags()
+    if tag not in allowed_tags:
         msg = f"""
         {tag} is not a valid tag. Here is the list of tags:
-        {extract_tags()}
+        {allowed_tags}
         And you can always retrieve available tags at https://api.lsst.fink-portal.org/api/v1/tags
         """
         return Response(msg, 400)
 
-    if "n" not in payload:
-        nalerts = 10
-    else:
-        nalerts = int(payload["n"])
+    has_hbase_support = hbase_supports[allowed_tags.index(tag)]
+    if not has_hbase_support:
+        msg = f"""
+        {tag} is only available from the Livestream service (no API support defined).
+        And you can always retrieve available tags and their API support at https://api.lsst.fink-portal.org/api/v1/tags
+        """
+        return Response(msg, 400)
+
+    nalerts = int(payload.get("n", 10))
 
     if "startdate" not in payload:
         # start of the Fink operations
