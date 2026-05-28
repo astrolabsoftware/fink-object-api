@@ -125,6 +125,26 @@ def test_bad_request() -> None:
         pass
 
 
+def test_tags_retrieval() -> None:
+    """
+    Examples
+    --------
+    >>> test_tags_retrieval()
+    """
+    r = requests.get(f"{APIURL}/api/v1/tags")
+
+    assert r.status_code == 200, r.content
+
+    tags = r.json()
+
+    assert "in_tns" in tags, tags
+
+    # atag = tags["in_tns"]
+
+    # assert "description" in atag, atag
+    # assert "API support" in atag, atag
+
+
 if __name__ == "__main__":
     """ Execute the test suite """
     import doctest
