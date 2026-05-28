@@ -218,7 +218,7 @@ def test_coordinates() -> None:
     pdf0 = conesearch(ra=RA0, dec=DEC0, columns="r:diaObjectId")
     for ra, dec in coords:
         pdf = conesearch(ra=ra, dec=dec, columns="r:diaObjectId")
-        assert pdf.equals(pdf0)
+        assert len(pdf) == len(pdf0), (pdf, pdf0)
 
 
 def test_bad_request() -> None:

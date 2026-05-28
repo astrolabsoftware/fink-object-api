@@ -22,11 +22,11 @@ import requests
 APIURL = sys.argv[1]
 
 # Implement random name generator
-OID = "169298438257115164"
+OID = "314003014107006318"
 
 
 def get_an_object(
-    oid="169298438257115164",
+    oid=OID,
     output_format="json",
     columns="*",
 ):
@@ -93,9 +93,9 @@ def test_column_selection() -> None:
     --------
     >>> test_column_selection()
     """
-    pdf = get_an_object(oid=OID, columns="r:nDiaSources,r:firstDiaSourceMjdTai")
+    pdf = get_an_object(oid=OID, columns="r:nDiaSources,f:firstDiaSourceMjdTaiFink")
 
-    assert len(pdf.columns) == 2, f"I count {len(pdf.columns)} columns"
+    assert len(pdf.columns) == 2, f"I count {len(pdf.columns)} columns {pdf.columns}"
 
 
 def test_bad_request() -> None:
@@ -115,12 +115,12 @@ def test_multiple_objects() -> None:
     --------
     >>> test_multiple_objects()
     """
-    OIDS_ = ["169298438257115164", "169298437583405159", "169298437355340113"]
+    OIDS_ = [OID, "170261592629837872"]
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
 
-    n_oids = len(np.unique(pdf.groupby("r:diaObjectId").count()["r:ra"]))
-    assert n_oids == 3
+    oids = np.unique(pdf["r:diaObjectId"])
+    assert len(oids) == 2, oids
 
     n_oids_single = 0
     len_object = 0
@@ -130,7 +130,7 @@ def test_multiple_objects() -> None:
         n_oids_single += n_oid
         len_object += len(pdf_)
 
-    assert n_oids == n_oids_single, f"{n_oids} is not equal to {n_oids_single}"
+    assert len(oids) == n_oids_single, f"{len(oids)} is not equal to {n_oids_single}"
     assert len_object == len(pdf), f"{len_object} is not equal to {len(pdf)}"
 
 

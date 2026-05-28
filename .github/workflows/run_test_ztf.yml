@@ -1,0 +1,16 @@
+name: "e2e: survey=ztf"
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  call-sentinel-template:
+    uses: ./.github/workflows/run_test_template.yml
+    with:
+      survey: ztf
+      python-version: "3.11"
+

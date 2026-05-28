@@ -22,11 +22,11 @@ import requests
 APIURL = sys.argv[1]
 
 # Implement random name generator
-OID = "169298433216610349"
+OID = "314003014107006318"
 
 
 def get_an_object(
-    oid="169298433216610349",
+    oid="314003014107006318",
     midpointMjdTai=None,
     output_format="json",
     columns="*",
@@ -73,7 +73,7 @@ def test_single_object_with_date() -> None:
     --------
     >>> test_single_object_with_date()
     """
-    pdf = get_an_object(oid=OID, midpointMjdTai=60924.3322219485)
+    pdf = get_an_object(oid=OID, midpointMjdTai=61176.9896294959)
 
     assert len(pdf) == 1, len(pdf)
 
@@ -155,7 +155,7 @@ def test_multiple_objects() -> None:
     --------
     >>> test_multiple_objects()
     """
-    OIDS_ = [OID, "169342391073374215"]
+    OIDS_ = [OID, "170261592629837872"]
     OIDS = ",".join(OIDS_)
     pdf = get_an_object(oid=OIDS)
     assert not pdf.empty, OIDS

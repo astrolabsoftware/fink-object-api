@@ -24,7 +24,7 @@ APIURL = sys.argv[1]
 
 
 def cutouttest(
-    diaObjectId="169298437355340113",
+    diaSourceId="170424319673368579",
     kind="Science",
     stretch="sigmoid",
     colormap="viridis",
@@ -32,11 +32,10 @@ def cutouttest(
     pmax=99.5,
     convolution_kernel=None,
     output_format="PNG",
-    diaSourceId=None,
 ):
     """Perform a cutout search in the Science Portal using the Fink REST API"""
     payload = {
-        "diaObjectId": diaObjectId,
+        "diaSourceId": diaSourceId,
         "kind": kind,  # Science, Template, Difference
         "stretch": stretch,  # sigmoid[default], linear, sqrt, power, log, asinh
         "colormap": colormap,  # Valid matplotlib colormap name (see matplotlib.cm). Default is grayscale.
@@ -44,9 +43,6 @@ def cutouttest(
         "pmax": pmax,  # The percentile value used to determine the pixel value of maximum cut level. Default is 99.5. No effect for sigmoid.
         "output-format": output_format,
     }
-
-    if diaSourceId is not None:
-        payload.update({"diaSourceId": diaSourceId})
 
     # Convolve the image with a kernel (gauss or box). Default is None (not specified).
     if convolution_kernel is not None:
@@ -87,7 +83,7 @@ def test_fits_cutout() -> None:
     """
     data = cutouttest(output_format="FITS")
 
-    assert len(data) == 1
+    assert len(data) == 3, len(data)
     assert np.shape(data[0].data) == (30, 30)
 
 
