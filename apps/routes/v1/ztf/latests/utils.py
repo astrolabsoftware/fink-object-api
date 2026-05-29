@@ -97,6 +97,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         payload["class"].split("(TNS) ")[1] in tns_classes
     )
     is_cta_blazar = payload["class"] == "(CTA) Blazar"
+    is_slsn = payload["class"] == "SLSN candidate"
     if is_tns:
         client = connect_to_hbase_table("ztf.tns")
         classname = payload["class"].split("(TNS) ")[1]
@@ -118,6 +119,23 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         # CTAO Blazars with low states
         # To be changed when more trend will appear, like flares
         client = connect_to_hbase_table("ztf.low_state_blazars")
+
+        client.setLimit(nalerts)
+        client.setRangeScan(True)
+        client.setReversed(True)
+
+        results = client.scan(
+            "",
+            f"key:key:{jd_start}_,key:key:{jd_stop}_",
+            cols,
+            0,
+            False,
+            False,
+        )
+        schema_client = client.schema()
+        group_alerts = True
+    elif is_slsn:
+        client = connect_to_hbase_table("ztf.slsn")
 
         client.setLimit(nalerts)
         client.setRangeScan(True)
