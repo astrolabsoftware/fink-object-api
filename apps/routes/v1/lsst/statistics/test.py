@@ -53,7 +53,7 @@ def test_stats() -> None:
     pdf = statstest()
 
     # Number of observation days in 2025
-    assert len(pdf) == 254, len(pdf)
+    assert len(pdf) == 37, len(pdf)
 
 
 def test_a_day() -> None:
@@ -62,16 +62,15 @@ def test_a_day() -> None:
     --------
     >>> test_a_day()
     """
-    pdf = statstest(date="20250907")
+    pdf = statstest(date="20251102")
 
-    assert len(pdf) == 1
+    assert len(pdf) == 1, len(pdf)
 
-    assert len(pdf.columns) == 131
+    assert len(pdf.columns) == 22, len(pdf.columns)
 
-    assert "basic:sci" in pdf.columns
-    assert "basic:raw" in pdf.columns
+    assert "f:night" in pdf.columns, pdf.columns
 
-    assert pdf["basic:raw"].to_numpy()[0] == 346644
+    assert pdf["f:alerts"].to_numpy()[0] == 1348, pdf["f:alerts"]
 
 
 def test_cols() -> None:
