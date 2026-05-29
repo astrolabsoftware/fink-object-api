@@ -31,7 +31,7 @@ def resolve_packed(n_or_d):
 
     # Pure quaero implementation
     r = requests.get(
-        f"https://ssp.imcce.fr/webservices/ssodnet/api/resolver.php?-name=a:EQUAL:{n_or_d}&-mime=json&-from=FINK"
+        f"https://ssp.imcce.fr/webservices/ssodnet/api/resolver.php?-name=EQUAL:{n_or_d}&-mime=json&-from=FINK"
     )
     if r.status_code == 200 and r.json() != []:
         sso_name = r.json()["data"][0]["name"]

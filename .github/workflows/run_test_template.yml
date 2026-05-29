@@ -1,0 +1,37 @@
+# Reusable workflow for Sentinel tests
+# This workflow contains shared configuration and steps for both ZTF and Rubin surveys
+
+name: Sentinel Test Template
+
+on: 
+  workflow_call:
+    inputs:
+      survey:
+        required: true
+        type: string
+        description: 'Survey name (ztf or lsst)'
+      python-version:
+        required: true
+        type: string
+        description: 'Python version'
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs: 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
+    - name: Run test suites
+      run: |
+        ./run_tests.sh --url https://api.${{ inputs.survey }}.fink-portal.org -s ${{ inputs.survey }}

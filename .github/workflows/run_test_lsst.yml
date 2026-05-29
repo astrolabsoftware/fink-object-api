@@ -1,0 +1,16 @@
+name: "e2e: survey=lsst"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  call-sentinel-template:
+    uses: ./.github/workflows/run_test_template.yml
+    with:
+      survey: lsst
+      python-version: "3.11"
+

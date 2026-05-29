@@ -17,7 +17,7 @@ set -e
 message_help="""
 Run the test suite of the modules\n\n
 Usage:\n
-    \t./run_tests.sh [--url]\n\n
+    \t./run_tests.sh [-s] [--url]\n\n
 
 --url is the Science Portal URL you would like to test against.
 """
@@ -28,6 +28,10 @@ while [ "$#" -gt 0 ]; do
         URL="$2"
         shift 2
         ;;
+    -s)
+        SURVEY="$2"
+        shift 2
+        ;;
     -h)
         echo -e $message_help
         exit
@@ -35,13 +39,18 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-if [[ -f $URL ]]; then
-  echo "You need to specify an URL" $URL
+if [[ -z $URL ]]; then
+  echo "You need to specify an URL with --url"
+  exit
+fi
+
+if [[ -z $SURVEY ]]; then
+  echo "You need to specify a SURVEY with -s"
   exit
 fi
 
 # Run the ZTF test suite on the utilities
-for filename in apps/routes/v1/ztf/*/test.py
+for filename in apps/routes/v1/"${SURVEY}"/*/test.py
 do
   # Run test suite
   if [[ $filename != apps/routes/v1/ztf/ssoft/test.py ]]; then

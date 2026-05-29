@@ -55,6 +55,11 @@ ARGS = ns.model(
             description="Time window in days, may be used instead of stopdate. It restricts the search to alerts whose first detection was within the specified range of dates and NOT all transients seen during this period.",
             required=False,
         ),
+        "kind": fields.String(
+            description="When filtering by time, you can choose to filter alerts that had their first emission within those dates (within), or that appeared during those dates irrespective of their first variation time (across). Default is `within`",
+            example="within",
+            required=False,
+        ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'r:midpointMjdTai,r:psfFlux,r:band,r:diaObjectId'. If not specified, transfer all columns.",
             example="r:midpointMjdTai,r:psfFlux,r:band,r:diaObjectId",
