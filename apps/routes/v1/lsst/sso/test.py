@@ -64,7 +64,7 @@ def test_simple_ssosearch() -> None:
     pdf = ssosearch()
 
     assert not pdf.empty
-    assert '1996 TC28' in pdf["f:sso_name"].to_numpy()
+    assert "1996 TC28" in pdf["f:sso_name"].to_numpy()
 
 
 def test_ephem() -> None:
@@ -120,7 +120,7 @@ def test_temp_designation() -> None:
 #     """
 #     # we do not want Rubin & Rubincam
 #     pdf = ssosearch(n_or_d="Rubin")
-# 
+#
 #     assert len(pdf["sso_name"].unique()) == 1, pdf["sso_name"].unique()
 #     assert len(pdf["i:ssnamenr"].unique()) == 1, pdf["i:ssnamenr"].unique()
 
