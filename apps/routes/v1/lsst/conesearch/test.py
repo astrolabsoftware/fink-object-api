@@ -165,8 +165,8 @@ def test_conesearch_with_cols() -> None:
 
     assert not pdf.empty, pdf
 
-    # specified fields, plus mandatory i:ra,i:dec, plus computed v:separation
-    assert len(pdf.columns) == 4, f"I count {len(pdf.columns)} columns"
+    # specified fields, plus mandatory i:ra,i:dec,i:midpointMjdTai plus computed v:separation
+    assert len(pdf.columns) == 1+4, f"I count {len(pdf.columns)} columns"
 
 
 def test_bad_dates() -> None:
