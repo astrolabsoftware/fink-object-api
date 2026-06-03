@@ -278,19 +278,24 @@ class Schema(Resource):
                     "doc": "TNS label, if it exists.",
                 },
                 {
-                    "name": "blazar_stats_m0",
+                    "name": "blazar_stats_instantness_low",
                     "type": "float",
-                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness.",
+                    "doc": "Feature for characterising CTAO blazar low state. From fink_science>=8.42.0",
                 },
                 {
-                    "name": "blazar_stats_m1",
+                    "name": "blazar_stats_robustness_low",
                     "type": "float",
-                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness.",
+                    "doc": "Feature for characterising CTAO blazar low state. From fink_science>=8.42.0",
                 },
                 {
-                    "name": "blazar_stats_m2",
+                    "name": "blazar_stats_instantness_high",
                     "type": "float",
-                    "doc": "Feature for characterising CTAO blazar state. Related to low state duration.",
+                    "doc": "Feature for characterising CTAO blazar high state. From fink_science>=8.42.0",
+                },
+                {
+                    "name": "blazar_stats_robustness_high",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar high state. From fink_science>=8.42.0",
                 },
                 {
                     "name": "gaiaClass",

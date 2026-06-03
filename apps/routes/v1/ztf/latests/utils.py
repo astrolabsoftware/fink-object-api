@@ -52,10 +52,10 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
 
     if (
         payload.get("trend", None) in ["low_state", "new_low_state"]
-        and payload.get("class", None) != "(CTA) Blazar"
+        and payload.get("class", None) != "(CTA) Blazar low state"
     ):
         msg = """
-        {} trend is only implemented for the `(CTA) Blazar` class.
+        {} trend is only implemented for the `(CTA) Blazar low state` class.
         {} class can accept trend among: rising, fading.
         """.format(payload["trend"], payload["class"])
         return Response(msg, 400)
@@ -203,6 +203,9 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
             pdf = pdf[pdf["d:mag_rate"] > 0]
         elif payload.get("trend", None) == "new_low_state":
             # TODO: use fink-filters directly
-            pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
+            if "d:blazar_stats_m0" in pdf.columns:
+                pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
+            elif "d:blazar_stats_instantness_low" in pdf.columns:
+                pdf = pdf[pdf["d:blazar_stats_instantness_low"] >= 1]
 
     return pdf
