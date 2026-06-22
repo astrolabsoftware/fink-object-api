@@ -64,6 +64,10 @@ def check_recent_columns(columns, objectId):
                 "cutoutScience_stampData",
                 "cutoutTemplate_stampData",
                 "anomaly_score",
+                "blazar_stats_instantness_high",
+                "blazar_stats_instantness_low",
+                "blazar_stats_robustness_high",
+                "blazar_stats_robustness_low",
             ]
         ]
 
@@ -154,6 +158,10 @@ def check_old_columns(columns, objectId):
                 "gaiaClass",
                 "is_transient",
                 "slsn_score",
+                "blazar_stats_instantness_high",
+                "blazar_stats_instantness_low",
+                "blazar_stats_robustness_high",
+                "blazar_stats_robustness_low",
             ]
 
             outside_obtained = [i for i in definition if i not in obtained]

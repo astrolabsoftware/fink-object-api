@@ -52,10 +52,10 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
 
     if (
         payload.get("trend", None) in ["low_state", "new_low_state"]
-        and payload.get("class", None) != "(CTA) Blazar"
+        and payload.get("class", None) != "(CTA) Blazar low state"
     ):
         msg = """
-        {} trend is only implemented for the `(CTA) Blazar` class.
+        {} trend is only implemented for the `(CTA) Blazar low state` class.
         {} class can accept trend among: rising, fading.
         """.format(payload["trend"], payload["class"])
         return Response(msg, 400)
@@ -96,7 +96,8 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
     is_tns = payload["class"].startswith("(TNS)") and (
         payload["class"].split("(TNS) ")[1] in tns_classes
     )
-    is_cta_blazar = payload["class"] == "(CTA) Blazar"
+    is_cta_blazar_low = payload["class"] == "(CTA) Blazar low state"
+    is_cta_blazar_high = payload["class"] == "(CTA) Blazar high state"
     is_slsn = payload["class"] == "SLSN candidate"
     if is_tns:
         client = connect_to_hbase_table("ztf.tns")
@@ -115,10 +116,12 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         )
         schema_client = client.schema()
         group_alerts = False
-    elif is_cta_blazar:
-        # CTAO Blazars with low states
-        # To be changed when more trend will appear, like flares
-        client = connect_to_hbase_table("ztf.low_state_blazars")
+    elif is_cta_blazar_low or is_cta_blazar_high:
+        # CTAO Blazars with low/high states
+        if is_cta_blazar_low:
+            client = connect_to_hbase_table("ztf.low_state_blazars")
+        elif is_cta_blazar_high:
+            client = connect_to_hbase_table("ztf.high_state_blazars")
 
         client.setLimit(nalerts)
         client.setRangeScan(True)
@@ -200,6 +203,9 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
             pdf = pdf[pdf["d:mag_rate"] > 0]
         elif payload.get("trend", None) == "new_low_state":
             # TODO: use fink-filters directly
-            pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
+            if "d:blazar_stats_m0" in pdf.columns:
+                pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
+            elif "d:blazar_stats_instantness_low" in pdf.columns:
+                pdf = pdf[pdf["d:blazar_stats_instantness_low"] >= 1]
 
     return pdf

@@ -79,6 +79,12 @@ def format_hbase_output(
         pdfs["d:blazar_stats_m0"] = -1.0
         pdfs["d:blazar_stats_m1"] = -1.0
         pdfs["d:blazar_stats_m2"] = -1.0
+    if "d:blazar_stats_instantness_low" not in pdfs.columns and not truncated:
+        pdfs["d:blazar_stats_instantness_low"] = -1.0
+        pdfs["d:blazar_stats_robustness_low"] = -1.0
+    if "d:blazar_stats_instantness_high" not in pdfs.columns and not truncated:
+        pdfs["d:blazar_stats_instantness_high"] = -1.0
+        pdfs["d:blazar_stats_robustness_high"] = -1.0
 
     # Remove hbase specific fields
     for _ in ["key:key", "key:time"]:

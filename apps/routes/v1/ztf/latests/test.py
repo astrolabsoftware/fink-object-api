@@ -199,13 +199,13 @@ def test_blazar_trends() -> None:
     start = "2025-02-02 12:30:00"
     stop = "2025-03-02 12:30:00"
     pdf_low_state = classsearch(
-        myclass="(CTA) Blazar",
+        myclass="(CTA) Blazar low state",
         trend="low_state",
         startdate=start,
         stopdate=stop,
     )
     pdf_new_low_state = classsearch(
-        myclass="(CTA) Blazar",
+        myclass="(CTA) Blazar low state",
         trend="new_low_state",
         startdate=start,
         stopdate=stop,
