@@ -178,12 +178,6 @@ def check_old_columns(columns, objectId):
                 i for i in obtained if (i not in definition) and (i != "spicy_name")
             ]
 
-            # balzar fields were renamed
-            [
-                outside_definition.remove(i)
-                for i in ["blazar_stats_m0", "blazar_stats_m1", "blazar_stats_m2"]
-            ]
-
             assert len(outside_definition) == 0, (
                 "Not in defined fields",
                 family,
