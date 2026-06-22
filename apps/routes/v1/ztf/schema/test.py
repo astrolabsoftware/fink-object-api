@@ -64,6 +64,10 @@ def check_recent_columns(columns, objectId):
                 "cutoutScience_stampData",
                 "cutoutTemplate_stampData",
                 "anomaly_score",
+                "blazar_stats_instantness_high",
+                "blazar_stats_instantness_low",
+                "blazar_stats_robustness_high",
+                "blazar_stats_robustness_low",
             ]
         ]
 
@@ -154,6 +158,10 @@ def check_old_columns(columns, objectId):
                 "gaiaClass",
                 "is_transient",
                 "slsn_score",
+                "blazar_stats_instantness_high",
+                "blazar_stats_instantness_low",
+                "blazar_stats_robustness_high",
+                "blazar_stats_robustness_low",
             ]
 
             outside_obtained = [i for i in definition if i not in obtained]
@@ -168,6 +176,12 @@ def check_old_columns(columns, objectId):
             # `spicy_name` was introduced by mistake instead of `spicy_class` for 2024/02/01
             outside_definition = [
                 i for i in obtained if (i not in definition) and (i != "spicy_name")
+            ]
+
+            # balzar fields were renamed
+            [
+                outside_definition.remove(i)
+                for i in ["blazar_stats_m0", "blazar_stats_m1", "blazar_stats_m2"]
             ]
 
             assert len(outside_definition) == 0, (

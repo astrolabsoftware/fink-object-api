@@ -298,6 +298,21 @@ class Schema(Resource):
                     "doc": "Feature for characterising CTAO blazar high state. From fink_science>=8.42.0",
                 },
                 {
+                    "name": "blazar_stats_m0",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness. Only available for fink_science<8.42.0",
+                },
+                {
+                    "name": "blazar_stats_m1",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state robustness. Only available for fink_science<8.42.0",
+                },
+                {
+                    "name": "blazar_stats_m2",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar state. Related to low state duration. Only available for fink_science<8.42.0",
+                },
+                {
                     "name": "gaiaClass",
                     "type": "str",
                     "doc": "Name of best class from Gaia DR3 Part 4. Variability (I/358/vclassre).",
