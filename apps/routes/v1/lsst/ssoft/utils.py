@@ -28,6 +28,11 @@ from flask import Response
 from line_profiler import profile
 
 
+def get_rid_nan_inf(pdf, col):
+    """Remove problematic values"""
+    return pdf[~pd.isnull(pdf[col])]
+
+
 @profile
 def get_ssoft(payload: dict) -> pd.DataFrame:
     """Send the Fink Flat Table
@@ -116,14 +121,14 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
         mask = pdf["sso_name"] == pdf["sso_name"]
-        pdf = pdf[mask]
+        pdf = get_rid_nan_inf(pdf[mask], "sso_name")
         pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
         return pdf
     elif "sso_number" in payload:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
         mask = pdf["sso_number"] == pdf["sso_number"]
-        pdf = pdf[mask]
+        pdf = get_rid_nan_inf(pdf[mask], "sso_number")
         pdf = pdf[pdf["sso_number"].astype("int") == int(payload["sso_number"])]
         return pdf
     elif payload.get("output-format", "parquet") != "parquet":
