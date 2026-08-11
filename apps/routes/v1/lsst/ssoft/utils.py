@@ -1,0 +1,137 @@
+# Copyright 2019-2026 AstroLab Software
+# Author: Julien Peloton
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import datetime
+import io
+import json
+
+import pandas as pd
+import requests
+import yaml
+from fink_utils.sso.ssoft import (
+    COLUMNS,
+    COLUMNS_HG,
+    COLUMNS_HG1G2,
+)
+from flask import Response
+from line_profiler import profile
+
+
+@profile
+def get_ssoft(payload: dict) -> pd.DataFrame:
+    """Send the Fink Flat Table
+
+    Data is from /api/v1/ssoft
+
+    Parameters
+    ----------
+    payload: dict
+        See https://api.lsst.fink-portal.org
+
+    Return
+    ----------
+    out: pandas dataframe
+    """
+    # Schema
+    schema = payload.get("schema", False)
+    if schema:
+        if "flavor" in payload:
+            flavor = payload["flavor"]
+            if flavor not in ["HG1G2", "HG"]:
+                rep = {
+                    "status": "error",
+                    "text": "flavor needs to be in ['HG1G2', 'HG']\n",
+                }
+                return Response(str(rep), 400)
+            elif flavor == "HG1G2":
+                ssoft_columns = {**COLUMNS, **COLUMNS_HG1G2}
+            elif flavor == "HG":
+                ssoft_columns = {**COLUMNS, **COLUMNS_HG}
+        else:
+            ssoft_columns = {**COLUMNS, **COLUMNS_HG}
+
+        # return the schema of the table
+        response = Response(json.dumps(ssoft_columns), 200)
+        response.headers.set("Content-Type", "application/json")
+        return response
+
+    # Table
+    if "version" in payload:
+        version = payload["version"]
+
+        # version needs YYYY.MM
+        yyyymm = version.split(".")
+        if (len(yyyymm[0]) != 4) or (len(yyyymm[1]) != 2):
+            rep = {
+                "status": "error",
+                "text": "version needs to be YYYY.MM\n",
+            }
+            return Response(str(rep), 400)
+        if version < "2026.08":
+            rep = {
+                "status": "error",
+                "text": "version starts on 2026.08\n",
+            }
+            return Response(str(rep), 400)
+    else:
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        version = f"{now.year}.{now.month:02d}"
+
+    if "flavor" in payload:
+        flavor = payload["flavor"]
+        if flavor not in ["HG1G2", "HG"]:
+            rep = {
+                "status": "error",
+                "text": "flavor needs to be in ['HG1G2', 'HG']\n",
+            }
+            return Response(str(rep), 400)
+    else:
+        flavor = "HG"
+
+    # Need to profile compared to pyarrow
+    with open("config.yml") as f:
+        input_args = yaml.load(f, yaml.Loader)
+    r = requests.get(
+        "{}/SSOFT/ssoft_{}_{}.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+            input_args["WEBHDFS"],
+            flavor,
+            version,
+            input_args["USER"],
+            input_args["NAMENODE"],
+        ),
+    )
+
+    if "sso_name" in payload:
+        # TODO: use pyarrow instead
+        pdf = pd.read_parquet(io.BytesIO(r.content))
+        mask = pdf["sso_name"] == pdf["sso_name"]
+        pdf = pdf[mask]
+        pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
+        return pdf
+    elif "sso_number" in payload:
+        # TODO: use pyarrow instead
+        pdf = pd.read_parquet(io.BytesIO(r.content))
+        mask = pdf["sso_number"] == pdf["sso_number"]
+        pdf = pdf[mask]
+        pdf = pdf[pdf["sso_number"].astype("int") == int(payload["sso_number"])]
+        return pdf
+    elif payload.get("output-format", "parquet") != "parquet":
+        # Full table in other format than parquet (slow)
+        return pd.read_parquet(io.BytesIO(r.content))
+    else:
+        # Full table in parquet (fast)
+        # return the schema of the table
+        response = Response(io.BytesIO(r.content), 200)
+        response.headers.set("Content-Type", "application/parquet")
+        return response
