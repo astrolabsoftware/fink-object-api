@@ -19,11 +19,9 @@ import json
 import pandas as pd
 import requests
 import yaml
-from fink_utils.sso.ssoft import (
-    COLUMNS,
-    COLUMNS_HG,
-    COLUMNS_HG1G2,
-)
+
+# FIXME: update the columns wrt fink-science
+from fink_utils.sso.ssoft import get_ssoft_columns
 from flask import Response
 from line_profiler import profile
 
@@ -53,6 +51,9 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     schema = payload.get("schema", False)
     if schema:
         if "flavor" in payload:
+            COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, COLUMNS_SOCCA = (
+                get_ssoft_columns("lsst")
+            )
             flavor = payload["flavor"]
             if flavor not in ["HG1G2", "HG"]:
                 rep = {
