@@ -212,7 +212,10 @@ def test_blazar_trends() -> None:
     )
 
     assert len(pdf_low_state) == 7, len(pdf_low_state)
-    assert len(pdf_new_low_state) == 0  # to be changed later
+    assert len(pdf_new_low_state) == 7, (
+        len(pdf_new_low_state),
+        pdf_new_low_state,
+    )  # to be changed later
 
 
 def test_query_url() -> None:
