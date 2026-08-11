@@ -94,7 +94,7 @@ def default_ssoft() -> None:
     assert not pdf.empty
 
     now = datetime.datetime.now(tz=datetime.timezone.utc)
-    current_date = f"{now.year}.{now.month:02d}"
+    current_date = f"{now.year}{now.month:02d}"
 
     assert pdf["version"].to_numpy()[0] == current_date
 
@@ -154,27 +154,15 @@ def compare_schema() -> None:
     --------
     >>> compare_schema()
     """
-    schema1 = ssoftsearch(schema=True, flavor="SSHG1G2", output_format="json")
+    schema1 = ssoftsearch(schema=True, flavor="SHG1G2", output_format="json")
 
     # get the schema
-    r = requests.get(f"{APIURL}/api/v1/ssoft?schema=True&flavor=SSHG1G2")
+    r = requests.get(f"{APIURL}/api/v1/ssoft?schema=True&flavor=SHG1G2")
     schema2 = r.json()
 
     keys1 = set(schema1.keys())
     keys2 = set(schema2.keys())
     assert keys1 == keys2, [keys1, keys2]
-
-
-def check_sshg1g2() -> None:
-    """
-    Examples
-    --------
-    >>> check_sshg1g2()
-    """
-    pdf = ssoftsearch(flavor="SSHG1G2")
-
-    assert "period" in pdf.columns
-    assert "a_b_00" in pdf.columns
 
 
 if __name__ == "__main__":

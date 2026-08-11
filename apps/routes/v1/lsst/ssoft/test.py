@@ -94,11 +94,11 @@ def default_ssoft() -> None:
     assert not pdf.empty
 
     now = datetime.datetime.now(tz=datetime.timezone.utc)
-    current_date = f"{now.year}.{now.month:02d}"
+    current_date = f"{now.year}{now.month:02d}"
 
     assert pdf["version"].to_numpy()[0] == current_date
 
-    assert "alpha0" in pdf.columns
+    assert "H_g" in pdf.columns
 
 
 def previous_ssoft() -> None:
