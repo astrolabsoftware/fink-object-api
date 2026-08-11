@@ -16,7 +16,7 @@ from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 from pandas import DataFrame
 
-from apps.routes.v1.rubin.ssoft.utils import get_ssoft
+from apps.routes.v1.lsst.ssoft.utils import get_ssoft
 from apps.utils.utils import check_args, send_tabular_data
 
 ns = Namespace("api/v1/ssoft", "Get the Rubin Solar System Object Fink Table (SSoFT)")
