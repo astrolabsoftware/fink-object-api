@@ -14,6 +14,7 @@
 # limitations under the License.
 import numpy as np
 import pandas as pd
+from sbpy.photometry import HG1G2
 import requests
 from fink_utils.sso.miriade import get_miriade_data
 from fink_utils.sso.spins import estimate_sso_params, func_shg1g2
@@ -244,7 +245,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             for filt in np.unique(pdf["i:fid"]):
                 cond = pdf["i:fid"] == filt
                 model = func_shg1g2(
-                    phase[cond],
+                    HG1G2._phi1(phase[cond]),
+                    HG1G2._phi2(phase[cond]),
+                    HG1G2._phi3(phase[cond]),
                     ra[cond],
                     dec[cond],
                     outdic[f"H_{filt}"],
