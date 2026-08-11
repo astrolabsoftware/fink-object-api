@@ -68,6 +68,7 @@ def check_recent_columns(columns, objectId):
                 "blazar_stats_instantness_low",
                 "blazar_stats_robustness_high",
                 "blazar_stats_robustness_low",
+                "blazar_stats_cdf_quantile",
             ]
         ]
 
@@ -162,6 +163,7 @@ def check_old_columns(columns, objectId):
                 "blazar_stats_instantness_low",
                 "blazar_stats_robustness_high",
                 "blazar_stats_robustness_low",
+                "blazar_stats_cdf_quantile",
             ]
 
             outside_obtained = [i for i in definition if i not in obtained]
