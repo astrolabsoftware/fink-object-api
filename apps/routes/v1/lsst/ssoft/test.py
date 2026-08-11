@@ -1,4 +1,4 @@
-# Copyright 2023-2024 AstroLab Software
+# Copyright 2019-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,7 +98,7 @@ def default_ssoft() -> None:
 
     assert pdf["version"].to_numpy()[0] == current_date
 
-    assert "alpha0" in pdf.columns
+    assert "H_g" in pdf.columns
 
 
 def previous_ssoft() -> None:
@@ -107,7 +107,7 @@ def previous_ssoft() -> None:
     --------
     >>> previous_ssoft()
     """
-    pdf = ssoftsearch(version="2023.07")
+    pdf = ssoftsearch(version="2026.08")
 
     assert not pdf.empty
 
@@ -118,11 +118,11 @@ def test_ids() -> None:
     --------
     >>> test_ids()
     """
-    pdf = ssoftsearch(sso_number="33803")
+    pdf = ssoftsearch(sso_number="713454")
 
     assert len(pdf) == 1
 
-    pdf = ssoftsearch(sso_name="Benoitcarry")
+    pdf = ssoftsearch(sso_name="Ukyounodaibu")
 
     assert len(pdf) == 1
 
@@ -133,9 +133,9 @@ def test_schema() -> None:
     --------
     >>> test_schema()
     """
-    pdf = ssoftsearch(flavor="SHG1G2")
+    pdf = ssoftsearch(flavor="HG")
 
-    schema = ssoftsearch(schema=True, flavor="SHG1G2", output_format="json")
+    schema = ssoftsearch(schema=True, flavor="HG", output_format="json")
 
     # check columns
     not_in_pdf = [i for i in set(schema.keys()) if i not in set(pdf.columns)]
@@ -154,10 +154,10 @@ def compare_schema() -> None:
     --------
     >>> compare_schema()
     """
-    schema1 = ssoftsearch(schema=True, flavor="SHG1G2", output_format="json")
+    schema1 = ssoftsearch(schema=True, flavor="HG", output_format="json")
 
     # get the schema
-    r = requests.get(f"{APIURL}/api/v1/ssoft?schema=True&flavor=SHG1G2")
+    r = requests.get(f"{APIURL}/api/v1/ssoft?schema=True&flavor=HG")
     schema2 = r.json()
 
     keys1 = set(schema1.keys())

@@ -202,10 +202,7 @@ def extract_object_from_class(payload: dict, return_raw: bool = False) -> pd.Dat
         elif payload.get("trend", None) == "fading":
             pdf = pdf[pdf["d:mag_rate"] > 0]
         elif payload.get("trend", None) == "new_low_state":
-            # TODO: use fink-filters directly
-            if "d:blazar_stats_m0" in pdf.columns:
-                pdf = pdf[pdf["d:blazar_stats_m0"] >= 1]
-            elif "d:blazar_stats_instantness_low" in pdf.columns:
+            if "d:blazar_stats_instantness_low" in pdf.columns:
                 pdf = pdf[pdf["d:blazar_stats_instantness_low"] >= 1]
 
     return pdf

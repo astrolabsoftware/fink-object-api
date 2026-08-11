@@ -103,7 +103,7 @@ def format_and_send_cutout(payload: dict):
 
     json_payload = {}
     # Extract only the alert of interest
-    if "candid" in payload:
+    if ("candid" in payload) and ("i:candid" in pdf.columns):
         mask = pdf["i:candid"].astype(str) == str(payload["candid"])
         json_payload.update({"candid": str(payload["candid"])})
         pos_target = np.where(mask)[0][0]

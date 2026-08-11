@@ -298,6 +298,11 @@ class Schema(Resource):
                     "doc": "Feature for characterising CTAO blazar high state. From fink_science>=8.42.0",
                 },
                 {
+                    "name": "blazar_stats_cdf_quantile",
+                    "type": "float",
+                    "doc": "Feature for characterising CTAO blazar extreme state. From fink_science>=8.53.0",
+                },
+                {
                     "name": "blazar_stats_m0",
                     "type": "float",
                     "doc": "Feature for characterising CTAO blazar state. Related to low state robustness. Only available for fink_science<8.42.0",

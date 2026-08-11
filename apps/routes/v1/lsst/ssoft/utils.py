@@ -1,4 +1,4 @@
-# Copyright 2024 AstroLab Software
+# Copyright 2019-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,17 @@ import json
 import pandas as pd
 import requests
 import yaml
+
+# FIXME: update the columns wrt fink-science
 from fink_utils.sso.ssoft import get_ssoft_columns
 from flask import Response
 from line_profiler import profile
+
+
+def get_rid_nan_inf(pdf, col):
+    """Remove problematic values"""
+    is_decimal = pdf[col].apply(lambda x: str(x).isdecimal())
+    return pdf[~pd.isna(pdf[col]) * is_decimal]
 
 
 @profile
@@ -33,7 +41,7 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     Parameters
     ----------
     payload: dict
-        See https://api.ztf.fink-portal.org
+        See https://api.lsst.fink-portal.org
 
     Return
     ----------
@@ -44,25 +52,21 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     if schema:
         if "flavor" in payload:
             COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, COLUMNS_SOCCA = (
-                get_ssoft_columns("ztf")
+                get_ssoft_columns("lsst")
             )
             flavor = payload["flavor"]
-            if flavor not in ["SOCCA", "SHG1G2", "HG1G2", "HG"]:
+            if flavor not in ["HG1G2", "HG"]:
                 rep = {
                     "status": "error",
-                    "text": "flavor needs to be in ['SOCCA', 'SHG1G2', 'HG1G2', 'HG']\n",
+                    "text": "flavor needs to be in ['HG1G2', 'HG']\n",
                 }
                 return Response(str(rep), 400)
-            elif flavor == "SOCCA":
-                ssoft_columns = {**COLUMNS, **COLUMNS_SOCCA}
-            elif flavor == "SHG1G2":
-                ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
             elif flavor == "HG1G2":
                 ssoft_columns = {**COLUMNS, **COLUMNS_HG1G2}
             elif flavor == "HG":
                 ssoft_columns = {**COLUMNS, **COLUMNS_HG}
         else:
-            ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
+            ssoft_columns = {**COLUMNS, **COLUMNS_HG}
 
         # return the schema of the table
         response = Response(json.dumps(ssoft_columns), 200)
@@ -81,10 +85,10 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
                 "text": "version needs to be YYYY.MM\n",
             }
             return Response(str(rep), 400)
-        if version < "2023.07":
+        if version < "2026.08":
             rep = {
                 "status": "error",
-                "text": "version starts on 2023.07\n",
+                "text": "version starts on 2026.08\n",
             }
             return Response(str(rep), 400)
     else:
@@ -93,14 +97,14 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
 
     if "flavor" in payload:
         flavor = payload["flavor"]
-        if flavor not in ["SOCCA", "SHG1G2", "HG1G2", "HG"]:
+        if flavor not in ["HG1G2", "HG"]:
             rep = {
                 "status": "error",
-                "text": "flavor needs to be in ['SOCCA', 'SHG1G2', 'HG1G2', 'HG']\n",
+                "text": "flavor needs to be in ['HG1G2', 'HG']\n",
             }
             return Response(str(rep), 400)
     else:
-        flavor = "SHG1G2"
+        flavor = "HG"
 
     # Need to profile compared to pyarrow
     with open("config.yml") as f:
@@ -119,14 +123,13 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
         mask = pdf["sso_name"] == pdf["sso_name"]
-        pdf = pdf[mask]
         pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
         return pdf
     elif "sso_number" in payload:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
         mask = pdf["sso_number"] == pdf["sso_number"]
-        pdf = pdf[mask]
+        pdf = get_rid_nan_inf(pdf[mask], "sso_number")
         pdf = pdf[pdf["sso_number"].astype("int") == int(payload["sso_number"])]
         return pdf
     elif payload.get("output-format", "parquet") != "parquet":
