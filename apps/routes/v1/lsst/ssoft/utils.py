@@ -30,7 +30,8 @@ from line_profiler import profile
 
 def get_rid_nan_inf(pdf, col):
     """Remove problematic values"""
-    return pdf[~pd.isnull(pdf[col])]
+    is_decimal = pdf[col].apply(lambda x: str(x).isdecimal())
+    return pdf[~pd.isnull(pdf[col]) and is_decimal]
 
 
 @profile
