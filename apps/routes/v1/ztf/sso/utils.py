@@ -244,7 +244,9 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             for filt in np.unique(pdf["i:fid"]):
                 cond = pdf["i:fid"] == filt
                 model = func_shg1g2(
-                    [phase[cond], ra[cond], dec[cond]],
+                    phase[cond],
+                    ra[cond],
+                    dec[cond],
                     outdic[f"H_{filt}"],
                     outdic[f"G1_{filt}"],
                     outdic[f"G2_{filt}"],
