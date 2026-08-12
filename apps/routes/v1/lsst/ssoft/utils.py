@@ -50,10 +50,10 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     # Schema
     schema = payload.get("schema", False)
     if schema:
+        COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, _ = get_ssoft_columns(
+            "lsst"
+        )
         if "flavor" in payload:
-            COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, COLUMNS_SOCCA = (
-                get_ssoft_columns("lsst")
-            )
             flavor = payload["flavor"]
             if flavor not in ["SHG1G2", "HG1G2", "HG"]:
                 rep = {
