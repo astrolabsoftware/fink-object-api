@@ -55,12 +55,14 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
                 get_ssoft_columns("lsst")
             )
             flavor = payload["flavor"]
-            if flavor not in ["HG1G2", "HG"]:
+            if flavor not in ["SHG1G2", "HG1G2", "HG"]:
                 rep = {
                     "status": "error",
-                    "text": "flavor needs to be in ['HG1G2', 'HG']\n",
+                    "text": "flavor needs to be in ['SHG1G2', 'HG1G2', 'HG']\n",
                 }
                 return Response(str(rep), 400)
+            elif flavor == "SHG1G2":
+                ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
             elif flavor == "HG1G2":
                 ssoft_columns = {**COLUMNS, **COLUMNS_HG1G2}
             elif flavor == "HG":
@@ -97,10 +99,10 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
 
     if "flavor" in payload:
         flavor = payload["flavor"]
-        if flavor not in ["HG1G2", "HG"]:
+        if flavor not in ["SHG1G2", "HG1G2", "HG"]:
             rep = {
                 "status": "error",
-                "text": "flavor needs to be in ['HG1G2', 'HG']\n",
+                "text": "flavor needs to be in ['SHG1G2', 'HG1G2', 'HG']\n",
             }
             return Response(str(rep), 400)
     else:
