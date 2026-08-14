@@ -138,23 +138,64 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     if pdf.empty:
         return pdf
 
+    # Default filter by time is `within`
+    kind = payload.get("kind", "within")
+    if kind not in ["within", "across"]:
+        rep = {
+            "status": "error",
+            "text": "kind must be one of: within, across. See https://doc.lsst.fink-broker.org/services/api/conesearch/ for more information.\n",
+        }
+        return Response(str(rep), 400)
+
     # Filter by time
-    # FIXME: does not work yet as firstDiaSourceMjdTai is not populated
-    if "startdate" in payload:
-        # Filter out alerts that vary in the past
-        mjd_start = Time(isoify_time(payload["startdate"]), scale="tai").mjd
-        pdf = pdf[pdf["f:firstDiaSourceMjdTaiFink"] >= mjd_start]
-
+    if (
+        ("startdate" in payload)
+        and ("stopdate" not in payload)
+        and ("window" not in payload)
+    ):
+        # startdate only
+        startdate = Time(isoify_time(payload["startdate"]), scale="tai").tai.mjd
+        if kind == "within":
+            # first point after startdate
+            cond = pdf["f:firstDiaSourceMjdTaiFink"] >= startdate
+        elif kind == "across":
+            # last point after startdate
+            cond = pdf["r:midpointMjdTai"] >= startdate
+        pdf = pdf[cond]
+    elif ("startdate" not in payload) and ("stopdate" in payload):
+        # stopdate only
+        stopdate = Time(isoify_time(payload["stopdate"]), scale="tai").tai.mjd
+        if kind == "within":
+            # last point before stopdate
+            cond = pdf["r:midpointMjdTai"] <= stopdate
+        elif kind == "across":
+            # first point before stopdate
+            cond = pdf["f:firstDiaSourceMjdTaiFink"] <= stopdate
+        pdf = pdf[cond]
+    elif ("startdate" in payload) and (
+        ("stopdate" in payload) or ("window" in payload)
+    ):
+        # both boundaries
+        startdate = Time(isoify_time(payload["startdate"]), scale="tai").tai.mjd
         if "window" in payload:
-            # Also filter out alerts that vary in the future
-            window = float(payload["window"])
-            mjd_stop = mjd_start + window
-            pdf = pdf[pdf["r:midpointMjdTai"] <= mjd_stop]
+            stopdate = startdate + float(payload["window"])
+        else:
+            stopdate = Time(isoify_time(payload["stopdate"]), scale="tai").tai.mjd
 
-    if "stopdate" in payload:
-        # Filter out alerts that vary in the future
-        mjd_stop = Time(isoify_time(payload["stopdate"]), scale="tai").mjd
-        pdf = pdf[pdf["r:midpointMjdTai"] <= mjd_stop]
+        if kind == "within":
+            # Completely contained
+            c0 = pdf["f:firstDiaSourceMjdTaiFink"] >= startdate
+            c1 = pdf["r:midpointMjdTai"] <= stopdate
+            cond = c0 * c1
+        elif kind == "across":
+            c0 = pdf["f:firstDiaSourceMjdTaiFink"] <= startdate
+            c1 = pdf["r:midpointMjdTai"] >= startdate
+            c2 = pdf["f:firstDiaSourceMjdTaiFink"] >= startdate
+            c3 = pdf["f:firstDiaSourceMjdTaiFink"] <= stopdate
+            # Started before startdate and ended after startdate OR
+            # Started in between startdate and stopdate
+            cond = (c0 & c1) | (c2 & c3)
+        pdf = pdf[cond]
 
     # For conesearch, sort by distance
     if len(pdf) > 0:

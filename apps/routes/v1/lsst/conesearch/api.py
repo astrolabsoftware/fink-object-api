@@ -56,7 +56,7 @@ ARGS = ns.model(
             required=False,
         ),
         "kind": fields.String(
-            description="When filtering by time, you can choose to filter alerts that had their first emission within those dates (within), or that appeared during those dates irrespective of their first variation time (across). Default is `within`",
+            description="When filtering by time, you can choose to filter objects that had their first and last emission strictly within those dates (within), or objects that appeared during those dates irrespective of their first and last variation time (across). Default is `within` (stricter). See https://doc.lsst.fink-broker.org/services/api/conesearch/ for more information.",
             example="within",
             required=False,
         ),
