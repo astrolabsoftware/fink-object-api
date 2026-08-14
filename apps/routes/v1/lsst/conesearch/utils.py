@@ -148,7 +148,11 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
         return Response(str(rep), 400)
 
     # Filter by time
-    if ("startdate" in payload) and ("stopdate" not in payload):
+    if (
+        ("startdate" in payload)
+        and ("stopdate" not in payload)
+        and ("window" not in payload)
+    ):
         # startdate only
         startdate = Time(isoify_time(payload["startdate"]), scale="tai").tai.mjd
         if kind == "within":

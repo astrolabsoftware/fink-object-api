@@ -34,6 +34,7 @@ def conesearch(
     startdate=None,
     stopdate=None,
     window=None,
+    kind=None,
     columns=None,
     output_format="json",
 ):
@@ -48,6 +49,8 @@ def conesearch(
         payload.update({"stopdate": stopdate})
     if columns is not None:
         payload.update({"columns": columns})
+    if kind is not None:
+        payload.update({"kind": kind})
 
     r = requests.post(f"{APIURL}/api/v1/conesearch", json=payload)
 
@@ -91,11 +94,11 @@ def test_simple_conesearch() -> None:
     assert sep <= radius, sep
 
 
-def test_conesearch_with_dates() -> None:
+def test_conesearch_with_dates_within() -> None:
     """
     Examples
     --------
-    >>> test_conesearch_with_dates()
+    >>> test_conesearch_with_dates_within()
     """
     # within 10'', two objects
     pdf1 = conesearch(
@@ -106,20 +109,26 @@ def test_conesearch_with_dates() -> None:
     pdf2 = conesearch(
         startdate="2026-01-10 10:00:00",
         radius=10.0,
+        kind="within",
+    )
+
+    # Check kind is the default
+    pdf2b = conesearch(
+        startdate="2026-01-10 10:00:00",
+        radius=10.0,
     )
 
     # Filtering both ends
     pdf3 = conesearch(
         startdate="2026-01-07 10:00:00",
-        window="2",
+        stopdate="2026-01-09 10:00:00",
         radius=10.0,
+        kind="within",
     )
 
     # same with window
     pdf4 = conesearch(
-        startdate="2026-01-07 10:00:00",
-        stopdate="2026-01-09 10:00:00",
-        radius=10.0,
+        startdate="2026-01-07 10:00:00", window="2", radius=10.0, kind="within"
     )
 
     # object(s) found
@@ -129,6 +138,7 @@ def test_conesearch_with_dates() -> None:
     assert len(pdf4) == 1, len(pdf4)
     assert not pdf2.equals(pdf3)
     assert pdf3.equals(pdf4)
+    assert pdf2.equals(pdf2b)
 
 
 def test_bad_radius_conesearch() -> None:
