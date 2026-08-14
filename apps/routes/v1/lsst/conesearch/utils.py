@@ -167,6 +167,7 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
         elif kind == "across":
             # first point before stopdate
             cond = pdf["f:firstDiaSourceMjdTaiFink"] <= stopdate
+        pdf = pdf[cond]
     elif ("startdate" in payload) and (
         ("stopdate" in payload) or ("window" in payload)
     ):
