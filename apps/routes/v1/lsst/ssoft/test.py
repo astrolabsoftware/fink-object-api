@@ -118,11 +118,15 @@ def test_ids() -> None:
     --------
     >>> test_ids()
     """
-    pdf = ssoftsearch(sso_number="713454")
+    pdf = ssoftsearch(sso_number="106064")
+
+    assert len(pdf) == 1, pdf
+
+    pdf = ssoftsearch(sso_name="Sumatijain")
 
     assert len(pdf) == 1
 
-    pdf = ssoftsearch(sso_name="Ukyounodaibu")
+    pdf = ssoftsearch(sso_name="2014 WR176")
 
     assert len(pdf) == 1
 
@@ -146,6 +150,10 @@ def test_schema() -> None:
 
     msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema)} entries in the schema."
     assert set(schema.keys()) == set(pdf.columns), msg
+
+    # Check if no flavor, returns HG
+    schema_default = ssoftsearch(schema=True, output_format="json")
+    assert schema.equals(schema_default)
 
 
 def compare_schema() -> None:
