@@ -131,14 +131,77 @@ def test_conesearch_with_dates_within() -> None:
         startdate="2026-01-07 10:00:00", window="2", radius=10.0, kind="within"
     )
 
+    # Filtering by end
+    pdf5 = conesearch(
+        stopdate="2026-01-09 10:00:00",
+        radius=10.0,
+        kind="within",
+    )
+
     # object(s) found
     assert len(pdf1) == 2, len(pdf1)
     assert len(pdf2) == 1, len(pdf2)
     assert len(pdf3) == 1, len(pdf3)
     assert len(pdf4) == 1, len(pdf4)
+    assert len(pdf5) == 1, len(pdf5)
     assert not pdf2.equals(pdf3)
     assert pdf3.equals(pdf4)
     assert pdf2.equals(pdf2b)
+
+
+def test_conesearch_with_dates_across() -> None:
+    """
+    Examples
+    --------
+    >>> test_conesearch_with_dates_across()
+    """
+    # within 10'', two objects
+    pdf1 = conesearch(
+        radius=10.0,
+    )
+
+    # Filtering the date leaves one object
+    pdf2 = conesearch(
+        startdate="2026-01-17 10:00:00",
+        radius=10.0,
+        kind="across",
+    )
+
+    # Check kind=within is the default
+    pdf2b = conesearch(
+        startdate="2026-01-17 10:00:00",
+        radius=10.0,
+    )
+
+    # Filtering both ends
+    pdf3 = conesearch(
+        startdate="2026-01-07 10:00:00",
+        stopdate="2026-01-17 10:00:00",
+        radius=10.0,
+        kind="across",
+    )
+
+    # same with window
+    pdf4 = conesearch(
+        startdate="2026-01-07 10:00:00", window="10", radius=10.0, kind="across"
+    )
+
+    # Filtering by end
+    pdf5 = conesearch(
+        stopdate="2026-01-09 10:00:00",
+        radius=10.0,
+        kind="across",
+    )
+
+    # object(s) found
+    assert len(pdf1) == 2, len(pdf1)
+    assert len(pdf2) == 1, len(pdf2)
+    assert len(pdf3) == 2, len(pdf3)
+    assert len(pdf4) == 2, len(pdf4)
+    assert len(pdf5) == 1, len(pdf5)
+    assert not pdf2.equals(pdf3)
+    assert pdf3.equals(pdf4)
+    assert not pdf2.equals(pdf2b)
 
 
 def test_bad_radius_conesearch() -> None:
@@ -199,6 +262,31 @@ def test_bad_dates() -> None:
     msg = {
         "status": "error",
         "text": "You need to specify f:firstDiaSourceMjdTaiFink in the columns to filter on dates.\n",
+    }
+    assert r.text == str(msg), r.text
+
+
+def test_bad_kind() -> None:
+    """
+    Examples
+    --------
+    >>> test_bad_kind()
+    """
+    payload = {
+        "ra": RA0,
+        "dec": DEC0,
+        "radius": 10,
+        "startdate": "2026-01-10 10:00:00",
+        "kind": "toto",
+        "columns": "r:diaObjectId,f:firstDiaSourceMjdTaiFink",
+        "output_format": "json",
+    }
+
+    r = requests.post(f"{APIURL}/api/v1/conesearch", json=payload)
+
+    msg = {
+        "status": "error",
+        "text": "kind must be one of: within, across. See https://doc.lsst.fink-broker.org/services/api/conesearch/ for more information.\n",
     }
     assert r.text == str(msg), r.text
 
