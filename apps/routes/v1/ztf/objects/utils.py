@@ -1,4 +1,4 @@
-# Copyright 2024 AstroLab Software
+# Copyright 2024-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +88,11 @@ def extract_object_data(payload: dict) -> pd.DataFrame:
         truncated=truncated,
     )
 
-    if withcutouts:
+    if withcutouts and not pdf.empty:
+        # `pdf` is empty (and column-less) when the object has no archived
+        # alerts. Skip the cutout block in that case and return the same empty
+        # result as the plain query, rather than raising a KeyError. See #193.
+
         # Default `None` returns all 3 cutouts
         cutout_kind = payload.get("cutout-kind", "All")
 
