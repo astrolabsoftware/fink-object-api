@@ -1,4 +1,4 @@
-# Copyright 2022-2024 AstroLab Software
+# Copyright 2022-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,10 @@ APIURL = sys.argv[1]
 
 # Implement random name generator
 OID = "ZTF21abfmbix"
+
+# Object with zero archived alerts in the Fink/ZTF database (predates the
+# Nov 2019 archive). Used to check the empty-result path. See #193.
+OID_NO_ALERTS = "ZTF18aahqavd"
 
 
 def get_an_object(
@@ -214,6 +218,30 @@ def test_multiple_objects() -> None:
 
     assert n_oids == n_oids_single, f"{n_oids} is not equal to {n_oids_single}"
     assert len_object == len(pdf), f"{len_object} is not equal to {len(pdf)}"
+
+
+def test_empty_object() -> None:
+    """
+    Examples
+    --------
+    >>> test_empty_object()
+    """
+    pdf = get_an_object(oid=OID_NO_ALERTS)
+
+    assert pdf.empty
+
+
+def test_empty_object_with_cutouts() -> None:
+    """Requesting cutouts for an object with no archived alerts must return
+    the same empty result as the plain query (200), not a 500. See #193.
+
+    Examples
+    --------
+    >>> test_empty_object_with_cutouts()
+    """
+    pdf = get_an_object(oid=OID_NO_ALERTS, withcutouts=True, cutout_kind="Science")
+
+    assert pdf.empty
 
 
 if __name__ == "__main__":

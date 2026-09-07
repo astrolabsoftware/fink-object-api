@@ -1,4 +1,4 @@
-# Copyright 2022-2024 AstroLab Software
+# Copyright 2022-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -184,6 +184,25 @@ def test_candid_cutout() -> None:
     data2 = cutouttest(candid="1622215345315015012")
 
     assert data1.getextrema() != data2.getextrema()
+
+
+def test_empty_object_cutout() -> None:
+    """A cutout request for an object with no archived alerts must return an
+    empty result with status 200, not a 500. See #193.
+
+    Examples
+    --------
+    >>> test_empty_object_cutout()
+    """
+    # Object with zero archived alerts in the Fink/ZTF database.
+    payload = {
+        "objectId": "ZTF18aahqavd",
+        "kind": "Science",
+        "output-format": "array",
+    }
+    r = requests.post(f"{APIURL}/api/v1/cutouts", json=payload)
+
+    assert r.status_code == 200, r.content
 
 
 if __name__ == "__main__":
