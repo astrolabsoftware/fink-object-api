@@ -31,6 +31,7 @@ from apps.routes.v1.lsst.schema.api import ns as ns_schema
 from apps.routes.v1.lsst.skymap.api import ns as ns_skymap
 from apps.routes.v1.lsst.sources.api import ns as ns_sources
 from apps.routes.v1.lsst.sso.api import ns as ns_sso
+from apps.routes.v1.lsst.ssobulk.api import ns as ns_ssobulk
 from apps.routes.v1.lsst.statistics.api import ns as ns_stats
 from apps.routes.v1.lsst.tags.api import ns as ns_tags
 from apps.routes.v1.lsst.ssoft.api import ns as ns_ssoft
@@ -88,6 +89,7 @@ api.add_namespace(ns_conesearch)
 api.add_namespace(ns_cutouts)
 api.add_namespace(ns_schema)
 api.add_namespace(ns_sso)
+api.add_namespace(ns_ssobulk)
 api.add_namespace(ns_ssoft)
 api.add_namespace(ns_resolver)
 api.add_namespace(ns_skymap)
