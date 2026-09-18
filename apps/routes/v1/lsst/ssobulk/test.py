@@ -29,7 +29,7 @@ def ssobulk(
     output_format="parquet",
 ):
     """Perform a sso bulk download using the Fink REST API"""
-    payload = {"output-format": output_format}
+    payload = {}
 
     if version is not None:
         payload.update(
