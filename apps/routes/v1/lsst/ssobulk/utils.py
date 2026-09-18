@@ -70,6 +70,12 @@ def get_lc(payload: dict) -> pd.DataFrame:
         ),
     )
 
+    if "sso_name" in payload:
+        # TODO: use pyarrow or polar instead
+        pdf = pd.read_parquet(io.BytesIO(r.content))
+        pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
+        return pdf
+
     if payload.get("output-format", "parquet") != "parquet":
         # Full table in other format than parquet (slow)
         return pd.read_parquet(io.BytesIO(r.content))
