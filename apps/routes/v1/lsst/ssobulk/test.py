@@ -66,6 +66,7 @@ def ssobulk(
 
     return pdf
 
+
 def test_ids() -> None:
     """
     Examples

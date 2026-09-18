@@ -15,7 +15,7 @@
 import io
 import polars as pl
 import datetime
-import pandas as pd
+import json
 import requests
 import yaml
 from flask import Response
@@ -23,7 +23,7 @@ from line_profiler import profile
 
 
 @profile
-def get_lc(payload: dict) -> pd.DataFrame:
+def get_lc(payload: dict) -> pl.DataFrame:
     """Send the Fink Flat Table
 
     Data is from /api/v1/ssobulk
@@ -37,6 +37,91 @@ def get_lc(payload: dict) -> pd.DataFrame:
     ----------
     out: pandas dataframe
     """
+    # Schema
+    schema = payload.get("schema", False)
+    if schema:
+        SCHEMA = {
+            "ssnamenr": {
+                "type": "str",
+                "description": "Official name or provisional designation of the SSO",
+            },
+            "cra": {"type": "list", "description": "List of RA in degree"},
+            "cdec": {"type": "list", "description": "List of DEC in degree"},
+            "cmagpsf": {"type": "list", "description": "List of difference magnitudes"},
+            "csigmapsf": {
+                "type": "list",
+                "description": "List of difference magnitude error estimates",
+            },
+            "cfid": {
+                "type": "list",
+                "description": "List of filter band ID: 1 = g, 2 = r",
+            },
+            "cjd": {
+                "type": "list",
+                "description": "List of observing times in JD (UTC)",
+            },
+            "Dobs": {
+                "type": "list",
+                "description": "List of topocentric distances in AU",
+            },
+            "Dhelio": {
+                "type": "list",
+                "description": "List of heliocentric distances in AU",
+            },
+            "Phase": {
+                "type": "list",
+                "description": "List of phase angles in degree",
+            },
+            "Elong": {
+                "type": "list",
+                "description": "List of elongation angles in degree",
+            },
+            "RA": {
+                "type": "list",
+                "description": "List of RA ephemerides in degree",
+            },
+            "DEC": {
+                "type": "list",
+                "description": "List of DEC ephemerides in degree",
+            },
+            "RA_h": {
+                "type": "list",
+                "description": "List of Sun RA ephemerides in degree",
+            },
+            "DEC_h": {
+                "type": "list",
+                "description": "List of Sun DEC ephemerides in degree",
+            },
+            "px_ec": {
+                "type": "list",
+                "description": "List of x-coordinates of asteroids in topocentric in AU",
+            },
+            "py_ec": {
+                "type": "list",
+                "description": "List of y-coordinates of asteroids in topocentric in AU",
+            },
+            "pz_ec": {
+                "type": "list",
+                "description": "List of z-coordinates of asteroids in topocentric in AU",
+            },
+            "px_h_ec": {
+                "type": "list",
+                "description": "List of x-coordinates of asteroids in heliocentric in AU",
+            },
+            "py_h_ec": {
+                "type": "list",
+                "description": "List of y-coordinates of asteroids in heliocentric in AU",
+            },
+            "pz_h_ec": {
+                "type": "list",
+                "description": "List of z-coordinates of asteroids in heliocentric in AU",
+            },
+        }
+        # return the schema of the table
+        response = Response(json.dumps(SCHEMA), 200)
+        response.headers.set("Content-Type", "application/json")
+        return response
+
     # Need to profile compared to pyarrow
     with open("config.yml") as f:
         input_args = yaml.load(f, yaml.Loader)

@@ -15,7 +15,6 @@
 import io
 import json
 import datetime
-import pandas as pd
 import polars as pl
 import requests
 import yaml
@@ -24,7 +23,7 @@ from line_profiler import profile
 
 
 @profile
-def get_lc(payload: dict) -> pd.DataFrame:
+def get_lc(payload: dict) -> pl.DataFrame:
     """Send the Fink Flat Table
 
     Data is from /api/v1/ssobulk
