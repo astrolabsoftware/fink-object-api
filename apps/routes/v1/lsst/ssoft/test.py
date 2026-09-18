@@ -28,6 +28,7 @@ def ssoftsearch(
     sso_number=None,
     sso_name=None,
     schema=None,
+    columns=None,
     output_format="parquet",
 ):
     """Perform a sso search in the Science Portal using the Fink REST API"""
@@ -65,6 +66,13 @@ def ssoftsearch(
         payload.update(
             {
                 "schema": True,
+            }
+        )
+
+    if columns is not None:
+        payload.update(
+            {
+                "columns": True,
             }
         )
 
@@ -110,6 +118,21 @@ def previous_ssoft() -> None:
     pdf = ssoftsearch(version="2026.08")
 
     assert not pdf.empty
+
+
+def test_columns() -> None:
+    """
+    Examples
+    --------
+    >>> test_columns()
+    """
+    pdf = ssoftsearch(columns="sso_name", flavor="HG")
+
+    assert len(pdf.columns) == 1, pdf.columns
+
+    pdf = ssoftsearch(columns="sso_name,H_g,toto", flavor="HG")
+
+    assert len(pdf.columns) == 1, pdf.columns
 
 
 def test_ids() -> None:

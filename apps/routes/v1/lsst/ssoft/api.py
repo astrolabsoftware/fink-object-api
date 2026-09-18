@@ -49,6 +49,11 @@ ARGS = ns.model(
             example="2026.08",
             required=False,
         ),
+        "columns": fields.String(
+            description="Comma-separated data columns to transfer, e.g. 'sso_name,H_g,chi2red'. If not specified, transfer all columns. See `schema` argument for the list of all available columns.",
+            example="sso_name,H_g,chi2red",
+            required=False,
+        ),
         "output-format": fields.String(
             description="Output format among json, csv, parquet[default], votable.",
             example="parquet",

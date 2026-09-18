@@ -32,6 +32,43 @@ def get_rid_nan_inf(pdf, col):
     return pdf[~pd.isna(pdf[col]) * is_decimal]
 
 
+def get_schema(payload):
+    """Wrapper to get columns given a flavor"""
+    COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, _ = get_ssoft_columns("lsst")
+    if "flavor" in payload:
+        flavor = payload["flavor"]
+        if flavor not in ["SHG1G2", "HG1G2", "HG"]:
+            rep = {
+                "status": "error",
+                "text": "flavor needs to be in ['SHG1G2', 'HG1G2', 'HG']\n",
+            }
+            return Response(str(rep), 400)
+        elif flavor == "SHG1G2":
+            ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
+        elif flavor == "HG1G2":
+            ssoft_columns = {**COLUMNS, **COLUMNS_HG1G2}
+        elif flavor == "HG":
+            ssoft_columns = {**COLUMNS, **COLUMNS_HG}
+    else:
+        ssoft_columns = {**COLUMNS, **COLUMNS_HG}
+
+    return ssoft_columns
+
+
+def get_user_columns(payload):
+    columns = payload.get("columns", None)
+    if columns is None:
+        return None
+
+    ssoft_columns = get_schema(payload)
+    to_return = []
+    [to_return.append(column) for column in columns if column in ssoft_columns.keys()]
+
+    if to_return == []:
+        return None
+    return to_return
+
+
 @profile
 def get_ssoft(payload: dict) -> pd.DataFrame:
     """Send the Fink Flat Table
@@ -50,26 +87,10 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     # Schema
     schema = payload.get("schema", False)
     if schema:
-        COLUMNS, COLUMNS_HG, COLUMNS_HG1G2, COLUMNS_SHG1G2, _ = get_ssoft_columns(
-            "lsst"
-        )
-        if "flavor" in payload:
-            flavor = payload["flavor"]
-            if flavor not in ["SHG1G2", "HG1G2", "HG"]:
-                rep = {
-                    "status": "error",
-                    "text": "flavor needs to be in ['SHG1G2', 'HG1G2', 'HG']\n",
-                }
-                return Response(str(rep), 400)
-            elif flavor == "SHG1G2":
-                ssoft_columns = {**COLUMNS, **COLUMNS_SHG1G2}
-            elif flavor == "HG1G2":
-                ssoft_columns = {**COLUMNS, **COLUMNS_HG1G2}
-            elif flavor == "HG":
-                ssoft_columns = {**COLUMNS, **COLUMNS_HG}
-        else:
-            ssoft_columns = {**COLUMNS, **COLUMNS_HG}
-
+        ssoft_columns = get_schema(payload)
+        if isinstance(ssoft_columns, Response):
+            # Error propagation
+            return ssoft_columns
         # return the schema of the table
         response = Response(json.dumps(ssoft_columns), 200)
         response.headers.set("Content-Type", "application/json")
@@ -121,24 +142,27 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
         ),
     )
 
+    columns = get_user_columns(payload)
     if "sso_name" in payload:
         # TODO: use pyarrow instead
-        pdf = pd.read_parquet(io.BytesIO(r.content))
+        pdf = pd.read_parquet(io.BytesIO(r.content), columns=columns)
         pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
         return pdf
     elif "sso_number" in payload:
         # TODO: use pyarrow instead
-        pdf = pd.read_parquet(io.BytesIO(r.content))
+        pdf = pd.read_parquet(io.BytesIO(r.content), columns=columns)
         mask = pdf["sso_number"] == pdf["sso_number"]
         pdf = get_rid_nan_inf(pdf[mask], "sso_number")
         pdf = pdf[pdf["sso_number"].astype("int") == int(payload["sso_number"])]
         return pdf
     elif payload.get("output-format", "parquet") != "parquet":
         # Full table in other format than parquet (slow)
-        return pd.read_parquet(io.BytesIO(r.content))
+        return pd.read_parquet(io.BytesIO(r.content), columns=columns)
     else:
-        # Full table in parquet (fast)
-        # return the schema of the table
-        response = Response(io.BytesIO(r.content), 200)
-        response.headers.set("Content-Type", "application/parquet")
-        return response
+        if columns is not None:
+            return pd.read_parquet(io.BytesIO(r.content), columns=columns)
+        else:
+            # Full table in parquet (fast)
+            response = Response(io.BytesIO(r.content), 200)
+            response.headers.set("Content-Type", "application/parquet")
+            return response
