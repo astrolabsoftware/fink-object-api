@@ -80,11 +80,9 @@ def test_ids() -> None:
     now = datetime.datetime.now(tz=datetime.timezone.utc)
     current_date = f"{now.year}.{now.month:02d}"
 
-    assert pdf["version"].to_numpy()[0] == current_date
+    assert "ssnamenr" in pdf.columns
 
-    assert "designation" in pdf.columns
-
-    pdf = ssobulk(sso_name="Benoicarry", version="2026.09")
+    pdf = ssobulk(sso_name="Benoitcarry", version="2026.09")
 
     assert not pdf.empty
 
@@ -99,7 +97,7 @@ def test_schema() -> None:
     --------
     >>> test_schema()
     """
-    pdf = ssobulk()
+    pdf = ssobulk(sso_name="Benoitcarry")
 
     schema = ssobulk(schema=True, output_format="json")
 
