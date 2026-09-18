@@ -77,9 +77,9 @@ def get_lc(payload: dict) -> pd.DataFrame:
 
     # TODO: replace with polars
     pdf = pd.DataFrame()
-    for dic in r.json()['FileStatuses']['FileStatus']:
-        filename = dic['pathSuffix']
-        if filename.endswith('.parquet'):
+    for dic in r.json()["FileStatuses"]["FileStatus"]:
+        filename = dic["pathSuffix"]
+        if filename.endswith(".parquet"):
             r0 = requests.get(
                 "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
                     input_args["WEBHDFS"],
@@ -89,11 +89,13 @@ def get_lc(payload: dict) -> pd.DataFrame:
                     input_args["NAMENODE"],
                 ),
             )
-            pdf = pd.concat((pdf, pd.read_parquet(io.BytesIO(r0.content))))
-
-    if "sso_name" in payload:
-        # TODO: use pyarrow or polar instead
-        pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
+            sub = pd.read_parquet(io.BytesIO(r0.content))
+            if "sso_name" in payload:
+                is_there = sub["sso_name"].astype("str") == payload["sso_name"]
+                if is_there.sum() > 0:
+                    return sub[is_there]
+            else:
+                pdf = pd.concat((pdf, sub))
 
     return pdf
 
