@@ -1,4 +1,4 @@
-# Copyright 2024 AstroLab Software
+# Copyright 2024-2026 AstroLab Software
 # Author: Julien Peloton
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -101,6 +101,17 @@ def format_and_send_cutout(payload: dict):
         escape_slash=False,
     )
 
+    if pdf.empty:
+        # `pdf` is empty (and column-less) when the object has no archived
+        # alerts. Return an empty response here, before any column access
+        # below raises a KeyError. See #193.
+        return send_file(
+            io.BytesIO(),
+            mimetype="image/png",
+            as_attachment=True,
+            download_name=filename,
+        )
+
     json_payload = {}
     # Extract only the alert of interest
     if ("candid" in payload) and ("i:candid" in pdf.columns):
@@ -119,14 +130,6 @@ def format_and_send_cutout(payload: dict):
             "objectId": pdf["i:objectId"].to_numpy()[pos_target],
         }
     )
-
-    if pdf.empty:
-        return send_file(
-            io.BytesIO(),
-            mimetype="image/png",
-            as_attachment=True,
-            download_name=filename,
-        )
 
     # Extract cutouts
     user_config = extract_configuration("config.yml")
