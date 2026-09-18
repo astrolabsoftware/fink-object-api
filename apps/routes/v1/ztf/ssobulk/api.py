@@ -24,6 +24,21 @@ ns = Namespace("api/v1/ssobulk", "Get all Fink/ZTF SSO lightcurves in once")
 ARGS = ns.model(
     "ssobulk",
     {
+        "sso_name": fields.String(
+            description="If specified, retrieve only the SSO with that official name or provisional designation from IAU.",
+            example="Benoitcarry",
+            required=False,
+        ),
+        "schema": fields.Boolean(
+            description="If True, return the schema of the table in json format.",
+            example=False,
+            required=False,
+        ),
+        "version": fields.String(
+            description="Version of the file YYYY.MM. By default it uses the current month one. Starts at 2026.08",
+            example="2026.08",
+            required=False,
+        ),
         "output-format": fields.String(
             description="Output format among json, csv, parquet[default], votable.",
             example="parquet",
