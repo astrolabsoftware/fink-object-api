@@ -61,8 +61,9 @@ def get_lc(payload: dict) -> pd.DataFrame:
         now = datetime.datetime.now(tz=datetime.timezone.utc)
         version = f"{now.year}.{now.month:02d}"
 
+    # Get file list
     r = requests.get(
-        "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet/agg.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+        "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet?op=LISTSTATUS&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],
             version,
             input_args["USER"],
@@ -70,18 +71,39 @@ def get_lc(payload: dict) -> pd.DataFrame:
         ),
     )
 
+    if r.status_code != 200:
+        response = Response(r.text, r.status_code)
+        return response
+
+    # TODO: replace with polars
+    pdf = pd.DataFrame()
+    for dic in r.json()['FileStatuses']['FileStatus']:
+        filename = dic['pathSuffix']
+        if filename.endswith('.parquet'):
+            r0 = requests.get(
+                "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+                    input_args["WEBHDFS"],
+                    version,
+                    filename,
+                    input_args["USER"],
+                    input_args["NAMENODE"],
+                ),
+            )
+            pdf = pd.concat((pdf, pd.read_parquet(io.BytesIO(r0.content))))
+
     if "sso_name" in payload:
         # TODO: use pyarrow or polar instead
-        pdf = pd.read_parquet(io.BytesIO(r.content))
         pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
-        return pdf
 
-    if payload.get("output-format", "parquet") != "parquet":
-        # Full table in other format than parquet (slow)
-        return pd.read_parquet(io.BytesIO(r.content))
-    else:
-        # Full table in parquet (fast)
-        # return the schema of the table
-        response = Response(io.BytesIO(r.content), 200)
-        response.headers.set("Content-Type", "application/parquet")
-        return response
+    return pdf
+
+    # Need to find a way to not decode in pandas
+    # if payload.get("output-format", "parquet") != "parquet":
+    #     # Full table in other format than parquet (slow)
+    #     return pd.read_parquet(io.BytesIO(r.content))
+    # else:
+    #     # Full table in parquet (fast)
+    #     # return the schema of the table
+    #     response = Response(io.BytesIO(r.content), 200)
+    #     response.headers.set("Content-Type", "application/parquet")
+    #     return response
