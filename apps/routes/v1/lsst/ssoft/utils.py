@@ -62,7 +62,11 @@ def get_user_columns(payload):
 
     ssoft_columns = get_schema(payload)
     to_return = []
-    [to_return.append(column) for column in columns if column in ssoft_columns.keys()]
+    [
+        to_return.append(column)
+        for column in columns.split(",")
+        if column in ssoft_columns.keys()
+    ]
 
     if to_return == []:
         return None
