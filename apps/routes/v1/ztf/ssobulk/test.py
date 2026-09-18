@@ -12,7 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import datetime
 import io
 import sys
 
@@ -76,9 +75,6 @@ def test_ids() -> None:
     pdf = ssobulk(sso_name="Benoitcarry")
 
     assert len(pdf) == 1, pdf
-
-    now = datetime.datetime.now(tz=datetime.timezone.utc)
-    current_date = f"{now.year}.{now.month:02d}"
 
     assert "ssnamenr" in pdf.columns
 
