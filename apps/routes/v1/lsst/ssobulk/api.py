@@ -15,9 +15,10 @@
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 from pandas import DataFrame
+import polars as pl
 
 from apps.routes.v1.lsst.ssobulk.utils import get_lc
-from apps.utils.utils import check_args, send_tabular_data
+from apps.utils.utils import check_args, send_tabular_data, send_polars_data
 
 ns = Namespace("api/v1/ssobulk", "Get all Fink/LSST SSO lightcurves in once")
 
@@ -84,6 +85,11 @@ class Ssobulk(Resource):
         if isinstance(out, DataFrame):
             output_format = payload.get("output-format", "json")
             return send_tabular_data(out, output_format)
+
+        # Return a record
+        if isinstance(out, pl.DataFrame):
+            output_format = payload.get("output-format", "json")
+            return send_polars_data(out, output_format)
 
         # return the full table as binary
         return out

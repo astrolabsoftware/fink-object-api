@@ -67,15 +67,15 @@ def ssobulk(
     return pdf
 
 
-def default_ssobulk() -> None:
+def test_ids() -> None:
     """
     Examples
     --------
-    >>> default_ssobulk()
+    >>> test_ids()
     """
-    pdf = ssobulk()
+    pdf = ssobulk(sso_name="Benoitcarry")
 
-    assert not pdf.empty
+    assert len(pdf) == 1, pdf
 
     now = datetime.datetime.now(tz=datetime.timezone.utc)
     current_date = f"{now.year}.{now.month:02d}"
@@ -84,27 +84,9 @@ def default_ssobulk() -> None:
 
     assert "designation" in pdf.columns
 
-
-def previous_ssobulk() -> None:
-    """
-    Examples
-    --------
-    >>> previous_ssobulk()
-    """
-    pdf = ssobulk(version="2026.09")
+    pdf = ssobulk(sso_name="Benoicarry", version="2026.09")
 
     assert not pdf.empty
-
-
-def test_ids() -> None:
-    """
-    Examples
-    --------
-    >>> test_ids()
-    """
-    pdf = ssobulk(sso_name="2007 YG85")
-
-    assert len(pdf) == 1, pdf
 
     pdf = ssobulk(sso_name="totocaca")
 

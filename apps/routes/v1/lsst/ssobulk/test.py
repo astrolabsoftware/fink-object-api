@@ -66,36 +66,6 @@ def ssobulk(
 
     return pdf
 
-
-def default_ssobulk() -> None:
-    """
-    Examples
-    --------
-    >>> default_ssobulk()
-    """
-    pdf = ssobulk()
-
-    assert not pdf.empty
-
-    now = datetime.datetime.now(tz=datetime.timezone.utc)
-    current_date = f"{now.year}.{now.month:02d}"
-
-    assert pdf["version"].to_numpy()[0] == current_date
-
-    assert "designation" in pdf.columns
-
-
-def previous_ssobulk() -> None:
-    """
-    Examples
-    --------
-    >>> previous_ssobulk()
-    """
-    pdf = ssobulk(version="2026.08")
-
-    assert not pdf.empty
-
-
 def test_ids() -> None:
     """
     Examples
@@ -105,6 +75,17 @@ def test_ids() -> None:
     pdf = ssobulk(sso_name="2007 YG85")
 
     assert len(pdf) == 1, pdf
+
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    current_date = f"{now.year}.{now.month:02d}"
+
+    assert pdf["version"].to_numpy()[0] == current_date
+
+    assert "designation" in pdf.columns
+
+    pdf = ssobulk(sso_name="2007 YG85", version="2026.08")
+
+    assert not pdf.empty
 
     pdf = ssobulk(sso_name="totocaca")
 
@@ -117,7 +98,7 @@ def test_schema() -> None:
     --------
     >>> test_schema()
     """
-    pdf = ssobulk()
+    pdf = ssobulk(sso_name="2007 YG85")
 
     schema = ssobulk(schema=True, output_format="json")
 

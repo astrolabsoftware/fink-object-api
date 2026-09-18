@@ -96,6 +96,41 @@ def check_args(args: list, payload: dict) -> dict:
     return {"status": "ok"}
 
 
+def send_polars_data(pdf, output_format):
+    """Send polar data over HTTP
+
+    Parameters
+    ----------
+    pdf: pl.DataFrame
+        Polars DataFrame with data to be sent
+    output_format: str
+        Output format: json, csv, votable, parquet.
+
+    Notes
+    -----
+    Only parquet is supported for the moment
+
+    Returns
+    -------
+    out: Any
+        Depends on the `output_format` chosen. In
+        case of error, returns `Response` object.
+    """
+    if output_format == "parquet":
+        f = io.BytesIO()
+        pdf.write_parquet(f)
+        f.seek(0)
+        response = Response(f.read(), 200)
+        response.headers.set("Content-Type", "parquet")
+        return response
+
+    rep = {
+        "status": "error",
+        "text": f"Output format `{output_format}` is not supported. Choose among json, csv, votable, or parquet\n",
+    }
+    return Response(str(rep), 400)
+
+
 def send_tabular_data(pdf, output_format):
     """Send tabular data over HTTP
 

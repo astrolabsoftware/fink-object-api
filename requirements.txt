@@ -3,6 +3,7 @@ astroquery
 flask
 flask-restx
 pandas
+polars
 numpy
 fink-filters==7.38
 fink-utils==0.74.0

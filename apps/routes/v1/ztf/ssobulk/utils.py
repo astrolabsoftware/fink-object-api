@@ -100,4 +100,4 @@ def get_lc(payload: dict) -> pd.DataFrame:
             else:
                 frames.append(sub)
 
-    return pl.concat(frames).to_pandas() if frames else pd.DataFrame()
+    return pl.concat(frames) if frames else pl.DataFrame()

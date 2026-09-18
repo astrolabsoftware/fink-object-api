@@ -16,6 +16,7 @@ import io
 import json
 import datetime
 import pandas as pd
+import polars as pl
 import requests
 import yaml
 from flask import Response
@@ -137,8 +138,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
         response = Response(r.text, r.status_code)
         return response
 
-    # TODO: replace with polars
-    pdf = pd.DataFrame()
+    frames = []
     for dic in r.json()["FileStatuses"]["FileStatus"]:
         filename = dic["pathSuffix"]
         if filename.endswith(".parquet"):
@@ -151,23 +151,15 @@ def get_lc(payload: dict) -> pd.DataFrame:
                     input_args["NAMENODE"],
                 ),
             )
-            sub = pd.read_parquet(io.BytesIO(r0.content))
+            sub = pl.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
-                is_there = sub["designation"].astype("str") == payload["sso_name"]
-                if is_there.sum() > 0:
-                    return sub[is_there]
+                matching = sub.filter(
+                    pl.col("designation").cast(pl.String) == payload["sso_name"]
+                )
+
+                if matching.height > 0:
+                    return matching
             else:
-                pdf = pd.concat((pdf, sub))
+                frames.append(sub)
 
-    return pdf
-
-    # Need to find a way to not decode in pandas
-    # if payload.get("output-format", "parquet") != "parquet":
-    #     # Full table in other format than parquet (slow)
-    #     return pd.read_parquet(io.BytesIO(r.content))
-    # else:
-    #     # Full table in parquet (fast)
-    #     # return the schema of the table
-    #     response = Response(io.BytesIO(r.content), 200)
-    #     response.headers.set("Content-Type", "application/parquet")
-    #     return response
+    return pl.concat(frames) if frames else pl.DataFrame()
