@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import io
+import json
 import datetime
 import pandas as pd
 import requests
@@ -36,6 +37,67 @@ def get_lc(payload: dict) -> pd.DataFrame:
     ----------
     out: pandas dataframe
     """
+    # Schema
+    schema = payload.get("schema", False)
+    if schema:
+        SCHEMA = {
+            "designation": {
+                "type": "str",
+                "description": "Official name or provisional designation of the SSO",
+            },
+            "cra": {"type": "list", "description": "List of RA in degree"},
+            "cdec": {"type": "list", "description": "List of DEC in degree"},
+            "cband": {"type": "list", "description": "List of filter band as str"},
+            "cmidpointMjdTai": {
+                "type": "list",
+                "description": "List of times MJD (TAI)",
+            },
+            "cphaseAngle": {
+                "type": "list",
+                "description": "List of phase angles in degree",
+            },
+            "cephRa": {
+                "type": "list",
+                "description": "List of RA ephemerides in degree",
+            },
+            "cephDec": {
+                "type": "list",
+                "description": "List of DEC ephemerides in degree",
+            },
+            "ctopoRange": {
+                "type": "list",
+                "description": "List of topocentric distances in AU",
+            },
+            "chelioRange": {
+                "type": "list",
+                "description": "List of heliocentric distances in AU",
+            },
+            "cephOffsetRa": {
+                "type": "list",
+                "description": "List of offsets in RA in degree",
+            },
+            "cephOffsetDec": {
+                "type": "list",
+                "description": "List of offsets in DEC in degree",
+            },
+            "cjdUtc": {"type": "list", "description": "List of times in JD (UTC)"},
+            "chelioRa": {"type": "list", "description": "List of Sun RA in degree"},
+            "chelioDec": {"type": "list", "description": "List of Sun DEC in degree"},
+            "cmagpsf": {"type": "list", "description": "List of difference magnitudes"},
+            "csigmapsf": {
+                "type": "list",
+                "description": "List of difference magnitude error estimates",
+            },
+            "version": {
+                "type": "str",
+                "description": "Version of the table as YYYY.MM",
+            },
+        }
+        # return the schema of the table
+        response = Response(json.dumps(SCHEMA), 200)
+        response.headers.set("Content-Type", "application/json")
+        return response
+
     # Need to profile compared to pyarrow
     with open("config.yml") as f:
         input_args = yaml.load(f, yaml.Loader)
