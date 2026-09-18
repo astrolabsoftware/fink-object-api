@@ -92,9 +92,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
             sub = pl.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
                 matching = sub.filter(
-                    pl.col("designation")
-                    .cast(pl.String)
-                    == payload["sso_name"]
+                    pl.col("designation").cast(pl.String) == payload["sso_name"]
                 )
 
                 if matching.height > 0:
@@ -102,4 +100,4 @@ def get_lc(payload: dict) -> pd.DataFrame:
             else:
                 frames.append(sub)
 
-    return pl.concat(frames) if frames else pl.DataFrame()
+    return pl.concat(frames).to_pandas() if frames else pd.DataFrame()
