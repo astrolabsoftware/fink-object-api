@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import io
+import polars as pl
 import datetime
 import pandas as pd
 import requests
@@ -75,8 +76,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
         response = Response(r.text, r.status_code)
         return response
 
-    # TODO: replace with polars
-    pdf = pd.DataFrame()
+    frames = []
     for dic in r.json()["FileStatuses"]["FileStatus"]:
         filename = dic["pathSuffix"]
         if filename.endswith(".parquet"):
@@ -89,12 +89,17 @@ def get_lc(payload: dict) -> pd.DataFrame:
                     input_args["NAMENODE"],
                 ),
             )
-            sub = pd.read_parquet(io.BytesIO(r0.content))
+            sub = pl.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
-                is_there = sub["designation"].astype("str") == payload["sso_name"]
-                if is_there.sum() > 0:
-                    return sub[is_there]
-            else:
-                pdf = pd.concat((pdf, sub))
+                matching = sub.filter(
+                    pl.col("designation")
+                    .cast(pl.String)
+                    == payload["sso_name"]
+                )
 
-    return pdf
+                if matching.height > 0:
+                    return matching
+            else:
+                frames.append(sub)
+
+    return pl.concat(frames) if frames else pl.DataFrame()
