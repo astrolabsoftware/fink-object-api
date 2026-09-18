@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import io
-import polars as pl
-import datetime
 import json
+import datetime
+import polars as pl
 import requests
 import yaml
 from flask import Response
@@ -31,7 +31,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
     Parameters
     ----------
     payload: dict
-        See https://api.ztf.fink-portal.org
+        See https://api.lsst.fink-portal.org
 
     Return
     ----------
@@ -41,80 +41,56 @@ def get_lc(payload: dict) -> pl.DataFrame:
     schema = payload.get("schema", False)
     if schema:
         SCHEMA = {
-            "ssnamenr": {
+            "designation": {
                 "type": "str",
                 "description": "Official name or provisional designation of the SSO",
             },
             "cra": {"type": "list", "description": "List of RA in degree"},
             "cdec": {"type": "list", "description": "List of DEC in degree"},
+            "cband": {"type": "list", "description": "List of filter band as str"},
+            "cmidpointMjdTai": {
+                "type": "list",
+                "description": "List of times MJD (TAI)",
+            },
+            "cphaseAngle": {
+                "type": "list",
+                "description": "List of phase angles in degree",
+            },
+            "cephRa": {
+                "type": "list",
+                "description": "List of RA ephemerides in degree",
+            },
+            "cephDec": {
+                "type": "list",
+                "description": "List of DEC ephemerides in degree",
+            },
+            "ctopoRange": {
+                "type": "list",
+                "description": "List of topocentric distances in AU",
+            },
+            "chelioRange": {
+                "type": "list",
+                "description": "List of heliocentric distances in AU",
+            },
+            "cephOffsetRa": {
+                "type": "list",
+                "description": "List of offsets in RA in degree",
+            },
+            "cephOffsetDec": {
+                "type": "list",
+                "description": "List of offsets in DEC in degree",
+            },
+            "cjdUtc": {"type": "list", "description": "List of times in JD (UTC)"},
+            "chelioRa": {"type": "list", "description": "List of Sun RA in degree"},
+            "chelioDec": {"type": "list", "description": "List of Sun DEC in degree"},
             "cmagpsf": {"type": "list", "description": "List of difference magnitudes"},
             "csigmapsf": {
                 "type": "list",
                 "description": "List of difference magnitude error estimates",
             },
-            "cfid": {
-                "type": "list",
-                "description": "List of filter band ID: 1 = g, 2 = r",
-            },
-            "cjd": {
-                "type": "list",
-                "description": "List of observing times in JD (UTC)",
-            },
-            "Dobs": {
-                "type": "list",
-                "description": "List of topocentric distances in AU",
-            },
-            "Dhelio": {
-                "type": "list",
-                "description": "List of heliocentric distances in AU",
-            },
-            "Phase": {
-                "type": "list",
-                "description": "List of phase angles in degree",
-            },
-            "Elong": {
-                "type": "list",
-                "description": "List of elongation angles in degree",
-            },
-            "RA": {
-                "type": "list",
-                "description": "List of RA ephemerides in degree",
-            },
-            "DEC": {
-                "type": "list",
-                "description": "List of DEC ephemerides in degree",
-            },
-            "RA_h": {
-                "type": "list",
-                "description": "List of Sun RA ephemerides in degree",
-            },
-            "DEC_h": {
-                "type": "list",
-                "description": "List of Sun DEC ephemerides in degree",
-            },
-            "px_ec": {
-                "type": "list",
-                "description": "List of x-coordinates of asteroids in topocentric in AU",
-            },
-            "py_ec": {
-                "type": "list",
-                "description": "List of y-coordinates of asteroids in topocentric in AU",
-            },
-            "pz_ec": {
-                "type": "list",
-                "description": "List of z-coordinates of asteroids in topocentric in AU",
-            },
-            "px_h_ec": {
-                "type": "list",
-                "description": "List of x-coordinates of asteroids in heliocentric in AU",
-            },
-            "py_h_ec": {
-                "type": "list",
-                "description": "List of y-coordinates of asteroids in heliocentric in AU",
-            },
-            "pz_h_ec": {
-                "type": "list",
-                "description": "List of z-coordinates of asteroids in heliocentric in AU",
+            "version": {
+                "type": "str",
+                "description": "Version of the table as YYYY.MM",
             },
         }
         # return the schema of the table
@@ -137,10 +113,10 @@ def get_lc(payload: dict) -> pl.DataFrame:
                 "text": "version needs to be YYYY.MM\n",
             }
             return Response(str(rep), 400)
-        if version < "2026.09":
+        if version < "2026.08":
             rep = {
                 "status": "error",
-                "text": "version starts on 2026.09\n",
+                "text": "version starts on 2026.08\n",
             }
             return Response(str(rep), 400)
     else:
@@ -149,7 +125,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
 
     # Get file list
     r = requests.get(
-        "{}/SSOBULK/sso_ztf_lc_aggregated_{}.parquet?op=LISTSTATUS&user.name={}&namenoderpcaddress={}".format(
+        "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet?op=LISTSTATUS&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],
             version,
             input_args["USER"],
@@ -166,7 +142,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
         filename = dic["pathSuffix"]
         if filename.endswith(".parquet"):
             r0 = requests.get(
-                "{}/SSOBULK/sso_ztf_lc_aggregated_{}.parquet/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+                "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
                     input_args["WEBHDFS"],
                     version,
                     filename,
@@ -177,7 +153,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
             sub = pl.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
                 matching = sub.filter(
-                    pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
+                    pl.col("designation").cast(pl.String) == payload["sso_name"]
                 )
 
                 if matching.height > 0:

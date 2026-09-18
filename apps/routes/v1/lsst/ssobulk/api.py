@@ -16,17 +16,17 @@ from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 import polars as pl
 
-from apps.routes.v1.ztf.ssobulk.utils import get_lc
+from apps.routes.v1.lsst.ssobulk.utils import get_lc
 from apps.utils.utils import check_args, send_polars_data
 
-ns = Namespace("api/v1/ssobulk", "Get all Fink/ZTF SSO lightcurves in once")
+ns = Namespace("api/v1/ssobulk", "Get all Fink/LSST SSO lightcurves in once")
 
 ARGS = ns.model(
     "ssobulk",
     {
         "sso_name": fields.String(
             description="If specified, retrieve only the SSO with that official name or provisional designation from IAU.",
-            example="Benoitcarry",
+            example="2010 VY69",
             required=False,
         ),
         "schema": fields.Boolean(
@@ -47,7 +47,7 @@ ARGS = ns.model(
 @ns.doc(params={k: ARGS[k].description for k in ARGS})
 class Ssobulk(Resource):
     def get(self):
-        """Get all Fink/ZTF SSO lightcurves in once"""
+        """Get all Fink/LSST SSO lightcurves in once"""
         payload = request.args
         if len(payload) > 0:
             # POST from query URL
@@ -57,7 +57,7 @@ class Ssobulk(Resource):
 
     @ns.expect(ARGS, location="json", as_dict=True)
     def post(self):
-        """Get all Fink/ZTF SSO lightcurves in once"""
+        """Get all Fink/LSST SSO lightcurves in once"""
         # get payload from the query URL
         payload = request.args
 

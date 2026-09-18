@@ -1,0 +1,139 @@
+# Copyright 2019-2026 AstroLab Software
+# Author: Julien Peloton
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import datetime
+import io
+import sys
+
+import pandas as pd
+import requests
+
+APIURL = sys.argv[1]
+
+
+def ssobulk(
+    version=None,
+    sso_name=None,
+    schema=None,
+    output_format="parquet",
+):
+    """Perform a sso bulk download using the Fink REST API"""
+    payload = {}
+
+    if version is not None:
+        payload.update(
+            {
+                "version": version,
+            }
+        )
+
+    if sso_name is not None:
+        payload.update(
+            {
+                "sso_name": sso_name,
+            }
+        )
+
+    if schema is not None:
+        payload.update(
+            {
+                "schema": True,
+            }
+        )
+
+    r = requests.post(f"{APIURL}/api/v1/ssobulk", json=payload)
+
+    assert r.status_code == 200, r.content
+
+    if output_format == "json":
+        # Format output in a DataFrame
+        pdf = pd.read_json(io.BytesIO(r.content))
+    elif output_format == "csv":
+        pdf = pd.read_csv(io.BytesIO(r.content))
+    elif output_format == "parquet":
+        pdf = pd.read_parquet(io.BytesIO(r.content))
+
+    return pdf
+
+
+def test_ids() -> None:
+    """
+    Examples
+    --------
+    >>> test_ids()
+    """
+    pdf = ssobulk(sso_name="2007 YG85")
+
+    assert len(pdf) == 1, pdf
+
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    current_date = f"{now.year}.{now.month:02d}"
+
+    assert pdf["version"].to_numpy()[0] == current_date
+
+    assert "designation" in pdf.columns
+
+    pdf = ssobulk(sso_name="2007 YG85", version="2026.08")
+
+    assert not pdf.empty
+
+    pdf = ssobulk(sso_name="totocaca")
+
+    assert len(pdf) == 0
+
+
+def test_schema() -> None:
+    """
+    Examples
+    --------
+    >>> test_schema()
+    """
+    pdf = ssobulk(sso_name="2007 YG85")
+
+    schema = ssobulk(schema=True, output_format="json")
+
+    # check columns
+    not_in_pdf = [i for i in set(schema.keys()) if i not in set(pdf.columns)]
+    not_in_schema = [i for i in set(pdf.columns) if i not in set(schema.keys())]
+
+    assert not_in_pdf == [], not_in_pdf
+    assert not_in_schema == [], not_in_schema
+
+    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema)} entries in the schema."
+    assert set(schema.keys()) == set(pdf.columns), msg
+
+
+def compare_schema() -> None:
+    """
+    Examples
+    --------
+    >>> compare_schema()
+    """
+    schema1 = ssobulk(schema=True, output_format="json")
+
+    # get the schema
+    r = requests.get(f"{APIURL}/api/v1/ssobulk?schema=True")
+    schema2 = r.json()
+
+    keys1 = set(schema1.keys())
+    keys2 = set(schema2.keys())
+    assert keys1 == keys2, [keys1, keys2]
+
+
+if __name__ == "__main__":
+    """ Execute the test suite """
+    import doctest
+    import sys
+
+    sys.exit(doctest.testmod()[0])
