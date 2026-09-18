@@ -62,7 +62,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
         version = f"{now.year}.{now.month:02d}"
 
     r = requests.get(
-        "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+        "{}/SSOBULK/sso_rubin_lc_aggregated_{}.parquet/agg.parquet?op=OPEN&user.name={}&namenoderpcaddress={}".format(
             input_args["WEBHDFS"],
             version,
             input_args["USER"],
