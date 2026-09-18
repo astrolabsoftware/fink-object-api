@@ -177,7 +177,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
             sub = pl.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
                 matching = sub.filter(
-                    pl.col("designation").cast(pl.String) == payload["sso_name"]
+                    pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
                 )
 
                 if matching.height > 0:
