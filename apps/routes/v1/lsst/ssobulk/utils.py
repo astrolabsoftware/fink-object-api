@@ -91,7 +91,7 @@ def get_lc(payload: dict) -> pd.DataFrame:
             )
             sub = pd.read_parquet(io.BytesIO(r0.content))
             if "sso_name" in payload:
-                is_there = sub["sso_name"].astype("str") == payload["sso_name"]
+                is_there = sub["designation"].astype("str") == payload["sso_name"]
                 if is_there.sum() > 0:
                     return sub[is_there]
             else:
