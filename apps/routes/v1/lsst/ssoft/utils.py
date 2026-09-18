@@ -124,7 +124,6 @@ def get_ssoft(payload: dict) -> pd.DataFrame:
     if "sso_name" in payload:
         # TODO: use pyarrow instead
         pdf = pd.read_parquet(io.BytesIO(r.content))
-        mask = pdf["sso_name"] == pdf["sso_name"]
         pdf = pdf[pdf["sso_name"].astype("str") == payload["sso_name"]]
         return pdf
     elif "sso_number" in payload:
