@@ -72,7 +72,7 @@ def ssoftsearch(
     if columns is not None:
         payload.update(
             {
-                "columns": True,
+                "columns": columns,
             }
         )
 
@@ -132,7 +132,7 @@ def test_columns() -> None:
 
     pdf = ssoftsearch(columns="sso_name,H_g,toto", flavor="HG")
 
-    assert len(pdf.columns) == 1, pdf.columns
+    assert len(pdf.columns) == 2, pdf.columns
 
 
 def test_ids() -> None:
