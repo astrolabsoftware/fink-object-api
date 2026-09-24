@@ -207,13 +207,6 @@ def extract_schema(payload: dict) -> Response:
             "fink_science_version": "8.26.0",
         },
         {
-            "name": "xm_spicy_SPICY",
-            "type": "string",
-            "doc": "Unique source designation of closest source from SPICY catalog; if exists within 1.2 arcsec.",
-            "fink_broker_version": "4.0",
-            "fink_science_version": "8.26.0",
-        },
-        {
             "name": "xm_spicy_class",
             "type": "string",
             "doc": "Class name of closest source from SPICY catalog; if exists within 1.2 arcsec.",
@@ -294,13 +287,6 @@ def extract_schema(payload: dict) -> Response:
             "name": "clf_earlySNIa_score",
             "type": "float",
             "doc": "Score (0...1) for the early SN Ia classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
-            "fink_broker_version": "4.0",
-            "fink_science_version": "8.26.0",
-        },
-        {
-            "name": "clf_slsn_score",
-            "type": "float",
-            "doc": "Score (0...1) for the super-luminous SN classifier (binary classifier). See https://arxiv.org/abs/2404.08798",
             "fink_broker_version": "4.0",
             "fink_science_version": "8.26.0",
         },
