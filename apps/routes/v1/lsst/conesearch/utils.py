@@ -53,7 +53,14 @@ def run_conesearch(payload: dict) -> pd.DataFrame:
     else:
         cols = "*"
 
-    n = int(payload.get("n", 1000))
+    n = int(payload.get("n", 100))
+
+    if n > 100:
+        rep = {
+            "status": "error",
+            "text": "You cannot return more than 100 objects per call due to resource limitations.\n",
+        }
+        return Response(str(rep), 400)
 
     # Conesearch with optional date range
     client = connect_to_hbase_table("rubin.pixel1024")
