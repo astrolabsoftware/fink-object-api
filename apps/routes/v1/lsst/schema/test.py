@@ -50,7 +50,11 @@ def get_fields_from_schema(schema_dic):
         for category in categories:
             if i in category:
                 tmp = [i + k for k in list(schema_dic[category].keys())]
-                out.append(tmp)
+            else:
+                # Fields without prefix such as ephemerides
+                tmp = [k for k in list(schema_dic[category].keys())]
+
+            out.append(tmp)
     if len(out) > 1:
         return np.concatenate(out)
     else:
@@ -68,7 +72,7 @@ def check_schema_endpoint():
     endpoints = {
         "/api/v1/sources": {"diaObjectId": diaobjectid},
         "/api/v1/objects": {"diaObjectId": diaobjectid},
-        # "/api/v1/sso": {"name_or_d": ""},
+        "/api/v1/sso": {"n_or_d": "1998 TT26", "withEphem": True},
         "/api/v1/conesearch": {
             "ra": "10 02 38.65",
             "dec": "+00 51 02.6",
@@ -104,7 +108,12 @@ def check_schema_endpoint():
         not_in_schema = [i for i in data_fields if i not in schema_fields]
 
         if len(not_in_schema) >= 1:
-            allowed_fields = ["f:pixel1024", "v:separation_degree", "r:salt"]
+            allowed_fields = [
+                "f:pixel1024",
+                "v:separation_degree",
+                "r:salt",
+                "r:packed_primary_provisional_designation",
+            ]
             is_allowed = [i in allowed_fields for i in not_in_schema]
             assert np.sum(is_allowed) == len(not_in_schema), (endpoint, not_in_schema)
 
