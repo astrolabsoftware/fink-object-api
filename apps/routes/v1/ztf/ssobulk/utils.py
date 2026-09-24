@@ -153,8 +153,8 @@ def get_lc(payload: dict) -> pl.DataFrame:
     cache_file = os.path.join("/scratch", SSOBULKFILE.format(version))
     if os.path.exists(cache_file):
         # Read existing file
-        pdf = pl.read_parquet(cache_file)
         if "sso_name" in payload:
+            pdf = pl.read_parquet(cache_file)
             matching = pdf.filter(
                 pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
             )
@@ -164,7 +164,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
             else:
                 return pl.DataFrame()
         else:
-            return pdf
+            return Response(open(cache_file), 200)
     else:
         # Download entire file
         # Get file list
