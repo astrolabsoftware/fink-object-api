@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 import io
 import polars as pl
 import datetime
@@ -20,6 +21,8 @@ import requests
 import yaml
 from flask import Response
 from line_profiler import profile
+
+SSOBULKFILE = "sso_ztf_lc_aggregated_{}.parquet"
 
 
 @profile
@@ -147,42 +150,66 @@ def get_lc(payload: dict) -> pl.DataFrame:
         now = datetime.datetime.now(tz=datetime.timezone.utc)
         version = f"{now.year}.{now.month:02d}"
 
-    # Get file list
-    r = requests.get(
-        "{}/SSOBULK/sso_ztf_lc_aggregated_{}.parquet?op=LISTSTATUS&user.name={}&namenoderpcaddress={}".format(
-            input_args["WEBHDFS"],
-            version,
-            input_args["USER"],
-            input_args["NAMENODE"],
-        ),
-    )
-
-    if r.status_code != 200:
-        response = Response(r.text, r.status_code)
-        return response
-
-    frames = []
-    for dic in r.json()["FileStatuses"]["FileStatus"]:
-        filename = dic["pathSuffix"]
-        if filename.endswith(".parquet"):
-            r0 = requests.get(
-                "{}/SSOBULK/sso_ztf_lc_aggregated_{}.parquet/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
-                    input_args["WEBHDFS"],
-                    version,
-                    filename,
-                    input_args["USER"],
-                    input_args["NAMENODE"],
-                ),
+    cache_file = os.path.join("/scratch", SSOBULKFILE.format(version))
+    if os.path.exists(cache_file):
+        # Read existing file
+        pdf = pl.read_parquet(cache_file)
+        if "sso_name" in payload:
+            matching = pdf.filter(
+                pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
             )
-            sub = pl.read_parquet(io.BytesIO(r0.content))
-            if "sso_name" in payload:
-                matching = sub.filter(
-                    pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
-                )
 
-                if matching.height > 0:
-                    return matching
+            if matching.height > 0:
+                return matching
             else:
-                frames.append(sub)
+                return pl.DataFrame()
+        else:
+            return pdf
+    else:
+        # Download entire file
+        # Get file list
+        r = requests.get(
+            "{}/SSOBULK/{}?op=LISTSTATUS&user.name={}&namenoderpcaddress={}".format(
+                input_args["WEBHDFS"],
+                SSOBULKFILE.format(version),
+                input_args["USER"],
+                input_args["NAMENODE"],
+            ),
+        )
 
-    return pl.concat(frames) if frames else pl.DataFrame()
+        if r.status_code != 200:
+            response = Response(r.text, r.status_code)
+            return response
+
+        frames = []
+        for dic in r.json()["FileStatuses"]["FileStatus"]:
+            filename = dic["pathSuffix"]
+            if filename.endswith(".parquet"):
+                r0 = requests.get(
+                    "{}/SSOBULK/{}/{}?op=OPEN&user.name={}&namenoderpcaddress={}".format(
+                        input_args["WEBHDFS"],
+                        SSOBULKFILE.format(version),
+                        filename,
+                        input_args["USER"],
+                        input_args["NAMENODE"],
+                    ),
+                )
+                sub = pl.read_parquet(io.BytesIO(r0.content))
+                if "sso_name" in payload:
+                    matching = sub.filter(
+                        pl.col("ssnamenr").cast(pl.String) == payload["sso_name"]
+                    )
+
+                    if matching.height > 0:
+                        return matching
+                else:
+                    frames.append(sub)
+
+        if frames:
+            pdf = pl.concat(frames)
+
+            # Save on disk for future queries
+            pdf.write_parquet(cache_file)
+            return pdf
+        else:
+            return pl.DataFrame()
