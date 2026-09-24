@@ -747,6 +747,11 @@ def extract_schema(payload: dict) -> Response:
                             "type": "float",
                             "doc": "Magnitude in SDSS r filter (from --colors() option). Available only if withEphem input parameter is True.",
                         },
+                        {
+                            "name": "i:magpsf_red",
+                            "type": "float",
+                            "doc": "Reduced magnitude",
+                        },
                     ]
                 }
             ),
