@@ -657,6 +657,113 @@ def extract_schema(payload: dict) -> Response:
                     ]
                 }
             ),
+            "Miriade ephemerides": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": "4.0",
+                        "fink_science_version": "8.26.0",
+                    }
+                    for i in [
+                        {
+                            "name": "index",
+                            "type": "int",
+                            "doc": "Row index or object identifier. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "Date",
+                            "type": "float",
+                            "doc": "Julian date (or ISO-8601 date depending on --jd/--iso output options) of the observation (UTC). Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "IAU_code",
+                            "type": "str",
+                            "doc": "Object name (designation or IAU code). Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "Phase",
+                            "type": "float",
+                            "doc": "Phase angle in degrees. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "Elong",
+                            "type": "float",
+                            "doc": "Solar elongation in degrees. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "RA",
+                            "type": "str",
+                            "doc": "Right ascension from ephemerides in sexagesimal format (h:m:s) at the date. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "DEC",
+                            "type": "str",
+                            "doc": "Declination from ephemerides in sexagesimal format (°:′:″) at the date. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "Dobs",
+                            "type": "float",
+                            "doc": "Geocentric distance (range to observer) in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "RA_h",
+                            "type": "float",
+                            "doc": "Heliocentric right ascension in decimal degrees. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "DEC_h",
+                            "type": "float",
+                            "doc": "Heliocentric declination in decimal degrees. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "Dhelio",
+                            "type": "float",
+                            "doc": "Heliocentric distance in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "px_ec",
+                            "type": "float",
+                            "doc": "X coordinate of position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "py_ec",
+                            "type": "float",
+                            "doc": "Y coordinate of position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "pz_ec",
+                            "type": "float",
+                            "doc": "Z coordinate of position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "px_h_ec",
+                            "type": "float",
+                            "doc": "X coordinate of heliocentric position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "py_h_ec",
+                            "type": "float",
+                            "doc": "Y coordinate of heliocentric position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "pz_h_ec",
+                            "type": "float",
+                            "doc": "Z coordinate of heliocentric position vector in ecliptic coordinates in au. Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "SDSS:g",
+                            "type": "float",
+                            "doc": "Magnitude in SDSS g filter (from --colors() option). Available only if withEphem input parameter is True.",
+                        },
+                        {
+                            "name": "SDSS:r",
+                            "type": "float",
+                            "doc": "Magnitude in SDSS r filter (from --colors() option). Available only if withEphem input parameter is True.",
+                        },
+                    ]
+                }
+            ),
         }
     elif payload["endpoint"] == "/api/v1/tags":
         types = {
