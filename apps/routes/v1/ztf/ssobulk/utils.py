@@ -164,7 +164,8 @@ def get_lc(payload: dict) -> pl.DataFrame:
             else:
                 return pl.DataFrame()
         else:
-            return Response(open(cache_file), 200)
+            pdf = pl.read_parquet(cache_file)
+            return pdf
     else:
         # Download entire file
         # Get file list
