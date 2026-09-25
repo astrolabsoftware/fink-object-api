@@ -142,7 +142,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
         if "sso_name" in payload:
             pdf = pl.read_parquet(cache_file)
             matching = pdf.filter(
-                pl.col("sso_name").cast(pl.String) == payload["sso_name"]
+                pl.col("designation").cast(pl.String) == payload["sso_name"]
             )
 
             if matching.height > 0:
