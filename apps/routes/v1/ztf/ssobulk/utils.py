@@ -21,21 +21,18 @@ import requests
 import yaml
 from flask import Response
 from line_profiler import profile
-import pyarrow as pa
+from pathlib import Path
 
 SSOBULKFILE = "sso_ztf_lc_aggregated_{}.parquet"
 
-def generate(filename):
-    parquet_file = pq.ParquetFile(filename)
 
-    # Stream record batches (Arrow's native chunk format)
-    for i in range(parquet_file.num_row_groups):
-        batch = parquet_file.read_row_group(i)
-        sink = io.BytesIO()
-        writer = pa.ipc.new_stream(sink, batch.schema)
-        writer.write_table(batch)
-        writer.close()
-        yield sink.getvalue()
+def generate(filename):
+    """Read file by chunks"""
+    path = Path(filename)
+    with path.open("rb") as f:
+        # 50MB chunks
+        while chunk := f.read(50 * 1024 * 1024):
+            yield chunk
 
 
 @profile
@@ -177,7 +174,13 @@ def get_lc(payload: dict) -> pl.DataFrame:
             else:
                 return pl.DataFrame()
         else:
-            return Response(generate(cache_file), mimetype='application/octet-stream')
+            response = Response(
+                generate(cache_file), mimetype="application/vnd.apache.parquet"
+            )
+            response.headers["Content-Disposition"] = (
+                'attachment; filename="data.parquet"'
+            )
+            return response
     else:
         # Download entire file
         # Get file list
