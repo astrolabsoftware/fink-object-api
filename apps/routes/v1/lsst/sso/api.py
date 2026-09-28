@@ -36,11 +36,6 @@ ARGS = ns.model(
             example=False,
             required=False,
         ),
-        "withResiduals": fields.Boolean(
-            description="Return the residuals `obs - model` using the sHG1G2 phase curve model. Work only for a single object query (`n_or_d` cannot be a list).",
-            example=False,
-            required=False,
-        ),
         "columns": fields.String(
             description="Comma-separated data columns to transfer, e.g. 'r:midpointMjdTai,r:scienceFlux,r:band,r:ra,r:dec'. If not specified, transfer all columns.",
             example="r:midpointMjdTai,r:scienceFlux,r:band,r:ra,r:dec",
