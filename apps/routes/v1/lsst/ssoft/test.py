@@ -141,7 +141,7 @@ def test_ids() -> None:
     --------
     >>> test_ids()
     """
-    pdf = ssoftsearch(sso_number="106064")
+    pdf = ssoftsearch(sso_number="332333")
 
     assert len(pdf) == 1, pdf
 
@@ -149,7 +149,7 @@ def test_ids() -> None:
 
     assert len(pdf) == 1
 
-    pdf = ssoftsearch(sso_name="2014 WR176")
+    pdf = ssoftsearch(sso_name="2013 BL30")
 
     assert len(pdf) == 1
 

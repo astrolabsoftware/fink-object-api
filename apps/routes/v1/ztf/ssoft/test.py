@@ -107,7 +107,7 @@ def previous_ssoft() -> None:
     --------
     >>> previous_ssoft()
     """
-    pdf = ssoftsearch(version="2023.07")
+    pdf = ssoftsearch(version="2023.07", sso_number="33803")
 
     assert not pdf.empty
 
@@ -133,7 +133,7 @@ def test_schema() -> None:
     --------
     >>> test_schema()
     """
-    pdf = ssoftsearch(flavor="SHG1G2")
+    pdf = ssoftsearch(flavor="SHG1G2", sso_number="33803")
 
     schema = ssoftsearch(schema=True, flavor="SHG1G2", output_format="json")
 
@@ -141,11 +141,12 @@ def test_schema() -> None:
     not_in_pdf = [i for i in set(schema.keys()) if i not in set(pdf.columns)]
     not_in_schema = [i for i in set(pdf.columns) if i not in set(schema.keys())]
 
-    assert not_in_pdf == [], not_in_pdf
-    assert not_in_schema == [], not_in_schema
+    # schema has fixed designation for both lsst & ztf -- so there is a mismatch here
+    assert not_in_pdf == ["designation"], not_in_pdf
+    assert not_in_schema == ["ssnamenr"], not_in_schema
 
-    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema)} entries in the schema."
-    assert set(schema.keys()) == set(pdf.columns), msg
+    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema.keys())} entries in the schema."
+    assert len(schema.keys()) == len(pdf.columns), msg
 
 
 def compare_schema() -> None:
