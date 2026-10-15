@@ -72,12 +72,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     else:
         truncated = True
 
-    with_ephem, with_residuals = False, False
-    if "withResiduals" in payload and (
-        payload["withResiduals"] == "True" or payload["withResiduals"] is True
-    ):
-        with_residuals = True
-        with_ephem = True
+    with_ephem = False
     if "withEphem" in payload and (
         payload["withEphem"] == "True" or payload["withEphem"] is True
     ):
@@ -96,18 +91,8 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
 
     if "," in n_or_d:
         ids = [i.strip() for i in n_or_d.split(",")]
-        multiple_objects = True
     else:
         ids = [n_or_d.strip()]
-        multiple_objects = False
-
-    # We cannot do multi-object and phase curve computation
-    if multiple_objects and with_residuals:
-        rep = {
-            "status": "error",
-            "text": "You cannot request residuals for a list object names.\n",
-        }
-        return Response(str(rep), 400)
 
     # Get all ssnamenrs
     packed = []
@@ -177,51 +162,5 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
                 "text": "We could not obtain the ephemerides information. Check Miriade availabilities.",
             }
             return Response(str(rep), 400)
-
-    # if with_residuals:
-    #     # TODO: In case truncated is True, check (before DB call)
-    #     #       the mandatory fields have been requested
-
-    #     # Get phase curve parameters using the sHG1G2 model
-    #     phase = np.deg2rad(pdf["Phase"].values)
-    #     ra = np.deg2rad(pdf["i:ra"].values)
-    #     dec = np.deg2rad(pdf["i:dec"].values)
-
-    #     outdic = estimate_sso_params(
-    #         magpsf_red=pdf["i:magpsf_red"].to_numpy(),
-    #         sigmapsf=pdf["i:sigmapsf"].to_numpy(),
-    #         phase=phase,
-    #         filters=pdf["i:fid"].to_numpy(),
-    #         ra=ra,
-    #         dec=dec,
-    #         p0=[15.0, 0.15, 0.15, 0.8, np.pi, 0.0],
-    #         bounds=(
-    #             [-3, 0, 0, 3e-1, 0, -np.pi / 2],
-    #             [30, 1, 1, 1, 2 * np.pi, np.pi / 2],
-    #         ),
-    #         model="SHG1G2",
-    #         normalise_to_V=False,
-    #     )
-
-    #     # check if fit converged else return NaN
-    #     if outdic["fit"] != 0:
-    #         pdf["residuals_shg1g2"] = np.nan
-    #     else:
-    #         # per filter construction of the residual
-    #         pdf["residuals_shg1g2"] = 0.0
-    #         for filt in np.unique(pdf["i:fid"]):
-    #             cond = pdf["i:fid"] == filt
-    #             model = func_hg1g2_with_spin(
-    #                 [phase[cond], ra[cond], dec[cond]],
-    #                 outdic["H_{}".format(filt)],
-    #                 outdic["G1_{}".format(filt)],
-    #                 outdic["G2_{}".format(filt)],
-    #                 outdic["R"],
-    #                 np.deg2rad(outdic["alpha0"]),
-    #                 np.deg2rad(outdic["delta0"]),
-    #             )
-    #             pdf.loc[cond, "residuals_shg1g2"] = (
-    #                 pdf.loc[cond, "i:magpsf_red"] - model
-    #             )
 
     return pdf
