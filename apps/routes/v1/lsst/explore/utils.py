@@ -52,7 +52,7 @@ def extract_classes():
     for key, inner_dict in results.items():
         # Extract prefix (everything before the last underscore)
         prefix = key.rsplit("_", 1)[0]
-        value = int(inner_dict["r:midpointMjdTai"])
+        value = float(inner_dict["r:midpointMjdTai"])
 
         # Update if this value is higher
         if value > grouped[prefix]["max_value"]:
