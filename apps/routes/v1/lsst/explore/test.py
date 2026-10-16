@@ -59,6 +59,10 @@ def test_retrieve_data_from_class() -> None:
     assert not pdf.empty
     assert len(pdf) == 10, len(pdf)
 
+    pdf = get_data_from_explore(class_="SSO/MPC")
+
+    assert not pdf.empty
+
 
 def test_various_output() -> None:
     """
