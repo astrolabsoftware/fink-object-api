@@ -132,6 +132,7 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
     if is_sso:
         # Get data from the main SSO table
         client = connect_to_hbase_table("rubin.diaSource_sso")
+        client.setLimit(1)
         results = {}
         for v in oids.values():
             oid = v[main_id]
