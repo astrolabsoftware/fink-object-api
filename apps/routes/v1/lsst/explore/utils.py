@@ -111,43 +111,67 @@ def extract_object_data(payload: dict, return_raw: bool = False) -> pd.DataFrame
 
     client.setLimit(10000)
 
+    is_sso = False
+    if class_.startswith("SSO"):
+        is_sso = True
+
+    if is_sso:
+        main_id = "r:packed_primary_provisional_designation"
+    else:
+        main_id = "r:diaObjectId"
     oids = client.scan(
         "",
         f"key:key:{class_}",
-        "r:diaObjectId,r:midpointMjdTai",
+        "{},r:midpointMjdTai".format(main_id),
         0,
         False,
         False,
     )
     client.close()
 
-    if class_.startswith("SSO/"):
-        msg = "SSO not yet implemented"
-        return Response(msg, 400)
+    if is_sso:
+        # Get data from the main SSO table
+        client = connect_to_hbase_table("rubin.diaSource_sso")
+        results = {}
+        for v in oids.values():
+            oid = v[main_id]
+            salt = oid[1:3]
+            result = client.scan(
+                "",
+                f"key:key:{salt}_{oid}_",
+                cols,
+                0,
+                True,
+                True,
+            )
+            results.update(result)
+
+        schema_client = client.schema()
+
     else:
         client = connect_to_hbase_table("rubin.diaSource_static")
 
-    results = {}
-    for v in oids.values():
-        oid = v["r:diaObjectId"]
-        mjd = v["r:midpointMjdTai"]
+        results = {}
+        for v in oids.values():
+            oid = v[main_id]
+            mjd = v["r:midpointMjdTai"]
 
-        salt = oid[-3:]
+            salt = oid[-3:]
 
-        key = "{}_{}".format(oid, mjd)
-        to_evaluate = f"key:key:{salt}_{key}"
+            key = "{}_{}".format(oid, mjd)
+            to_evaluate = f"key:key:{salt}_{key}"
 
-        result = client.scan(
-            "",
-            to_evaluate,
-            cols,
-            0,
-            False,
-            False,
-        )
-        results.update(result)
+            result = client.scan(
+                "",
+                to_evaluate,
+                cols,
+                0,
+                False,
+                False,
+            )
+            results.update(result)
 
-    schema_client = client.schema()
+        schema_client = client.schema()
 
     client.close()
 
