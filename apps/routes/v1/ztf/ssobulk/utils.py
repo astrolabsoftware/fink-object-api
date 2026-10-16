@@ -58,6 +58,7 @@ def get_lc(payload: dict) -> pl.DataFrame:
                 "type": "str",
                 "description": "Official name or provisional designation of the SSO",
             },
+            "version": {"type": "str", "description": "YYYY.MM version"},
             "cra": {"type": "list", "description": "List of RA in degree"},
             "cdec": {"type": "list", "description": "List of DEC in degree"},
             "cmagpsf": {"type": "list", "description": "List of difference magnitudes"},

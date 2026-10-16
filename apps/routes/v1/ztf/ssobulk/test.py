@@ -101,11 +101,12 @@ def test_schema() -> None:
     not_in_pdf = [i for i in set(schema.keys()) if i not in set(pdf.columns)]
     not_in_schema = [i for i in set(pdf.columns) if i not in set(schema.keys())]
 
+    # schema has fixed designation for both lsst & ztf -- so there is a mismatch here
     assert not_in_pdf == [], not_in_pdf
     assert not_in_schema == [], not_in_schema
 
-    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema)} entries in the schema."
-    assert set(schema.keys()) == set(pdf.columns), msg
+    msg = f"Found {len(pdf.columns)} entries in the DataFrame and {len(schema.keys())} entries in the schema."
+    assert len(schema.keys()) == len(pdf.columns), msg
 
 
 def compare_schema() -> None:
