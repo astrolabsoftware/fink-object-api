@@ -34,6 +34,7 @@ from apps.routes.v1.lsst.sso.api import ns as ns_sso
 from apps.routes.v1.lsst.ssobulk.api import ns as ns_ssobulk
 from apps.routes.v1.lsst.statistics.api import ns as ns_stats
 from apps.routes.v1.lsst.tags.api import ns as ns_tags
+from apps.routes.v1.lsst.explore.api import ns as ns_explore
 from apps.routes.v1.lsst.ssoft.api import ns as ns_ssoft
 from apps.utils.utils import extract_configuration
 from config_prometheus import child_exit, post_fork, pre_fork
@@ -95,6 +96,7 @@ api.add_namespace(ns_resolver)
 api.add_namespace(ns_skymap)
 api.add_namespace(ns_stats)
 api.add_namespace(ns_tags)
+api.add_namespace(ns_explore)
 api.add_namespace(ns_blocks)
 
 # Register blueprint
