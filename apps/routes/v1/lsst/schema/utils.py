@@ -815,13 +815,25 @@ def extract_schema(payload: dict) -> Response:
             ),
         }
     elif payload["endpoint"] == "/api/v1/explore":
+        # Same as /api/v1/sources
         types = {
             "LSST original fields (r:)": sort_dict(
                 {
                     i["name"]: {"type": i["type"], "doc": i.get("doc", "TBD")}
-                    for i in fink_explore
+                    for i in diaSource_schema + root_list
                 }
-            )
+            ),
+            "Fink science module outputs (f:)": sort_dict(
+                {
+                    i["name"]: {
+                        "type": i["type"],
+                        "doc": i.get("doc", "TBD"),
+                        "fink_broker_version": i["fink_broker_version"],
+                        "fink_science_version": i["fink_science_version"],
+                    }
+                    for i in fink_source_science
+                }
+            ),
         }
     elif payload["endpoint"] == "/datatransfer/fink":
         fink_source_science_reconstructed, fink_object_science_reconstructed = (
