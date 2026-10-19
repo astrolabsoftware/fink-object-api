@@ -81,6 +81,7 @@ def check_schema_endpoint():
         "/api/v1/tags": {"tag": "in_tns"},
         "/api/v1/statistics": {"date": "20260129"},
         "/api/v1/fp": {"diaObjectId": diaobjectid},
+        "/api/v1/explore": {"class": "TNS/SN Ia"},
     }
 
     for endpoint, payload in endpoints.items():
