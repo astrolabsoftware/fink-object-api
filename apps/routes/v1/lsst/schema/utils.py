@@ -536,30 +536,6 @@ def extract_schema(payload: dict) -> Response:
         },
     ]
 
-    fink_explore = [
-        {
-            "name": "diaObjectId",
-            "type": "long",
-            "doc": "Unique identifier of this DiaObject. Only populated if static object.",
-            "fink_broker_version": "5.0",
-            "fink_science_version": "9.5.0",
-        },
-        {
-            "name": "packed_primary_provisional_designation",
-            "type": "str",
-            "doc": "The primary provisional designation in packed form (e.g. K08A00B). Only populated if moving object.",
-            "fink_broker_version": "5.0",
-            "fink_science_version": "9.5.0",
-        },
-        {
-            "name": "midpointMjdTai",
-            "type": "double",
-            "doc": "Effective mid-visit time for this diaForcedSource, expressed as Modified Julian Date, International Atomic Time.",
-            "fink_broker_version": "5.0",
-            "fink_science_version": "9.5.0",
-        },
-    ]
-
     if payload["endpoint"] == "/api/v1/sources":
         # root, diaSOurce, fink
         types = {
