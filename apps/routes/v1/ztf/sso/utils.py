@@ -146,7 +146,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             ssnamenr_to_sso_number[ssnamenr_] = sso_number
 
     # Get data from the main table
-    client = connect_to_hbase_table("ztf.ssnamenr2")
+    client = connect_to_hbase_table("ztf.ssnamenr2", schema_name="schema_5.0rc0_9.7.0")
     results = {}
     for to_evaluate in ssnamenrs:
         salt = to_evaluate[1:3]
