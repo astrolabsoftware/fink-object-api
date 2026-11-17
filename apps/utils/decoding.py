@@ -123,10 +123,12 @@ def format_hbase_output(
     pdfs = pdfs.copy()  # Fix Pandas' "DataFrame is highly fragmented" warning
 
     if not truncated:
-        # Fink final classification
+        # SSO table is slimmer than others
+        # and it does not contain d: fields.
         if (3 == pdfs["d:roid"]).all():
             pdfs["v:classification"] = "Solar System MPC"
         else:
+            # Fink final classification
             classifications = extract_fink_classification_(
                 pdfs["d:cdsxmatch"],
                 pdfs["d:roid"],
