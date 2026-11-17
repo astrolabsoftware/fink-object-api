@@ -124,23 +124,26 @@ def format_hbase_output(
 
     if not truncated:
         # Fink final classification
-        classifications = extract_fink_classification_(
-            pdfs["d:cdsxmatch"],
-            pdfs["d:roid"],
-            pdfs["d:mulens"],
-            pdfs["d:snn_snia_vs_nonia"],
-            pdfs["d:snn_sn_vs_all"],
-            pdfs["d:rf_snia_vs_nonia"],
-            pdfs["i:ndethist"],
-            pdfs["i:drb"],
-            pdfs["i:classtar"],
-            pdfs["i:jd"],
-            pdfs["i:jdstarthist"],
-            pdfs["d:rf_kn_vs_nonkn"],
-            pdfs["d:tracklet"],
-        )
+        if (3 == pdfs["d:roid"]).all():
+            pdfs["v:classification"] = "Solar System MPC"
+        else:
+            classifications = extract_fink_classification_(
+                pdfs["d:cdsxmatch"],
+                pdfs["d:roid"],
+                pdfs["d:mulens"],
+                pdfs["d:snn_snia_vs_nonia"],
+                pdfs["d:snn_sn_vs_all"],
+                pdfs["d:rf_snia_vs_nonia"],
+                pdfs["i:ndethist"],
+                pdfs["i:drb"],
+                pdfs["i:classtar"],
+                pdfs["i:jd"],
+                pdfs["i:jdstarthist"],
+                pdfs["d:rf_kn_vs_nonkn"],
+                pdfs["d:tracklet"],
+            )
 
-        pdfs["v:classification"] = classifications.to_numpy()
+            pdfs["v:classification"] = classifications.to_numpy()
 
         if extract_color:
             # Extract color evolution
