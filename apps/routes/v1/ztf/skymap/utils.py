@@ -26,6 +26,55 @@ from line_profiler import profile
 from apps.utils.client import connect_to_hbase_table
 from apps.utils.decoding import format_hbase_output
 
+import base64
+import binascii
+
+from flask import abort
+
+MAX_B64_CHARS = 20_000_000
+MAX_COMPRESSED_BYTES = 15_000_000
+MAX_DECOMPRESSED_BYTES = 500_000_000
+
+
+def read_bayestar(encoded):
+    if not isinstance(encoded, str) or not encoded:
+        abort(400, "'bayestar' must be a non-empty base64 string")
+    if len(encoded) > MAX_B64_CHARS:
+        abort(413, "'bayestar' is too large")
+
+    try:
+        compressed = base64.b64decode(encoded)
+    except (binascii.Error, ValueError):
+        abort(400, "'bayestar' is not a valid base64")
+
+    if len(compressed) > MAX_COMPRESSED_BYTES:
+        abort(413, "Decoded data is too large")
+    if not compressed.startswith(b"\x1f\x8b"):
+        abort(400, "'bayestar' is not gzip data")
+
+    # Bound decompressed output to reduce gzip-bomb risk.
+    try:
+        with gzip.GzipFile(fileobj=io.BytesIO(compressed), mode="rb") as gz:
+            fits_bytes = gz.read(MAX_DECOMPRESSED_BYTES + 1)
+    except (OSError, EOFError):
+        abort(400, "'bayestar' is not valid gzip data")
+
+    if len(fits_bytes) > MAX_DECOMPRESSED_BYTES:
+        abort(413, "Decompressed data is too large")
+
+    try:
+        with fits.open(io.BytesIO(fits_bytes), mode="readonly") as hdul:
+            if len(hdul) <= 1 or hdul[1].data is None:
+                abort(400, "FITS data is missing its second HDU")
+
+            # Copy these if they need to remain usable after the file closes.
+            data = hdul[1].data.copy()
+            header = hdul[1].header.copy()
+    except (OSError, ValueError) as exc:
+        abort(400, f"Invalid FITS data: {exc}")
+
+    return data, header
+
 
 @profile
 def search_in_skymap(payload: dict) -> pd.DataFrame:
@@ -56,15 +105,12 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
             )
         )
         if r.status_code == 200:
-            bayestar_data = str(r.content)
+            bayestar_data = base64.b64encode(r.content).decode("ascii")
         else:
             return pd.DataFrame([{"status": r.content}])
     credible_level_threshold = float(payload["credible_level"])
 
-    with gzip.open(io.BytesIO(eval(bayestar_data)), "rb") as f:
-        with fits.open(io.BytesIO(f.read())) as hdul:
-            data = hdul[1].data
-            header = hdul[1].header
+    data, header = read_bayestar(bayestar_data)
 
     hpx = data["PROB"]
     if header["ORDERING"] == "NESTED":

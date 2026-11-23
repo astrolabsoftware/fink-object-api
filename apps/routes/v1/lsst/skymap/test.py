@@ -17,6 +17,7 @@ import sys
 
 import pandas as pd
 import requests
+import base64
 
 APIURL = sys.argv[1]
 
@@ -38,8 +39,9 @@ def bayestartest(
         }
     else:
         data = open(bayestar, "rb").read()
+        bayestar_b64 = base64.b64encode(data).decode("ascii")
         payload = {
-            "bayestar": str(data),
+            "bayestar": bayestar_b64,
             "credible_level": credible_level,
             "output-format": output_format,
         }
@@ -62,16 +64,26 @@ def test_bayestar() -> None:
     pdf = bayestartest()
 
     # FIXME: find a non-null intersection...
-    assert len(pdf) == 0, len(pdf)
+    assert len(pdf) == 6, len(pdf)
 
-    # a = (
-    #     pdf.groupby("f:xm_simbad_otype")
-    #     .count()
-    #     .sort_values("r:diaObjectId", ascending=False)["r:diaObjectId"]
-    #     .to_dict()
-    # )
 
-    # assert a["Unknown"] == 4, a
+def pen_test() -> None:
+    """
+    Examples
+    --------
+    >>> pen_test()
+    """
+    bayestar = '__import__("os").makedirs("toto")'
+    payload = {
+        "bayestar": bayestar,
+        "credible_level": 0.1,
+        "output-format": "json",
+    }
+
+    r = requests.post(f"{APIURL}/api/v1/skymap", json=payload)
+
+    assert r.status_code == 400, r.status_code
+    assert r.content == b'{"message": "\'bayestar\' is not gzip data"}\n', r.content
 
 
 if __name__ == "__main__":
