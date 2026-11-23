@@ -160,7 +160,7 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             unique_oids = pdf["f:sso_name"].unique()
             rep = {
                 "status": "error",
-                "text": "We could not obtain the ephemerides information for {unique_oids}. Check Miriade availabilities.",
+                "text": f"We could not obtain the ephemerides information for {unique_oids}. Check Miriade availabilities.",
             }
             return Response(str(rep), 400)
 
