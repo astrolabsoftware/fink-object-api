@@ -17,6 +17,7 @@ import sys
 
 import pandas as pd
 import requests
+import base64
 
 APIURL = sys.argv[1]
 
