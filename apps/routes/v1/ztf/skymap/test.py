@@ -105,6 +105,7 @@ def pen_test() -> None:
     assert r.status_code == 400, r.status_code
     assert r.content == b'{"message": "\'bayestar\' is not gzip data"}\n', r.content
 
+
 if __name__ == "__main__":
     """ Execute the test suite """
     import doctest
