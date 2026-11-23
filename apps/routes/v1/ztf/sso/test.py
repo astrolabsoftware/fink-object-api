@@ -80,6 +80,7 @@ def test_simple_ssosearch() -> None:
     assert "Benoitcarry" in pdf["i:ssnamenr"].to_numpy()
     assert "8467" in pdf["i:ssnamenr"].to_numpy()
 
+
 def test_various_ssosearch() -> None:
     """
     Examples
@@ -93,6 +94,7 @@ def test_various_ssosearch() -> None:
     # special character
     pdf = ssosearch(n_or_d="Le Montagner")
     assert not pdf.empty
+
 
 def test_ephem() -> None:
     """

@@ -58,6 +58,8 @@ def get_salt_from_len(ssnamenr):
     else:
         salt = prefix
 
+    return salt
+
 
 @profile
 def extract_sso_data(payload: dict) -> pd.DataFrame:
