@@ -41,7 +41,7 @@ def bayestartest(
         data = open(bayestar, "rb").read()
         bayestar_b64 = base64.b64encode(data).decode("ascii")
         payload = {
-            "bayestar": str(data),
+            "bayestar": bayestar_b64,
             "credible_level": credible_level,
             "output-format": output_format,
         }
@@ -64,7 +64,7 @@ def test_bayestar() -> None:
     pdf = bayestartest()
 
     # FIXME: find a non-null intersection...
-    assert len(pdf) == 0, len(pdf)
+    assert len(pdf) == 6, len(pdf)
 
 
 def pen_test() -> None:
