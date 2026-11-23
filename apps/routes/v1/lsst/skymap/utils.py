@@ -92,8 +92,8 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     out: pandas dataframe
     """
     # boundaries in day
-    # n_day_before = payload.get("n_day_before", 1)
-    # n_day_after = payload.get("n_day_after", 6)
+    n_day_before = payload.get("n_day_before", 1)
+    n_day_after = payload.get("n_day_after", 6)
 
     # Interpret user input
     if "bayestar" in payload:
@@ -138,19 +138,18 @@ def search_in_skymap(payload: dict) -> pd.DataFrame:
     # grouping by later.
 
     # 1 day before the event, to 6 days after the event
-    # mjdstart = Time(header["DATE-OBS"], scale="utc").tai.mjd - n_day_before
-    # mjdend = mjdstart + n_day_after
+    mjdstart = Time(header["DATE-OBS"], scale="utc").tai.mjd - n_day_before
+    mjdend = mjdstart + n_day_after
 
     # FIXME: filtering on time does not work as
     # r:firstDiaSourceMjdTai is not populated yet
     # Moreover, the rowkey for pixel128 is pixel128_diaObjectId
     # so it does not contain time information.
     client = connect_to_hbase_table("rubin.pixel1024")
-    # client.setRangeScan(True)
+    client.setRangeScan(True)
     results = {}
     for pix in pixs:
-        # to_search = f"key:key:{pix}_{mjdstart},key:key:{pix}_{mjdend}"
-        to_search = f"key:key:{pix}_"
+        to_search = f"key:key:{pix}_{mjdstart},key:key:{pix}_{mjdend}"
         result = client.scan(
             "",
             to_search,
