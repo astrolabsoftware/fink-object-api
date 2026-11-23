@@ -30,6 +30,37 @@ from apps.utils.utils import (
 )
 
 
+def get_salt_from_len(ssnamenr):
+    """Extract salt from ssnamenr length
+
+    Notes
+    -----
+    This is due to the fact that string with less than 3
+    characters are treated with leading zeros
+
+    Parameters
+    ----------
+    ssnamenr: str
+        The ssnamenr from ZTF
+
+    Returns
+    -------
+    out: str
+        String of len 2
+    """
+    # As is defined in fink-broker index table archiving
+    prefix = ssnamenr[1:3]
+
+    if len(prefix) == 0:
+        salt = "00"
+    elif len(prefix) == 1:
+        salt = "0{}".format(prefix)
+    else:
+        salt = prefix
+
+    return salt
+
+
 @profile
 def extract_sso_data(payload: dict) -> pd.DataFrame:
     """Extract data returned by HBase and format it in a Pandas dataframe
@@ -134,11 +165,11 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             return Response(str(rep), 400)
 
         # search all ssnamenr corresponding quaero -> ssnamenr
-        if isinstance(sso_name, str):
-            new_ssnamenrs = resolve_sso_name_to_ssnamenr(sso_name)
+        if isinstance(sso_number, int):
+            new_ssnamenrs = resolve_sso_name_to_ssnamenr(str(sso_number))
             ssnamenrs = np.concatenate((ssnamenrs, new_ssnamenrs))
         else:
-            new_ssnamenrs = resolve_sso_name_to_ssnamenr(sso_number)
+            new_ssnamenrs = resolve_sso_name_to_ssnamenr(sso_name.replace(" ", ""))
             ssnamenrs = np.concatenate((ssnamenrs, new_ssnamenrs))
 
         for ssnamenr_ in new_ssnamenrs:
@@ -146,12 +177,13 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
             ssnamenr_to_sso_number[ssnamenr_] = sso_number
 
     # Get data from the main table
-    client = connect_to_hbase_table("ztf.ssnamenr")
+    client = connect_to_hbase_table("ztf.ssnamenr2", schema_name="schema_5.0rc0_9.7.0")
     results = {}
     for to_evaluate in ssnamenrs:
+        salt = get_salt_from_len(to_evaluate)
         result = client.scan(
             "",
-            f"key:key:{to_evaluate}_",
+            f"key:key:{salt}_{to_evaluate}_",
             cols,
             0,
             True,
