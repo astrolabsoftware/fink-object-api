@@ -45,7 +45,7 @@ def read_bayestar(encoded):
     try:
         compressed = base64.b64decode(encoded)
     except (binascii.Error, ValueError):
-        abort(400, "'bayestar' is not a valid bytes literal")
+        abort(400, "'bayestar' is not a valid base64")
 
     if len(compressed) > MAX_COMPRESSED_BYTES:
         abort(413, "Decoded data is too large")
