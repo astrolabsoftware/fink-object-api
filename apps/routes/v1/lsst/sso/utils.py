@@ -157,9 +157,10 @@ def extract_sso_data(payload: dict) -> pd.DataFrame:
     if with_ephem:
         pdf = get_miriade_data(pdf, survey="lsst", observer="X05", shift=0.0)
         if "i:magpsf_red" not in pdf.columns:
+            unique_oids = pdf["f:sso_name"].unique()
             rep = {
                 "status": "error",
-                "text": "We could not obtain the ephemerides information. Check Miriade availabilities.",
+                "text": "We could not obtain the ephemerides information for {unique_oids}. Check Miriade availabilities.",
             }
             return Response(str(rep), 400)
 

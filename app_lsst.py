@@ -104,4 +104,4 @@ app.register_blueprint(blueprint)
 
 
 if __name__ == "__main__":
-    app.run(config["HOST"], debug=True, port=int(config["PORT"]))
+    app.run(config["HOST"], debug=config["DEBUG"], port=int(config["PORT"]))
